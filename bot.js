@@ -17,4 +17,4 @@ client.on('messageCreate', (message) => {
     message.reply("hello");
   }
 });
-client.login(process.env.BOT_TOKEN);
+client.login('OTMzMzcwNzEwMjQyNTI1MTg0.YegjNg.F49s15-5pKBM5S7F19pTqLiXSrg');
