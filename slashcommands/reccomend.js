@@ -1,41 +1,71 @@
+const KORPUS_SZEREGOWYCH = "Korpus Szeregowych";
+const KORPUS_PODOFICEROW = "Korpus Podoficerów";
+const KORPUS_OFICEROW = "Korpus Oficerów";
+
+const checkCorpsRole = (member) => {
+  if (member.roles.cache.some(role => role.name === KORPUS_OFICEROW))
+    return KORPUS_OFICEROW;
+  else if (member.roles.cache.some(role => role.name === KORPUS_PODOFICEROW))
+    return KORPUS_PODOFICEROW
+  else if (member.roles.cache.some(role => role.name === KORPUS_SZEREGOWYCH))
+    return KORPUS_SZEREGOWYCH
+}
+
+const checkRole = (member, targetRoles) => {
+  for (let i = 0; i < targetRoles.length; i++) {
+    if (member.roles.cache.some(role => role.name === targetRoles[i]))
+      return true;
+  }
+  return false;
+}
+
+const assaignReccomendation = (interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender) => {
+
+  return interaction.reply(`Rekomendujący: ${interaction.user.username}(${korpusRekomendujacego})\n1x ${memberRecommended.user.username}(${korpusRekomendowanego})  - ${reason}`);
+}
+
 const run = async (client, interaction) => {
- let member = interaction.options.getMember("gracz");
-let korpusRekomendowanego, korpusRekomendujacego;
+  let memberRecommended = interaction.options.getMember("gracz");
+  let memberRecommender = interaction.member;
+  let reason = interaction.options.getString("powod");
+  let korpusRekomendowanego, korpusRekomendujacego;
 
-  
-  if(interaction.member.roles.cache.some(r => r.name === "Korpus Oficerów"))
-    korpusRekomendujacego = "Korpus Oficerów";
-  if(interaction.member.roles.cache.some(r => r.name === "Korpus Podoficerów"))
-    korpusRekomendujacego = "Korpus Podoficerów";
-  if(interaction.member.roles.cache.some(r => r.name === "Korpus Szeregowych"))
-    korpusRekomendujacego = "Korpus Szeregowych";
+  if (!memberRecommended) return interaction.reply({ content: "Niepoprawny użytkownik", ephemeral: true })
 
-  if(member.roles.cache.some(r => r.name === "Korpus Oficerów"))
-    korpusRekomendowanego = "Korpus Oficerów";
-  if(member.roles.cache.some(r => r.name === "Korpus Podoficerów"))
-    korpusRekomendowanego = "Korpus Podoficerów";
-  if(member.roles.cache.some(r => r.name === "Korpus Szeregowych"))
-    korpusRekomendowanego = "Korpus Szeregowych";
+  korpusRekomendowanego = checkCorpsRole(memberRecommended);
+  korpusRekomendujacego = checkCorpsRole(memberRecommender);
 
-    
-    let reason = interaction.options.getString("powod");
+  if(korpusRekomendowanego !== KORPUS_OFICEROW && korpusRekomendowanego !== KORPUS_PODOFICEROW && korpusRekomendowanego !== KORPUS_SZEREGOWYCH)
+    return interaction.reply({ content: "Rekomendowany nie nalezy do żadnego korpusu", ephemeral: true });
 
-    if(!member) return interaction.reply({content: "Niepoprawny użytkownik", ephemeral: true})
-    console.log(korpusRekomendujacego + " - " + korpusRekomendowanego);
+  if (korpusRekomendujacego === KORPUS_SZEREGOWYCH) return interaction.reply({ content: "Twój korpus nie może dawać rekomendacji", ephemeral: true });
 
-    if(korpusRekomendujacego === "Korpus Podoficerów" && korpusRekomendowanego === "Korpus Szeregowych")
-      if(member.roles.cache.some(r => r.name === "St. Szeregowy")) return interaction.reply({content: "Nie możesz rekomendować na swój stopień", ephemeral: true})
-    if(korpusRekomendujacego === korpusRekomendowanego ) return interaction.reply({content: "Nie możesz rekomendować tej osoby", ephemeral: true})
-  
+  if (korpusRekomendujacego === korpusRekomendowanego) {
+    if (korpusRekomendujacego === KORPUS_OFICEROW && checkRole(memberRecommender, ["Pułkownik", "Generał"]))
+      return assaignReccomendation(interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender)
+    return interaction.reply({ content: "Nie możesz rekomendować tej osoby", ephemeral: true })
+  }
 
- interaction.reply(`Rekomendujący: ${interaction.user.username}(${korpusRekomendujacego})\n1x ${member.user.username}(${korpusRekomendowanego})  - ${reason}`);
+  if (korpusRekomendujacego === KORPUS_PODOFICEROW && korpusRekomendowanego === KORPUS_SZEREGOWYCH) {
+    if (checkRole(memberRecommended, ["St. Szeregowy"]))
+      return interaction.reply({ content: "Nie możesz rekomendować tej osoby", ephemeral: true })
+    else
+      return interaction.reply(`Rekomendujący: ${interaction.user.username}(${korpusRekomendujacego})\n1x ${memberRecommended.user.username}(${korpusRekomendowanego})  - ${reason}`);
+  }
+
+
+  if (korpusRekomendujacego === KORPUS_OFICEROW) {
+    return interaction.reply(`Rekomendujący: ${interaction.user.username}(${korpusRekomendujacego})\n1x ${memberRecommended.user.username}(${korpusRekomendowanego})  - ${reason}`);
+  }
+
+
+  return interaction.reply({ content: "Nie możesz rekomendować tej osoby", ephemeral: true })
 
 }
 
 module.exports = {
   name: "rekomenduj",
   description: "Zarekomenduj gracza",
-  perm: "MODERATE_MEMBERS",
   options: [
     {
       name: 'gracz',
