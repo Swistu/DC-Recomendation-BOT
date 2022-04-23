@@ -1,13 +1,16 @@
+const database = require('../database/recommendPlayer.js');
+
 const KORPUS_SZEREGOWYCH = "Korpus Szeregowych";
 const KORPUS_PODOFICEROW = "Korpus Podoficerów";
 const KORPUS_OFICEROW = "Korpus Oficerów";
 
+
 const checkCorpsRole = (member) => {
   if (member.roles.cache.some(role => role.name === KORPUS_OFICEROW))
     return KORPUS_OFICEROW;
-  else if (member.roles.cache.some(role => role.name === KORPUS_PODOFICEROW))
+  if (member.roles.cache.some(role => role.name === KORPUS_PODOFICEROW))
     return KORPUS_PODOFICEROW
-  else if (member.roles.cache.some(role => role.name === KORPUS_SZEREGOWYCH))
+  if (member.roles.cache.some(role => role.name === KORPUS_SZEREGOWYCH))
     return KORPUS_SZEREGOWYCH
 }
 
@@ -19,9 +22,23 @@ const checkRole = (member, targetRoles) => {
   return false;
 }
 
-const assaignReccomendation = (interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender) => {
+const assaignReccomendation = async (interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender, reason) => {
+  try {
+    const wynik = await database.reccomendPlayer(memberRecommender.user.tag, memberRecommended.user.tag, reason)
 
-  return interaction.reply(`Rekomendujący: ${interaction.user.username}(${korpusRekomendujacego})\n1x ${memberRecommended.user.username}(${korpusRekomendowanego})  - ${reason}`);
+    if (wynik)
+      interaction.reply({
+        content: `Rekomendujący: ${interaction.user.username}(${korpusRekomendujacego})\n
+      1x ${memberRecommended.user.username}(${korpusRekomendowanego})  - ${reason}`,
+        ephemeral: true
+      });
+    else {
+      interaction.reply({ content: "Wystąpił błąd podczas dodawania rekomendacji", ephemeral: true });
+    }
+
+  } catch (e) {
+    interaction.reply('Wystąpił bład :(', e);
+  }
 }
 
 const run = async (client, interaction) => {
@@ -35,14 +52,15 @@ const run = async (client, interaction) => {
   korpusRekomendowanego = checkCorpsRole(memberRecommended);
   korpusRekomendujacego = checkCorpsRole(memberRecommender);
 
-  if(korpusRekomendowanego !== KORPUS_OFICEROW && korpusRekomendowanego !== KORPUS_PODOFICEROW && korpusRekomendowanego !== KORPUS_SZEREGOWYCH)
+  if (korpusRekomendowanego !== KORPUS_OFICEROW && korpusRekomendowanego !== KORPUS_PODOFICEROW && korpusRekomendowanego !== KORPUS_SZEREGOWYCH)
     return interaction.reply({ content: "Rekomendowany nie nalezy do żadnego korpusu", ephemeral: true });
 
-  if (korpusRekomendujacego === KORPUS_SZEREGOWYCH) return interaction.reply({ content: "Twój korpus nie może dawać rekomendacji", ephemeral: true });
+  if (korpusRekomendujacego === KORPUS_SZEREGOWYCH)
+    return interaction.reply({ content: "Twój korpus nie może dawać rekomendacji", ephemeral: true });
 
   if (korpusRekomendujacego === korpusRekomendowanego) {
     if (korpusRekomendujacego === KORPUS_OFICEROW && checkRole(memberRecommender, ["Pułkownik", "Generał"]))
-      return assaignReccomendation(interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender)
+      return assaignReccomendation(interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender, reason)
     return interaction.reply({ content: "Nie możesz rekomendować tej osoby", ephemeral: true })
   }
 
@@ -50,12 +68,11 @@ const run = async (client, interaction) => {
     if (checkRole(memberRecommended, ["St. Szeregowy"]))
       return interaction.reply({ content: "Nie możesz rekomendować tej osoby", ephemeral: true })
     else
-      return interaction.reply(`Rekomendujący: ${interaction.user.username}(${korpusRekomendujacego})\n1x ${memberRecommended.user.username}(${korpusRekomendowanego})  - ${reason}`);
+      return assaignReccomendation(interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender, reason)
   }
-
-
+  
   if (korpusRekomendujacego === KORPUS_OFICEROW) {
-    return interaction.reply(`Rekomendujący: ${interaction.user.username}(${korpusRekomendujacego})\n1x ${memberRecommended.user.username}(${korpusRekomendowanego})  - ${reason}`);
+    return assaignReccomendation(interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender, reason)
   }
 
 
