@@ -1,5 +1,5 @@
 const database = require('../database/recommendPlayer.js');
-
+const { getErrorMessage } = require('../helper/errorMessage');
 const KORPUS_SZEREGOWYCH = "Korpus Szeregowych";
 const KORPUS_PODOFICEROW = "Korpus Podoficerów";
 const KORPUS_OFICEROW = "Korpus Oficerów";
@@ -24,17 +24,19 @@ const checkRole = (member, targetRoles) => {
 
 const assaignReccomendation = async (interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender, reason) => {
   try {
-    const wynik = await database.reccomendPlayer(memberRecommender.user.tag, memberRecommended.user.tag, reason)
+    await interaction.reply({ content: "Sprawdzam rekomendacje ...", ephemeral: true });
+    const wynik = await database.recommendPlayer(memberRecommender.user.tag, memberRecommended.user.tag, korpusRekomendowanego, reason)
 
     if (wynik)
-      interaction.reply({
+      await interaction.editReply({
         content: `Rekomendujący: ${interaction.user.username}(${korpusRekomendujacego})\n
       1x ${memberRecommended.user.username}(${korpusRekomendowanego})  - ${reason}`,
         ephemeral: true
       });
-    else {
-      interaction.reply({ content: "Wystąpił błąd podczas dodawania rekomendacji", ephemeral: true });
-    }
+    else
+      await interaction.editReply({ content: getErrorMessage() });
+
+
 
   } catch (e) {
     interaction.reply('Wystąpił bład :(', e);
@@ -61,7 +63,7 @@ const run = async (client, interaction) => {
   if (korpusRekomendujacego === korpusRekomendowanego) {
     if (korpusRekomendujacego === KORPUS_OFICEROW && checkRole(memberRecommender, ["Pułkownik", "Generał"]))
       return assaignReccomendation(interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender, reason)
-    return interaction.reply({ content: "Nie możesz rekomendować tej osoby", ephemeral: true })
+    return interaction.reply({ content: "Nie możesz rekomendować osoby z tego samego korpusu.", ephemeral: true })
   }
 
   if (korpusRekomendujacego === KORPUS_PODOFICEROW && korpusRekomendowanego === KORPUS_SZEREGOWYCH) {
@@ -70,7 +72,7 @@ const run = async (client, interaction) => {
     else
       return assaignReccomendation(interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender, reason)
   }
-  
+
   if (korpusRekomendujacego === KORPUS_OFICEROW) {
     return assaignReccomendation(interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender, reason)
   }
@@ -79,7 +81,6 @@ const run = async (client, interaction) => {
   return interaction.reply({ content: "Nie możesz rekomendować tej osoby", ephemeral: true })
 
 }
-
 module.exports = {
   name: "rekomenduj",
   description: "Zarekomenduj gracza",
