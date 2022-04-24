@@ -3,37 +3,43 @@ const { setErrorMessage } = require('../helper/errorMessage');
 const { checkRecomendation } = require('./checkRecomendation');
 require("dotenv").config();
 
-const KORPUS_SZEREGOWYCH = "Korpus Szeregowych";
+const KORPUS_STRZELCOW = "Korpus Strzelców";
 const KORPUS_PODOFICEROW = "Korpus Podoficerów";
 const KORPUS_OFICEROW = "Korpus Oficerów";
 
-const recommendPlayer = async (memberRecommender, memberRecommended, korpusRekomendowanego, reason) => {
+const recommendPlayer = async (memberRecommender, memberRecommended, memberRank, korpusRekomendowanego, reason) => {
   const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@discordbot.mqrll.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
   const client = new MongoClient(uri);
   const database = client.db("recomendationSystem");
 
-  const checkPromotion = async (number, promotion = false) => {
+  const checkPromotion = async (number, promotion = false, rank) => {
     if (promotion === true)
       return true;
 
     switch (korpusRekomendowanego) {
-      case KORPUS_SZEREGOWYCH:
+      case KORPUS_STRZELCOW:
         if (number >= 3)
-          promotion = true;
+          if (rank !== "Plutonowy")
+            promotion = true;
+          else if (number >= 4)
+            promotion = true;
         break;
       case KORPUS_PODOFICEROW:
         if (number >= 4)
+        if (rank !== "Starszy Chorąży sztabowy")
           promotion = true;
-        break;
+        else if (number >= 5)
+          promotion = true;
+      break;
       case KORPUS_OFICEROW:
         if (number >= 5)
           promotion = true;
-        break;
+      break;
     }
 
     if (promotion === true)
       await database.collection("users").updateOne(
-        { discordTag: memberRecommended },
+        { userID: memberRecommended.user.id },
         { $set: { promotion: true } }
       );
     else return false;
@@ -46,13 +52,13 @@ const recommendPlayer = async (memberRecommender, memberRecommended, korpusRekom
     if (!canRecommend)
       return false;
     const result = await database.collection("users").findOneAndUpdate(
-      { discordTag: memberRecommended },
+      { userID: memberRecommended.user.id },
       {
-        $setOnInsert: { discordTag: memberRecommended, corps: korpusRekomendowanego, promotion: false },
-        $inc: { number: 1 },
+        $setOnInsert: { discordTag: memberRecommended.user.tag, userID: memberRecommended.user.id, corps: korpusRekomendowanego, rank: memberRank, promotion: false },
+        $inc: { number: 1, currentNumber: 1 },
         $push: {
           recomendations: {
-            user: memberRecommender,
+            userID: memberRecommender.user.id,
             reason: reason
           }
         }
@@ -66,7 +72,7 @@ const recommendPlayer = async (memberRecommender, memberRecommended, korpusRekom
 
 
     if (result) {
-      await checkPromotion(result.number, result.promotion);
+      await checkPromotion(result.number, result.promotion, result.rank);
       return true;
     }
 

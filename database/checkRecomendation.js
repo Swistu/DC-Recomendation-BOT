@@ -10,7 +10,7 @@ const checkRecomendation = async (memberRecommender, memberRecommended) => {
   try {
     await client.connect();
 
-    const result = await database.collection("users").findOne({ discordTag: memberRecommended });
+    const result = await database.collection("users").findOne({ userID: memberRecommended.user.id });
 
     if (result === null)
       return true;
@@ -18,7 +18,7 @@ const checkRecomendation = async (memberRecommender, memberRecommended) => {
       setErrorMessage("Gracz już ma awans");
       return false
     }
-    if (result.recomendations.find(element => element.user === memberRecommender)) {
+    if (result.recomendations.find(element => element.userID === memberRecommender.user.id)) {
       setErrorMessage("Juz daleś rekomendacje temu graczowi");
       return false;
     }
