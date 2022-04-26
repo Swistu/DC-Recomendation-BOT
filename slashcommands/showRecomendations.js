@@ -1,22 +1,24 @@
-const { checkAllUserRecommendation } = require('../database/checkAllUserRecommendations.js');
-const { getErrorMessage } = require('../helper/errorMessage');
+const { getUserRecommendations } = require('../database/getUserRecommendations.js');
 
-const run = async ( interaction) => {
+const run = async (client, interaction) => {
   let userToCheck = interaction.options.getMember("gracz");
-  if (!userToCheck) return interaction.reply({ content: "Niepoprawny użytkownik", ephemeral: true })
+  if (!userToCheck)
+    return interaction.reply({ content: "Niepoprawny użytkownik", ephemeral: true })
 
-  const response = await checkAllUserRecommendation(userToCheck);
-  await interaction.reply( {content:"Sprawdzanie rekomendacji..."});
+  await interaction.reply({ content: "Sprawdzanie rekomendacji..." });
+  const response = await getUserRecommendations(userToCheck);
 
-  if (response) {
-    let message = `Rekomendacje gracza ${userToCheck} \n`;
-    for (i = 0; i < response.length; i++) {
-      message += `1x <@${response[i].userID}> - ${response[i].reason? response[i].reason: "brak powodu"} \n`;
-    }
-    await interaction.editReply({ content: message });
+  if (!response.valid) {
+    await interaction.editReply({ content: response.errorMessage });
+    return;
   }
-  else
-    await interaction.editReply({ content: 'Ten użytkownik nie ma rekomendacji albo inny error ¯\\_(ツ)_/¯' });
+
+  let message = `Rekomendacje gracza ${userToCheck} \n`;
+  response.payLoad.recommendations.forEach( element => {
+    message += `<@${element.userID}> - ${element.reason ? element.reason : "brak powodu"} \n`;
+  });
+
+  await interaction.editReply({ content: message });
 }
 
 module.exports = {
