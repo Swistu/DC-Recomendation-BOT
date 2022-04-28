@@ -10,16 +10,13 @@ const updateUser = async (userID, updateFields = {}) => {
     );
 
     if (result.matchedCount === 0) {
-      console.log("Updateuser0" + result);
-      return Promise.reject(false);
+      return Promise.reject("Nie znaleziono dokumentu");
     }
     if (result.modifiedCount === 0) {
-      console.log("Updateuser0" + result);
-      return Promise.reject(false);
+      return Promise.reject("Znaleziono dokument, ale nie zmodyfikowano");
     }
 
-    console.log("Updateuser1" + result);
-    return Promise.resolve(true);
+    return Promise.resolve("Poprawnie zmodyfikowano");
   } catch (e) {
     console.error(e);
     return Promise.reject(false);

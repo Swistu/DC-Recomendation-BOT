@@ -10,7 +10,10 @@ const promoteUser = async (user) => {
       errorMessage: response.errorMessage
     };
   }
-
+  /*
+    Problem with performence/memory
+    change way of editing roles
+  */
   const oldRole = user.roles.cache.find(role => role.name === response.payLoad.oldRank);
   const oldCorpsRole = user.roles.cache.find(role => role.name === response.payLoad.oldCorps);
   const newRole = user.guild.roles.cache.find(role => role.name === response.payLoad.newRank);
@@ -23,10 +26,13 @@ const promoteUser = async (user) => {
       Przewidywane dane 
       Aktualny stopień: ${response.payLoad.oldRank} - ${response.payLoad.oldCorps}
       Nowy stopień: ${response.payLoad.newRank} - ${response.payLoad.newCorps}
-      `
+      `,
+      payLoad: {
+        userID: user.user.id
+      }
     };
   }
-
+  
   const userUpdated = await updateUser(user.user.id, {
     rank: response.payLoad.newRank,
     corps: response.payLoad.newCorps,
@@ -54,12 +60,12 @@ const promoteUser = async (user) => {
       console.error(e);
       return {
         valid: false,
-        errorMessage: "Błąd podczas aktualizowania danych gracza. Awans nie uznany."
+        errorMessage: "Błąd podczas aktualizowania danych gracza. Awans nie uznany.",
+        payLoad: {
+          userID: user.user.id,
+        }
       }
     })
-
-  console.log("userUpdated.valid" + userUpdated.valid);
-
   return userUpdated;
 }
 

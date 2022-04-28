@@ -32,34 +32,33 @@ client.on("interactionCreate", interaction => {
 client.on('ready', async () => {
 
   console.log(`Logged in as ${client.user.tag}!`);
+  // const guildId = '935268119365156884';
+  // const guild = client.guilds.cache.get(guildId);
 
 
+  // let commands;
 
+  // if (guild) {
+  //   commands = guild.commands;
+  // } else {
+  //   commands = client.application.commands;
+  // }
 
-  const guildId = '935268119365156884';
-  const guild = client.guilds.cache.get(guildId);
+  // console.log(guild)
 
+  // const permissions2 = {
+  //   id: guild.roles.everyone.id,
+  //   type: 'ROLE',
+  //   permission: true,
+  // };
+  // let commandsList = await guild.commands.fetch();
 
-  let commands;
-
-  if (guild) {
-    commands = guild.commands;
-  } else {
-    commands = client.application.commands;
-  }
-
-  const permissions2 = {
-    id: guild.roles.everyone.id,
-    type: 'ROLE',
-    permission: true,
-  };
-  let commandsList = await guild.commands.fetch();
-  await commandsList.forEach(slashCommand => {
-    guild.commands.permissions.add({
-      command: slashCommand.id,
-      permissions: [permissions2]
-    });
-  });
+  // commandsList.forEach(slashCommand => {
+  //   guild.commands.permissions.add({
+  //     command: slashCommand.id,
+  //     permissions: [permissions2]
+  //   });
+  // });
 })
 
 client.login(process.env.BOT_TOKEN);

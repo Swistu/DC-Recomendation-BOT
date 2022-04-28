@@ -47,6 +47,8 @@ const getUserPromotionData = async (userToPromote) => {
   } finally {
     await client.close();
   }
+
+
 }
 
 exports.getUserPromotionData = getUserPromotionData;
