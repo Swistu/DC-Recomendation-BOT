@@ -2,16 +2,6 @@ const { getAllPromotionsList } = require("../database/getAllPromotionsList");
 const { promoteUser } = require("../utility/promoteUser");
 
 const run = async (client, interaction) => {
-
-
-  /*
-
-    Wziac liste ludzi do awansu.
-    Utworzyc liste odpowiedzi kogo sie udalo kogo nie
-    odpowiedziec ladnie :)
-
-  */
-
   await interaction.reply("Trwa awansowanie graczy...");
 
   const userList = await getAllPromotionsList();
@@ -35,7 +25,6 @@ const run = async (client, interaction) => {
 
     responseList.push(data);
   }
-
 
   let promotionApproved = "";
   let promotionUnapproved = "";

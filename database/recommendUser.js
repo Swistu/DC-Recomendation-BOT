@@ -18,7 +18,7 @@ const recommendUser = async (memberRecommender, memberRecommended, memberRank, k
         break;
       case constants.KORPUS_PODOFICEROW:
         if (currentNumber >= 4)
-          if (rank !== "Starszy Chorąży sztabowy")
+          if (rank !== "Starszy Chorąży Sztabowy")
             promotion = true;
           else if (currentNumber >= 5)
             promotion = true;

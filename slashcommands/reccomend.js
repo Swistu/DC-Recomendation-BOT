@@ -2,12 +2,12 @@ const { recommendUser } = require('../database/recommendUser.js');
 const constants = require('../utility/constants');
 
 const checkCorpsRole = (member) => {
-  if (member.roles.cache.some(role => role.name === constants.KORPUS_OFICEROW))
-    return constants.KORPUS_OFICEROW;
-  if (member.roles.cache.some(role => role.name === constants.KORPUS_PODOFICEROW))
-    return constants.KORPUS_PODOFICEROW
-  if (member.roles.cache.some(role => role.name === constants.KORPUS_STRZELCOW))
-    return constants.KORPUS_STRZELCOW
+  if (member.roles.cache.some(role => role.name === constants.CORPS.KORPUS_OFICEROW))
+    return constants.CORPS.KORPUS_OFICEROW;
+  if (member.roles.cache.some(role => role.name === constants.CORPS.KORPUS_PODOFICEROW))
+    return constants.CORPS.KORPUS_PODOFICEROW
+  if (member.roles.cache.some(role => role.name === constants.CORPS.KORPUS_STRZELCOW))
+    return constants.CORPS.KORPUS_STRZELCOW
 }
 
 const checkRole = (member, targetRoles) => {
@@ -87,26 +87,26 @@ const run = async (client, interaction) => {
   korpusRekomendowanego = checkCorpsRole(memberRecommended);
   korpusRekomendujacego = checkCorpsRole(memberRecommender);
 
-  if (korpusRekomendowanego !== constants.KORPUS_OFICEROW && korpusRekomendowanego !== constants.KORPUS_PODOFICEROW && korpusRekomendowanego !== constants.KORPUS_STRZELCOW)
+  if (korpusRekomendowanego !== constants.CORPS.KORPUS_OFICEROW && korpusRekomendowanego !== constants.CORPS.KORPUS_PODOFICEROW && korpusRekomendowanego !== constants.CORPS.KORPUS_STRZELCOW)
     return interaction.reply({ content: "Rekomendowany nie nalezy do żadnego korpusu", });
 
-  if (korpusRekomendujacego === constants.KORPUS_STRZELCOW)
+  if (korpusRekomendujacego === constants.CORPS.KORPUS_STRZELCOW)
     return interaction.reply({ content: "Twój korpus nie może dawać rekomendacji", });
 
   if (korpusRekomendujacego === korpusRekomendowanego) {
-    if (korpusRekomendujacego === constants.KORPUS_OFICEROW && checkRole(memberRecommender, ["Podpułkownik", "Pułkownik", "Generał"]))
+    if (korpusRekomendujacego === constants.CORPS.KORPUS_OFICEROW && checkRole(memberRecommender, ["Podpułkownik", "Pułkownik", "Generał"]))
       return assaignReccomendation(interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender, reason)
     return interaction.reply({ content: "Nie możesz rekomendować osoby z tego samego korpusu.", })
   }
 
-  if (korpusRekomendujacego === constants.KORPUS_PODOFICEROW && korpusRekomendowanego === constants.KORPUS_STRZELCOW) {
+  if (korpusRekomendujacego === constants.CORPS.KORPUS_PODOFICEROW && korpusRekomendowanego === constants.CORPS.KORPUS_STRZELCOW) {
     if (checkRole(memberRecommended, ["Starszy Szeregowy"]))
       return interaction.reply({ content: "Nie możesz rekomendować tej osoby", })
     else
       return assaignReccomendation(interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender, reason)
   }
 
-  if (korpusRekomendujacego === constants.KORPUS_OFICEROW) {
+  if (korpusRekomendujacego === constants.CORPS.KORPUS_OFICEROW) {
     return assaignReccomendation(interaction, korpusRekomendujacego, korpusRekomendowanego, memberRecommended, memberRecommender, reason)
   }
 

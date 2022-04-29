@@ -4,7 +4,7 @@ const run = async (client, interaction) => {
   const userToPromote = interaction.options.getMember("gracz");
 
   await interaction.reply("Sprawdzam awans...");
-  console.log(userToPromote);
+
   const promotedUser = await promoteUser(userToPromote);
 
   if (!promotedUser.valid) {
