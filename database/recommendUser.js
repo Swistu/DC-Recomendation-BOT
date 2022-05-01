@@ -9,28 +9,28 @@ const recommendUser = async (memberRecommender, memberRecommended, memberRank, k
       return true;
 
     switch (korpusRekomendowanego) {
-      case constants.KORPUS_STRZELCOW:
+      case constants.CORPS.KORPUS_STRZELCOW:
         if (currentNumber >= 3)
           if (rank !== "Plutonowy")
             promotion = true;
           else if (currentNumber >= 4)
             promotion = true;
         break;
-      case constants.KORPUS_PODOFICEROW:
+      case constants.CORPS.KORPUS_PODOFICEROW:
         if (currentNumber >= 4)
           if (rank !== "Starszy Chorąży Sztabowy")
             promotion = true;
           else if (currentNumber >= 5)
             promotion = true;
         break;
-      case constants.KORPUS_OFICEROW:
+      case constants.CORPS.KORPUS_OFICEROW:
         if (currentNumber >= 5)
           promotion = true;
         break;
     }
 
     if (promotion === true)
-      await updateUser(memberRecommended.user.id, { promotion: true });
+      await updateUser(memberRecommended.user.id, { $set: { promotion: true } });
     else
       return false;
   }

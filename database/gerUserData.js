@@ -14,7 +14,7 @@ const getUserData = async (userID, data = []) => {
       });
     }
 
-    const result = await database.collection("users").findOne(
+    const result = await database.collection('users').findOne(
       { userID: userID },
       { projection: { _id: 0, ...obj } }
     );
@@ -22,13 +22,13 @@ const getUserData = async (userID, data = []) => {
     if (result === null) {
       return {
         valid: false,
-        errorMessage: "Nie znaleziono gracza w bazie danych.",
+        errorMessage: `Nie znaleziono gracza <@${userID}> w bazie danych.`,
       };
     }
     if (!result) {
       return {
         valid: false,
-        errorMessage: "Błąd podczas pobierania danych."
+        errorMessage: 'Błąd podczas pobierania danych.'
       };
     }
 
@@ -43,7 +43,7 @@ const getUserData = async (userID, data = []) => {
     console.error(e);
     return {
       valid: false,
-      errorMessage: "Błąd połączenia z bazą."
+      errorMessage: 'Błąd połączenia z bazą.'
     };
   } finally {
     await client.close();

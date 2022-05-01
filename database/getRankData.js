@@ -1,6 +1,6 @@
 const { client, database } = require('./mongodb');
 
-const getRankData = async (query, projection = []) => {
+const getRankData = async (query = {}, projection = []) => {
   try {
     await client.connect();
 

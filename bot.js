@@ -44,8 +44,6 @@ client.on('ready', async () => {
   //   commands = client.application.commands;
   // }
 
-  // console.log(guild)
-
   // const permissions2 = {
   //   id: guild.roles.everyone.id,
   //   type: 'ROLE',

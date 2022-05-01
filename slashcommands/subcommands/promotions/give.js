@@ -1,16 +1,38 @@
-const { getAllPromotionsList } = require("../database/getAllPromotionsList");
-const { promoteUser } = require("../utility/promoteUser");
+const { getAllPromotionsList } = require("../../../database/getAllPromotionsList");
+const { promoteUser } = require("../../../utility/promoteUser");
 
-const run = async (client, interaction) => {
-  await interaction.reply("Trwa awansowanie graczy...");
+const promoteOneUser = async (interaction, userToPromote) => {
+  await interaction.editReply("Sprawdzam awans...");
 
+  const promotedUser = await promoteUser(userToPromote);
+
+  if (!promotedUser.valid) {
+    await interaction.editReply(promotedUser.errorMessage);
+    return;
+  }
+
+  const message = `Awans przyznany: \n
+  ${promotedUser.payLoad.oldRank} <@${promotedUser.payLoad.userID}> awansuje na ${promotedUser.payLoad.newRank}
+      `;
+
+  await interaction.editReply(message);
+}
+
+const give = async (interaction) => {
+  const userToPromote = await interaction.options.getMember('gracz');
+
+  if (userToPromote) {
+    promoteOneUser(interaction, userToPromote);
+    return 0;
+  }
+
+  await interaction.editReply("Trwa awansowanie graczy...");
   const userList = await getAllPromotionsList();
 
   if (!userList.valid) {
     await interaction.editReply(userList.errorMessage);
     return;
   }
-
   if (userList.payLoad.validUserList.length === 0) {
     await interaction.editReply("Nie ma graczy, których można awansować");
     return;
@@ -19,7 +41,7 @@ const run = async (client, interaction) => {
   const guildMembers = await client.guilds.cache.get("935268119365156884").members
   const responseList = [];
 
-  for(const element of userList.payLoad.validUserList){
+  for (const element of userList.payLoad.validUserList) {
     const guildMember = await guildMembers.fetch(element.userID);
     const data = await promoteUser(guildMember);
 
@@ -38,10 +60,8 @@ const run = async (client, interaction) => {
   })
 
   await interaction.editReply(promotionApproved + "\n" + promotionUnapproved);
-}
+};
 
 module.exports = {
-  name: "przyznajawanse",
-  description: "Awansuje wszystkich możliwych graczy.",
-  run
-}
+  give
+};

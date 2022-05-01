@@ -1,7 +1,7 @@
-const { getAllPromotionsList } = require('../database/getAllPromotionsList');
+const { getAllPromotionsList } = require('../../../database/getAllPromotionsList');
 
-const run = async (client, interaction) => {
-  await interaction.reply("Sprawdzam awanse...")
+const show = async (interaction) => {
+  await interaction.editReply("Sprawdzam awanse...");
 
   const response = await getAllPromotionsList();
 
@@ -20,12 +20,10 @@ const run = async (client, interaction) => {
   response.payLoad.unvalidUserList.forEach(element => {
     unAvailablePromotions += `${element.rank} <@${element.userID}>\n`;
   });
-  
+
   await interaction.editReply(availablePromotions + "\n\n" + unAvailablePromotions);
-}
+};
 
 module.exports = {
-  name: "pokazawanse",
-  description: "Pokazuje wszystkie nadchodzące awanse.",
-  run
-}
+  show
+};

@@ -1,18 +1,20 @@
 const { client, database } = require('./mongodb');
 
-const updateUser = async (userID, updateFields = {}) => {
+const updateUser = async (userID, update = {}, options = {}) => {
   try {
     await client.connect();
 
     const result = await database.collection("users").updateOne(
       { userID: userID },
-      { $set: updateFields }
+      update,
+      options
     );
 
-    if (result.matchedCount === 0) {
+    if (result.matchedCount === 0 && result.upsertedCount === 0) {
       return Promise.reject("Nie znaleziono dokumentu");
     }
-    if (result.modifiedCount === 0) {
+    if (result.modifiedCount === 0 && result.upsertedCount === 0) {
+      console.log('result', result);
       return Promise.reject("Znaleziono dokument, ale nie zmodyfikowano");
     }
 

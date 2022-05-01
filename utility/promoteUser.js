@@ -10,10 +10,7 @@ const promoteUser = async (user) => {
       errorMessage: response.errorMessage
     };
   }
-  /*
-    Problem with performence/memory
-    change way of editing roles
-  */
+
   const oldRole = user.roles.cache.find(role => role.name === response.payLoad.oldRank);
   const oldCorpsRole = user.roles.cache.find(role => role.name === response.payLoad.oldCorps);
   const newRole = user.guild.roles.cache.find(role => role.name === response.payLoad.newRank);
@@ -32,13 +29,16 @@ const promoteUser = async (user) => {
       }
     };
   }
-  
+
   const userUpdated = await updateUser(user.user.id, {
-    rank: response.payLoad.newRank,
-    corps: response.payLoad.newCorps,
-    promotion: false,
-    currentNumber: 0,
-    recommendations: []
+    $set: {
+
+      rank: response.payLoad.newRank,
+      corps: response.payLoad.newCorps,
+      promotion: false,
+      currentNumber: 0,
+      recommendations: []
+    }
   }).then(() => {
     user.roles.remove(oldRole);
     user.roles.add(newRole);
