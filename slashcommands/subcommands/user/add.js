@@ -2,8 +2,9 @@ const { getUserData } = require("../../../database/gerUserData");
 const { getRankData } = require("../../../database/getRankData");
 const { updateUser } = require("../../../database/updateUser");
 const { getUserRoles } = require("../../../utility/getUserRoles");
+const { repair } = require("./repair");
 
-const add = async (interaction) => {
+const add = async (client, interaction) => {
   const user = await interaction.options.getMember('gracz');
 
   const userData = await getUserData(user.user.id);
@@ -28,7 +29,7 @@ const add = async (interaction) => {
         return 0;
       }
 
-      await updateUser(user.user.id, {
+      const result = await updateUser(user.user.id, {
         $setOnInsert: {
           userID: user.user.id,
           discordTag: user.user.tag,
@@ -39,13 +40,14 @@ const add = async (interaction) => {
           rank: rankData.payLoad.name,
           recommendations: [],
         }
-      }, { upsert: true })
-        .then(async () => {
-          await interaction.editReply(`Dodano użytkownika <@${user.user.id}> do bazy.`);
-        }).catch(async (err) => {
-          console.error(err);
-          await interaction.editReply(err);
-        })
+      }, { upsert: true });
+
+      if (!result.valid) {
+        await interaction.editReply(result.errorMessage);
+        return 0;
+      }
+
+      repair(client, interaction, `Dodano użytkownika <@${user.user.id}> do bazy.\n`);
 
       return 0;
     } else {

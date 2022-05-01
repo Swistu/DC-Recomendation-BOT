@@ -6,7 +6,7 @@ const run = async (client, interaction) => {
   
   switch (await interaction.options.getSubcommand()) {
     case 'przyznaj':
-      give(interaction);
+      give(client, interaction);
       break;
     case 'pokaż':
       show(interaction);

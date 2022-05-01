@@ -15,7 +15,7 @@ const set = async (client, interaction) => {
   if (!newRankData.valid)
     return await interaction.editReply(newRankData.errorMessage);
 
-  await updateUser(member.user.id, {
+  const result = await updateUser(member.user.id, {
     $set: {
       currentNumber: 0,
       corps: newRankData.payLoad.corps,
@@ -24,14 +24,13 @@ const set = async (client, interaction) => {
       rank: newRankData.payLoad.name,
       recommendations: [],
     }
-  }).then(async () => {
-    await interaction.editReply();
-    repair(client, interaction, 'Poprawnie zmieniono w bazie stopień.\nBot sam naprawił:\n\n');
-  })
-    .catch(async (e) => {
-      console.error(e)
-      await interaction.editReply('Nie udało sie ustawić stopnia graczowi');
-    });
+  });
+
+  if (!result.valid) {
+    await interaction.editReply(result.errorMessage);
+  }
+  
+  repair(client, interaction, `Poprawnie zaktualizowano stopień <@${member.user.id}> w bazie.\nBot sam naprawił:\n\n`);
 };
 
 module.exports = {

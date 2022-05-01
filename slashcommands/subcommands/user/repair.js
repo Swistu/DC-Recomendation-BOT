@@ -42,7 +42,7 @@ const repair = async (client, interaction, message = '') => {
         return 0;
       }
 
-      await updateUser(user.user.id, {
+      const result = await updateUser(user.user.id, {
         $set: {
           userID: user.user.id,
           discordTag: user.user.tag,
@@ -53,14 +53,15 @@ const repair = async (client, interaction, message = '') => {
           rank: rankData.payLoad.name,
           recommendations: [],
         }
-      }, { upsert: true })
-        .then(async () => {
-          message += 'Brak istnienia danych użytkownika w bazie\n';
-          repair(client, interaction, message);
-        }).catch(async (err) => {
-          console.error(err);
-          await interaction.editReply(err);
-        })
+      }, { upsert: true });
+
+      if (!result.valid) {
+        await interaction.editReply(err);
+        return 0;
+      }
+      message += 'Brak istnienia danych użytkownika w bazie\n';
+
+      repair(client, interaction, message);
 
       return 0;
     } else {

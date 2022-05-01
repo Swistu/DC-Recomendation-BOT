@@ -11,14 +11,14 @@ const recommendUser = async (memberRecommender, memberRecommended, memberRank, k
     switch (korpusRekomendowanego) {
       case constants.CORPS.KORPUS_STRZELCOW:
         if (currentNumber >= 3)
-          if (rank !== "Plutonowy")
+          if (rank !== constants.RANKS.PLUTONOWY)
             promotion = true;
           else if (currentNumber >= 4)
             promotion = true;
         break;
       case constants.CORPS.KORPUS_PODOFICEROW:
         if (currentNumber >= 4)
-          if (rank !== "Starszy Chorąży Sztabowy")
+          if (rank !== constants.RANKS.STARSZY_CHORAZY_SZTABOWY)
             promotion = true;
           else if (currentNumber >= 5)
             promotion = true;
@@ -69,7 +69,8 @@ const recommendUser = async (memberRecommender, memberRecommended, memberRank, k
     if (result) {
       await checkPromotion(result.value.currentNumber, result.value.promotion, result.value.rank);
       return {
-        valid: true
+        valid: true,
+        payLoad: result
       };
     }
 

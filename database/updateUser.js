@@ -11,17 +11,28 @@ const updateUser = async (userID, update = {}, options = {}) => {
     );
 
     if (result.matchedCount === 0 && result.upsertedCount === 0) {
-      return Promise.reject("Nie znaleziono dokumentu");
+      return {
+        valid: false,
+        errorMessage: `Nie znaleziono ${userID} w bazie.`
+      };
     }
     if (result.modifiedCount === 0 && result.upsertedCount === 0) {
-      console.log('result', result);
-      return Promise.reject("Znaleziono dokument, ale nie zmodyfikowano");
+      return {
+        valid: false,
+        errorMessage: `Znaleziono ${userID} w bazie, ale nie edytowano go.`
+      };
     }
 
-    return Promise.resolve("Poprawnie zmodyfikowano");
+    return {
+      valid: true,
+      payLoad: result
+    };
   } catch (e) {
     console.error(e);
-    return Promise.reject(false);
+    return {
+      valid: false,
+      errorMessage: 'Błąd połączenie z bazą danych.'
+    };
   } finally {
     await client.close();
   }

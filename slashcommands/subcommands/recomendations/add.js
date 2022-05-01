@@ -39,7 +39,7 @@ const add = async (interaction) => {
   const reason = interaction.options.getString('powod');
 
   if (!memberRecommended || !memberRecommender)
-    return await interaction.editReply('Niepoprawny użytkownik');
+    return await interaction.editReply('Niepoprawny gracz');
 
   const memberRecommendedResult = await getUserData(memberRecommended.user.id);
   const memberRecommenderResult = await getUserData(memberRecommender.user.id);
@@ -57,7 +57,7 @@ const add = async (interaction) => {
   const recomenderRank = memberRecommenderResult.payLoad.rank;
 
   if (recomendedCorps !== constants.CORPS.KORPUS_OFICEROW && recomendedCorps !== constants.CORPS.KORPUS_PODOFICEROW && recomendedCorps !== constants.CORPS.KORPUS_STRZELCOW)
-    return await interaction.editReply({ content: 'Rekomendowany nie nalezy do żadnego korpusu', });
+    return await interaction.editReply(`<@${memberRecommended.user.id}> nie nalezy do żadnego korpusu`);
 
   if (recomenderCorps === constants.CORPS.KORPUS_STRZELCOW)
     return await interaction.editReply({ content: 'Twój korpus nie może dawać rekomendacji', });

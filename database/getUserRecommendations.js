@@ -4,7 +4,7 @@ const getUserRecommendations = async (userToCheck) => {
   try {
     await client.connect();
 
-    const result = await database.collection("users").findOne(
+    const result = await database.collection('users').findOne(
       { userID: userToCheck.id },
       { projection: { recommendations: 1, _id: 0 } }
     );
@@ -12,14 +12,14 @@ const getUserRecommendations = async (userToCheck) => {
     if (!result) {
       return {
         valid: false,
-        errorMessage: "Nie znaleziono użytkownika w bazie."
+        errorMessage: `Nie znaleziono <@${userToCheck.id}> w bazie.`
       };
     }
 
     if (result.recommendations.length === 0) {
       return {
         valid: false,
-        errorMessage: "Użytkownik nie posiada rekomendacji."
+        errorMessage: `<@${userToCheck.id}> nie posiada rekomendacji.`
       };
     }
 
@@ -33,7 +33,7 @@ const getUserRecommendations = async (userToCheck) => {
     console.error(e);
     return {
       valid: false,
-      errorMessage: "Błąd połączenia z bazą"
+      errorMessage: 'Błąd połączenia z bazą'
     };
   } finally {
     await client.close();

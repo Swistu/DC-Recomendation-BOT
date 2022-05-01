@@ -12,7 +12,7 @@ const getUserPromotionData = async (userToPromote) => {
     if(!result){
       return {
         valid: false,
-        errorMessage: "Ten gracz nie ma jeszcze awansu."
+        errorMessage: `<@${userToPromote.id}> nie ma jeszcze awansu.`
       };
     }
 
@@ -24,7 +24,7 @@ const getUserPromotionData = async (userToPromote) => {
     if(!newRank){
       return {
         valid: false,
-        errorMessage: "Nie znaleziono nowego stopnia dla gracza. \n"
+        errorMessage: `Nie znaleziono nowego stopnia dla <@${userToPromote.id}>. \n`
       };
     }
 

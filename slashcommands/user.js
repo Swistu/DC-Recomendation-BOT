@@ -13,14 +13,14 @@ const getAllRanks = (ranks) => {
 const allRanks = getAllRanks(constants.RANKS);
 
 const run = async (client, interaction) => {
-  await interaction.reply('Trwa sprawdzanie rekomendacji...');
+  await interaction.reply('Uruchamiam komende...');
 
   switch (await interaction.options.getSubcommand()) {
     case 'napraw':
       repair(client, interaction);
       break;
     case 'dodaj':
-      add(interaction);
+      add(client, interaction);
       break;
     case 'ustaw':
       set(client, interaction);
