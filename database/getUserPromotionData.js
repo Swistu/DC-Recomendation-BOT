@@ -8,25 +8,16 @@ const getUserPromotionData = async (userToPromote) => {
       { promotion: true, userID: userToPromote.id },
       { projection: { userID: 1, rank: 1, corps: 1, number: 1, _id: 0 } }
     );
-
-    if(!result){
-      return {
-        valid: false,
-        errorMessage: `<@${userToPromote.id}> nie ma jeszcze awansu.`
-      };
-    }
+    if (!result)
+      return { valid: false, errorMessage: `<@${userToPromote.id}> nie ma jeszcze awansu.` };
 
     const newRank = await database.collection("ranking").findOne(
       { number: result.number },
       { projection: { name: 1, corps: 1, _id: 0 } }
     );
 
-    if(!newRank){
-      return {
-        valid: false,
-        errorMessage: `Nie znaleziono nowego stopnia dla <@${userToPromote.id}>. \n`
-      };
-    }
+    if (!newRank)
+      return { valid: false, errorMessage: `Nie znaleziono nowego stopnia dla <@${userToPromote.id}>. \n` };
 
     return {
       valid: true,
@@ -40,15 +31,10 @@ const getUserPromotionData = async (userToPromote) => {
     };
   } catch (e) {
     console.error(e);
-    return {
-      valid: false,
-      errorMessage: "Błąd połączenia z bazą"
-    };
+    return { valid: false, errorMessage: "Błąd połączenia z bazą" };
   } finally {
     await client.close();
   }
-
-
-}
+};
 
 exports.getUserPromotionData = getUserPromotionData;

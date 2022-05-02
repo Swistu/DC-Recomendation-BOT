@@ -10,10 +10,7 @@ const getAllPromotionsList = async () => {
     );
 
     if (!await result.hasNext())
-      return {
-        valid: false,
-        errorMessage: "Nie ma ludzi do awansowania"
-      };
+      return { valid: false, errorMessage: "Nie ma ludzi do awansowania" };
 
     let validUserList = [];
     let unvalidUserList = [];
@@ -56,13 +53,10 @@ const getAllPromotionsList = async () => {
     };
   } catch (e) {
     console.error(e);
-    return {
-      valid: false,
-      errorMessage: "Błąd połączenia z bazą"
-    };
+    return { valid: false, errorMessage: "Błąd połączenia z bazą" };
   } finally {
     await client.close();
   }
-}
+};
 
 exports.getAllPromotionsList = getAllPromotionsList;

@@ -3,16 +3,12 @@ const { getUserRecommendations } = require("../../../database/getUserRecommendat
 
 const show = async (interaction) => {
   const userToCheck = interaction.options.getMember("gracz");
-
   if (!userToCheck)
     return interaction.editReply('Niepoprawny użytkownik');
 
   const response = await getUserRecommendations(userToCheck);
-
-  if (!response.valid) {
-    await interaction.editReply(response.errorMessage);
-    return;
-  }
+  if (!response.valid)
+    return await interaction.editReply(response.errorMessage);
 
   let message = `Rekomendacje gracza <@${userToCheck.user.id}> \n`;
   response.payLoad.recommendations.forEach(element => {
@@ -22,6 +18,4 @@ const show = async (interaction) => {
   await interaction.editReply(message);
 };
 
-module.exports = {
-  show
-};
+module.exports = { show };

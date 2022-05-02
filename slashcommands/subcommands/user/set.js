@@ -3,15 +3,12 @@ const { updateUser } = require("../../../database/updateUser");
 const { repair } = require("./repair");
 
 const set = async (client, interaction) => {
-  const newRankName = interaction.options.getString('rank');
   const member = interaction.options.getMember('gracz');
-
-
+  const newRankName = interaction.options.getString('rank');
   if (!newRankName)
     return await interaction.editReply('Nie udało sie pobrać nazwy nowego stopnia');
 
   const newRankData = await getRankData({ name: newRankName });
-
   if (!newRankData.valid)
     return await interaction.editReply(newRankData.errorMessage);
 
@@ -26,13 +23,10 @@ const set = async (client, interaction) => {
     }
   });
 
-  if (!result.valid) {
-    await interaction.editReply(result.errorMessage);
-  }
-  
+  if (!result.valid) 
+    return await interaction.editReply(result.errorMessage);
+
   repair(client, interaction, `Poprawnie zaktualizowano stopień <@${member.user.id}> w bazie.\nBot sam naprawił:\n\n`);
 };
 
-module.exports = {
-  set
-};
+module.exports = { set };

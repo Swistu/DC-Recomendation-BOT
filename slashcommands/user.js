@@ -3,7 +3,6 @@ const { add } = require("./subcommands/user/add");
 const { set } = require("./subcommands/user/set");
 const constants = require("../utility/constants");
 
-
 const getAllRanks = (ranks) => {
   const ranksTab = Object.values(ranks);
 

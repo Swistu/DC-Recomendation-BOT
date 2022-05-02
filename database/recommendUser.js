@@ -1,92 +1,43 @@
-const { client, database } = require('./mongodb');
 const { canUserAddRecommendation } = require('./canUserAddRecommendation');
-const { updateUser } = require('./updateUser');
-const constants = require('../utility/constants');
+const { client, database } = require('./mongodb');
 
-const recommendUser = async (memberRecommender, memberRecommended, memberRank, korpusRekomendowanego, reason) => {
-  const checkPromotion = async (currentNumber, promotion = false, rank) => {
-    if (promotion === true)
-      return true;
-
-    switch (korpusRekomendowanego) {
-      case constants.CORPS.KORPUS_STRZELCOW:
-        if (currentNumber >= 3)
-          if (rank !== constants.RANKS.PLUTONOWY)
-            promotion = true;
-          else if (currentNumber >= 4)
-            promotion = true;
-        break;
-      case constants.CORPS.KORPUS_PODOFICEROW:
-        if (currentNumber >= 4)
-          if (rank !== constants.RANKS.STARSZY_CHORAZY_SZTABOWY)
-            promotion = true;
-          else if (currentNumber >= 5)
-            promotion = true;
-        break;
-      case constants.CORPS.KORPUS_OFICEROW:
-        if (currentNumber >= 5)
-          promotion = true;
-        break;
-    }
-
-    if (promotion === true)
-      await updateUser(memberRecommended.user.id, { $set: { promotion: true } });
-    else
-      return false;
-  }
-
+const recommendUser = async (recommenderID, recommendedID, reason, negativeRecommend = false) => {
   try {
-    const canRecommend = await canUserAddRecommendation(memberRecommender, memberRecommended);
-    if (!canRecommend.valid)
-      return {
-        valid: false,
-        errorMessage: canRecommend.errorMessage
-      };
+    const canRecommend = await canUserAddRecommendation(recommenderID, recommendedID);
+    if (!canRecommend.valid && !negativeRecommend)
+      return { valid: false, errorMessage: canRecommend.errorMessage };
+
+    if (negativeRecommend)
+      numberValue = -1;
+    else
+      numberValue = 1;
 
     await client.connect();
-
-    const result = await database.collection("users").findOneAndUpdate(
-      { userID: memberRecommended.user.id },
+    const result = await database.collection('users').findOneAndUpdate(
+      { userID: recommendedID },
       {
-        $setOnInsert: { discordTag: memberRecommended.user.tag, userID: memberRecommended.user.id, corps: korpusRekomendowanego, rank: memberRank, promotion: false },
-        $inc: { number: 1, currentNumber: 1 },
+        $inc: { number: numberValue, currentNumber: numberValue },
         $push: {
           recommendations: {
-            userID: memberRecommender.user.id,
+            userID: recommenderID,
             reason: reason
           }
         }
       },
-      { upsert: true, returnDocument: "after" }
-    )
+      { upsert: true, returnDocument: 'after' }
+    );
 
     if (!result)
-      return {
-        valid: false,
-        errorMessage: "Jakis błąd przy dodawaniu do serwera. Rekomendacja nie weszła"
-      }
+      return { valid: false, errorMessage: 'Błąd przy dodawaniu do serwera. Rekomendacja dla <@${recommendedID}> nie weszła' };
+    if (result)
+      return { valid: true, payLoad: result };
 
-    if (result) {
-      await checkPromotion(result.value.currentNumber, result.value.promotion, result.value.rank);
-      return {
-        valid: true,
-        payLoad: result
-      };
-    }
-
-    return {
-      valid: false,
-      errorMessage: "Błąd przy pobieraniu/aktualizowaniu danych"
-    }
   } catch (e) {
     console.error(e);
-    return {
-      valid: false,
-      errorMessage: "Błąd przy połączeniu z bazą danych."
-    };
+    return { valid: false, errorMessage: 'Błąd przy połączeniu z bazą danych.' };
   } finally {
     await client.close();
   }
-}
+};
 
 exports.recommendUser = recommendUser;

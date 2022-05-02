@@ -5,11 +5,8 @@ const show = async (interaction) => {
   await interaction.editReply("Sprawdzam awanse...");
 
   const response = await getAllPromotionsList();
-
-  if (!response.valid) {
-    await interaction.editReply(response.errorMessage);
-    return;
-  }
+  if (!response.valid) 
+    return await interaction.editReply(response.errorMessage);
 
   let availablePromotions = "Lista graczy do awansu:\n\n";
   let unAvailablePromotions = "Lista graczy, którzy nie mogą dostać awansu z powodu niezgodności danych:\n\n";
@@ -47,6 +44,4 @@ const show = async (interaction) => {
   await interaction.editReply(availablePromotions + "\n\n" + unAvailablePromotions);
 };
 
-module.exports = {
-  show
-};
+module.exports = { show };

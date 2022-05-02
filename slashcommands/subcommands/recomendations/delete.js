@@ -2,10 +2,9 @@ const { getUserRecommendations } = require('../../../database/getUserRecommendat
 const { updateUser } = require('../../../database/updateUser');
 
 const getUserRecommendationIndex = (userID, recommendationsArray = []) => {
-  for (let i = 0; i < recommendationsArray.length; i++) {
+  for (let i = 0; i < recommendationsArray.length; i++)
     if (recommendationsArray[i].userID === userID)
       return i;
-  }
 
   return null;
 }
@@ -21,9 +20,8 @@ const delet = async (interaction) => {
     return await interaction.editReply(userRecommendationsResponse.errorMessage);
 
   const recommendationIndex = getUserRecommendationIndex(memberRecommender.id, userRecommendationsResponse.payLoad.recommendations);
-  if (recommendationIndex === null) {
+  if (recommendationIndex === null)
     return await interaction.editReply(`<@${memberRecommended.user.id}> nie ma od Ciebie rekomendacji.`);
-  }
 
   const result = await updateUser(memberRecommended.user.id, {
     $inc: { number: -1, currentNumber: -1 },
@@ -34,15 +32,10 @@ const delet = async (interaction) => {
       promotion: false
     }
   })
-
-  if (!result.valid) {
-    await interaction.editReply(result.errorMessage);
-    return;
-  }
+  if (!result.valid)
+    return await interaction.editReply(result.errorMessage);
 
   await interaction.editReply(`Usunięto 1 rekomendacje graczowi <@${memberRecommended.user.id}>`);
 };
 
-module.exports = {
-  delet
-};
+module.exports = { delet };

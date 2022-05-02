@@ -9,38 +9,26 @@ const repair = async (client, interaction, message = '') => {
   await interaction.editReply('Trwa naprawiania gracza...');
   const user = await interaction.options.getMember('gracz');
 
-
   if (message === '')
     message = 'Bot naprawił:\n';
 
-  if (!user) {
-    await interaction.editReply('Nie udało sie pobrać danych gracza.');
-    return 0;
-  }
+  if (!user)
+    return await interaction.editReply('Nie udało sie pobrać danych gracza.');
 
+  // checking if we have user in database if not try to add one
   const userData = await getUserData(user.user.id);
-
-  // checking if we have user in database if not add one
   if (!userData.valid) {
     if (userData.errorMessage === `Nie znaleziono gracza <@${user.user.id}> w bazie danych.`) {
       const userRankRoles = await getUserRoles(user, "rank");
 
-      if (!userRankRoles) {
-        await interaction.editReply('Użytkownik nie ma nadanych ról.\nDodaj odpowiedni stopień/role użytkownikowi.');
-        return 0;
-      }
-
-      if (userRankRoles.length > 1) {
-        await interaction.editReply('Użytkownik może posiadać tylko 1 stopień.');
-        return 0;
-      }
+      if (!userRankRoles)
+        return await interaction.editReply('Użytkownik nie ma nadanych ról.\nDodaj odpowiedni stopień/role użytkownikowi.');
+      if (userRankRoles.length > 1)
+        return await interaction.editReply('Użytkownik może posiadać tylko 1 stopień.');
 
       const rankData = await getRankData({ name: userRankRoles[0] })
-
-      if (!rankData.valid) {
-        await interaction.editReply(rankData.errorMessage);
-        return 0;
-      }
+      if (!rankData.valid)
+        return await interaction.editReply(rankData.errorMessage);
 
       const result = await updateUser(user.user.id, {
         $set: {
@@ -55,19 +43,13 @@ const repair = async (client, interaction, message = '') => {
         }
       }, { upsert: true });
 
-      if (!result.valid) {
-        await interaction.editReply(err);
-        return 0;
-      }
+      if (!result.valid)
+        return await interaction.editReply(err);
+
       message += 'Brak istnienia danych użytkownika w bazie\n';
-
-      repair(client, interaction, message);
-
-      return 0;
-    } else {
-      await interaction.editReply(userData.errorMessage);
-      return 0;
-    }
+      return repair(client, interaction, message);
+    } else
+      return await interaction.editReply(userData.errorMessage);
   }
 
   // Check if user is ready for promotion and repair any rank problems
@@ -114,7 +96,7 @@ const repair = async (client, interaction, message = '') => {
   const userRoles = await getUserRoles(user);
   const unvalidRolesName = [];
 
-  // Checking if user have correct roles on discord server
+  // Checking if user have correct roles on discord server, add/remove incorrect one
   if (userRoles) {
     if (!userRoles.find(role => role === userData.payLoad.rank)) {
       user.roles.add(await getRole(client, userData.payLoad.rank).catch((e) => console.error(e)));
@@ -126,9 +108,8 @@ const repair = async (client, interaction, message = '') => {
     }
 
     for (const role of userRoles) {
-      if (role === userData.payLoad.rank || role === userData.payLoad.corps) {
+      if (role === userData.payLoad.rank || role === userData.payLoad.corps)
         continue;
-      }
 
       unvalidRolesName.push(role);
     }
@@ -136,9 +117,8 @@ const repair = async (client, interaction, message = '') => {
     if (unvalidRolesName.length > 0) {
       const unvalidRoles = [];
 
-      for (const unvalidRole of unvalidRolesName) {
+      for (const unvalidRole of unvalidRolesName)
         unvalidRoles.push(await getRole(client, unvalidRole).catch((e) => console.error(e)));
-      }
 
       if (unvalidRoles.length > 0) {
         for (const role of unvalidRoles)
@@ -154,14 +134,11 @@ const repair = async (client, interaction, message = '') => {
     message += 'Dodanie odpowiednich stopni użytkownikowi.';
   }
 
-  if (message === 'Bot naprawił:\n') {
+  if (message === 'Bot naprawił:\n')
     message = 'Bot nic nie naprawił :upside_down:\nIstnieje szansa, że bez sensu użyłeś tej komendy.';
-  }
 
   await interaction.editReply(`\n\n${message}`);
-}
+};
 
 
-module.exports = {
-  repair
-}
+module.exports = { repair };

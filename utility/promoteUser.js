@@ -4,19 +4,15 @@ const { updateUser } = require('../database/updateUser');
 const promoteUser = async (user) => {
   const response = await getUserPromotionData(user);
 
-  if (!response.valid) {
-    return {
-      valid: false,
-      errorMessage: response.errorMessage
-    };
-  }
+  if (!response.valid)
+    return { valid: false, errorMessage: response.errorMessage };
 
   const oldRole = user.roles.cache.find(role => role.name === response.payLoad.oldRank);
   const oldCorpsRole = user.roles.cache.find(role => role.name === response.payLoad.oldCorps);
   const newRole = user.guild.roles.cache.find(role => role.name === response.payLoad.newRank);
   const newCorpsRole = user.guild.roles.cache.find(role => role.name === response.payLoad.newCorps);
 
-  if (!oldRole || !oldCorpsRole || !newRole || !newCorpsRole) {
+  if (!oldRole || !oldCorpsRole || !newRole || !newCorpsRole)
     return {
       valid: false,
       errorMessage: `Błąd podczas wczytywania korpusu lub stopnia dla gracza <@${user.user.id}>
@@ -28,7 +24,7 @@ const promoteUser = async (user) => {
         userID: user.user.id
       }
     };
-  }
+
 
   const userUpdated = await updateUser(user.user.id, {
     $set: {
@@ -40,7 +36,7 @@ const promoteUser = async (user) => {
     }
   });
 
-  if (!userUpdated.valid) {
+  if (!userUpdated.valid)
     return {
       valid: false,
       errorMessage: `Błąd podczas aktualizowania danych <@${user.user.id}>. Awans nie uznany.`,
@@ -48,7 +44,6 @@ const promoteUser = async (user) => {
         userID: user.user.id,
       }
     }
-  }
 
   user.roles.remove(oldRole);
   user.roles.add(newRole);
@@ -65,8 +60,6 @@ const promoteUser = async (user) => {
       newCorps: response.payLoad.newCorps
     }
   }
-}
+};
 
-module.exports = {
-  promoteUser
-}
+module.exports = { promoteUser };

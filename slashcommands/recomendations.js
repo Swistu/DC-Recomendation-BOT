@@ -7,7 +7,7 @@ const run = async (client, interaction) => {
 
   switch (await interaction.options.getSubcommand()) {
     case 'dodaj':
-      add(interaction);
+      add(client, interaction);
       break;
     case 'usuń':
       delet(interaction);
@@ -18,7 +18,7 @@ const run = async (client, interaction) => {
     default:
       return await interaction.editReply('Niepoprawna komenda');
   }
-}
+};
 
 module.exports = {
   name: 'rekomendacje',
@@ -40,6 +40,11 @@ module.exports = {
           description: 'Dlaczego dostaje rekomendacje.',
           type: 'STRING',
           required: true
+        },
+        {
+          name: 'ujemna',
+          description: 'Czy ma to być ujemna rekomendacja?',
+          type: 'BOOLEAN',
         }
       ]
     },

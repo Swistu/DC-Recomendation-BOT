@@ -9,35 +9,18 @@ const getUserRecommendations = async (userToCheck) => {
       { projection: { recommendations: 1, _id: 0 } }
     );
 
-    if (!result) {
-      return {
-        valid: false,
-        errorMessage: `Nie znaleziono <@${userToCheck.id}> w bazie.`
-      };
-    }
+    if (!result)
+      return { valid: false, errorMessage: `Nie znaleziono <@${userToCheck.id}> w bazie.` };
+    if (result.recommendations.length === 0)
+      return { valid: false, errorMessage: `<@${userToCheck.id}> nie posiada rekomendacji.` };
 
-    if (result.recommendations.length === 0) {
-      return {
-        valid: false,
-        errorMessage: `<@${userToCheck.id}> nie posiada rekomendacji.`
-      };
-    }
-
-    return {
-      valid: true,
-      payLoad: {
-        recommendations: result.recommendations
-      }
-    };
+    return { valid: true, payLoad: { recommendations: result.recommendations } };
   } catch (e) {
     console.error(e);
-    return {
-      valid: false,
-      errorMessage: 'Błąd połączenia z bazą'
-    };
+    return { valid: false, errorMessage: 'Błąd połączenia z bazą' };
   } finally {
     await client.close();
   }
-}
+};
 
 exports.getUserRecommendations = getUserRecommendations;
