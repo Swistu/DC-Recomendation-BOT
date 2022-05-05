@@ -58,6 +58,11 @@ module.exports = {
           description: 'Komu usuwasz rekomendacje',
           type: 'USER',
           required: true,
+        },
+        {
+          name: 'ujemna',
+          description: 'Czy ma chodzi o ujemną rekomendacje?',
+          type: 'BOOLEAN',
         }
       ]
     },

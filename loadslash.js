@@ -9,7 +9,7 @@ let bot = {
   client
 }
 
-const guildId = '935268119365156884';
+const guildId = process.env.DICORD_GUILD_ID;
 
 client.slashcommands= new DiscordJS.Collection();
 

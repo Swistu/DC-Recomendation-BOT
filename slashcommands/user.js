@@ -1,4 +1,5 @@
 const { repair } = require("./subcommands/user/repair");
+const { show } = require("./subcommands/user/show");
 const { add } = require("./subcommands/user/add");
 const { set } = require("./subcommands/user/set");
 const constants = require("../utility/constants");
@@ -8,21 +9,23 @@ const getAllRanks = (ranks) => {
 
   return ranksTab.map(element => ({ name: element, value: element }))
 }
-
 const allRanks = getAllRanks(constants.RANKS);
 
 const run = async (client, interaction) => {
   await interaction.reply('Uruchamiam komende...');
 
   switch (await interaction.options.getSubcommand()) {
-    case 'napraw':
-      repair(client, interaction);
+    case 'pokaż':
+      show(interaction);
       break;
     case 'dodaj':
       add(client, interaction);
       break;
     case 'ustaw':
       set(client, interaction);
+      break;
+    case 'napraw':
+      repair(client, interaction);
       break;
     default:
       return await interaction.editReply('Niepoprawna subkomenda');
@@ -34,13 +37,13 @@ module.exports = {
   description: 'test',
   options: [
     {
-      name: 'napraw',
-      description: 'Naprawia rangi/ustawienia/baze danych użytkownika.',
+      name: 'pokaż',
+      description: 'Pokazuje wszystkie dane na temat gracza..',
       type: 1,
       options: [
         {
           name: 'gracz',
-          description: 'Nick gracza do naprawy',
+          description: 'Nick gracza, którego chcesz sprawdzić.',
           type: 'USER',
           required: true,
         },
@@ -78,7 +81,20 @@ module.exports = {
           choices: allRanks
         },
       ]
-    }
+    },
+    {
+      name: 'napraw',
+      description: 'Naprawia rangi/ustawienia/baze danych użytkownika.',
+      type: 1,
+      options: [
+        {
+          name: 'gracz',
+          description: 'Nick gracza do naprawy',
+          type: 'USER',
+          required: true,
+        },
+      ],
+    },
   ],
   run,
 };

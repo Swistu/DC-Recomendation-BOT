@@ -5,11 +5,11 @@ const run = async (client, interaction) => {
   await interaction.reply('Trwa sprawdzanie awansów...');
   
   switch (await interaction.options.getSubcommand()) {
-    case 'przyznaj':
-      give(client, interaction);
-      break;
     case 'pokaż':
       show(interaction);
+      break;
+    case 'przyznaj':
+      give(client, interaction);
       break;
     default:
       return await interaction.editReply('Niepoprawna subkomenda');
@@ -20,6 +20,11 @@ module.exports = {
   name: 'awanse',
   description: 'Sprawdzanie/przyznawanie awansów.',
   options: [
+    {
+      name: 'pokaż',
+      description: 'Pokazuje wszystke nadchodzące awanse.',
+      type: 1,
+    },
     {
       name: 'przyznaj',
       description: 'Przyznaje wszystkie możliwe awanse.',
@@ -32,11 +37,6 @@ module.exports = {
         },
       ]
     },
-    {
-      name: 'pokaż',
-      description: 'Pokazuje wszystke nadchodzące awanse.',
-      type: 1,
-    }
   ],
   run,
 };

@@ -23,7 +23,7 @@ const checkPromotion = (rank, corps, currentNumber) => {
         promotion = true;
       break;
   }
-  return false;
+  return promotion;
 };
 
 module.exports = { checkPromotion };

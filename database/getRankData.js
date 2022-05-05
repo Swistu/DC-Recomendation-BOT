@@ -7,7 +7,6 @@ const getRankData = async (query = {}, projection = []) => {
 
     if (typeof (projection) === typeof ('string'))
       Object.assign(projectionObj, { [projection]: 1 });
-
     if (typeof (projection) === typeof ([]))
       projection.forEach((element) => { Object.assign(projectionObj, { [element]: 1 }) });
 
@@ -17,14 +16,11 @@ const getRankData = async (query = {}, projection = []) => {
     );
 
     if (result === null)
-      return { valid: false, errorMessage: 'Nie znaleziono rangi w bazie danych.', };
-
+      return { valid: false, errorMessage: 'Nie znaleziono rangi w bazie danych.' };
     if (!result)
       return { valid: false, errorMessage: 'Błąd podczas pobierania danych.' };
 
-
     return { valid: true, payLoad: { ...result } };
-
   } catch (e) {
     console.error(e);
     return { valid: false, errorMessage: 'Błąd połączenia z bazą.' };

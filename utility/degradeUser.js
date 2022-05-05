@@ -36,7 +36,8 @@ const degradeUser = async (userData) => {
       corps: newRankData.payLoad.corps,
       promotion: false,
       currentNumber: 0,
-      recommendations: []
+      recommendations: [],
+      negativeRecommendations: []
     }
   });
 

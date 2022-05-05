@@ -3,9 +3,13 @@ const { client, database } = require('./mongodb');
 
 const recommendUser = async (recommenderID, recommendedID, reason, negativeRecommend = false) => {
   try {
-    const canRecommend = await canUserAddRecommendation(recommenderID, recommendedID);
-    if (!canRecommend.valid && !negativeRecommend)
+    const canRecommend = await canUserAddRecommendation(recommenderID, recommendedID, negativeRecommend);
+    if (!canRecommend.valid)
       return { valid: false, errorMessage: canRecommend.errorMessage };
+
+    let array = 'recommendations';
+    if (negativeRecommend)
+      array = 'negativeRecommendations'
 
     if (negativeRecommend)
       numberValue = -1;
@@ -18,7 +22,7 @@ const recommendUser = async (recommenderID, recommendedID, reason, negativeRecom
       {
         $inc: { number: numberValue, currentNumber: numberValue },
         $push: {
-          recommendations: {
+          [array]: {
             userID: recommenderID,
             reason: reason
           }

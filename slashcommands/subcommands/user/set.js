@@ -1,18 +1,31 @@
+const { getUserData } = require("../../../database/gerUserData");
 const { getRankData } = require("../../../database/getRankData");
 const { updateUser } = require("../../../database/updateUser");
 const { repair } = require("./repair");
+const constants = require("../../../utility/constants");
 
 const set = async (client, interaction) => {
-  const member = interaction.options.getMember('gracz');
+  const userProvider = interaction.member;
+  const providerRank = await getUserData(userProvider.id, "rank");
+  if (!providerRank.valid)
+    return await interaction.editReply(providerRank.errorMessage);
+
+  if (![constants.RANKS.PODPULKOWNIK, constants.RANKS.PULKOWNIK, constants.RANKS.GENERAL].some(rank => rank === providerRank.payLoad.rank))
+    return await interaction.editReply('Twój stopień nie pozwala na ustawianie rang.');
+
+  const user = interaction.options.getMember('gracz');
   const newRankName = interaction.options.getString('rank');
+
+  if (!user)
+    return await interaction.editReply('Podano niewłaściwego gracza.');
   if (!newRankName)
-    return await interaction.editReply('Nie udało sie pobrać nazwy nowego stopnia');
+    return await interaction.editReply('Nie udało sie pobrać nazwy nowego stopnia.');
 
   const newRankData = await getRankData({ name: newRankName });
   if (!newRankData.valid)
     return await interaction.editReply(newRankData.errorMessage);
 
-  const result = await updateUser(member.user.id, {
+  const result = await updateUser(user.user.id, {
     $set: {
       currentNumber: 0,
       corps: newRankData.payLoad.corps,
@@ -23,10 +36,10 @@ const set = async (client, interaction) => {
     }
   });
 
-  if (!result.valid) 
+  if (!result.valid)
     return await interaction.editReply(result.errorMessage);
 
-  repair(client, interaction, `Poprawnie zaktualizowano stopień <@${member.user.id}> w bazie.\nBot sam naprawił:\n\n`);
+  repair(client, interaction, `Poprawnie zaktualizowano stopień <@${user.user.id}> w bazie.\nBot sam naprawił:\n\n`);
 };
 
 module.exports = { set };

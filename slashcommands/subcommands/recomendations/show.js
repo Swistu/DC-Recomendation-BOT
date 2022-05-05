@@ -1,12 +1,11 @@
 const { getUserRecommendations } = require("../../../database/getUserRecommendations");
 
-
 const show = async (interaction) => {
   const userToCheck = interaction.options.getMember("gracz");
   if (!userToCheck)
     return interaction.editReply('Niepoprawny użytkownik');
 
-  const response = await getUserRecommendations(userToCheck);
+  const response = await getUserRecommendations(userToCheck.user.id);
   if (!response.valid)
     return await interaction.editReply(response.errorMessage);
 
