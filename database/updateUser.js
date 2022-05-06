@@ -12,7 +12,7 @@ const updateUser = async (userID, update = {}, options = {}) => {
     if (result.matchedCount === 0 && result.upsertedCount === 0)
       return { valid: false, errorMessage: `Nie znaleziono ${userID} w bazie.` };
     if (result.modifiedCount === 0 && result.upsertedCount === 0)
-      return { valid: false, errorMessage: `Znaleziono ${userID} w bazie, ale nie edytowano go.` };
+      return { valid: false, errorMessage: `Znaleziono <@${userID}> w bazie, ale nie edytowano go.` };
     if (!result)
       return { valid: false, errorMessage: `Wystąpił podczas edytowania w bazie.` };
 

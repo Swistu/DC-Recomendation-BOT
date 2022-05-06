@@ -33,6 +33,7 @@ const set = async (client, interaction) => {
       promotion: false,
       rank: newRankData.payLoad.name,
       recommendations: [],
+      negativeRecommendations: [],
     }
   });
 

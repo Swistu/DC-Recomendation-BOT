@@ -154,13 +154,13 @@ const repair = async (client, interaction, message = '') => {
     }
     if (!userRoles.find(role => role === userData.payLoad.corps)) {
       await user.roles.add(await getRole(client, userData.payLoad.corps)
-        .then(() => {
-          message += `Dodanie brakującego korpusu ${userData.payLoad.corps}\n`;
-        })
         .catch((e) => {
           console.error(e);
           message += `Nie udało sie pobrać nowej roli(${userData.payLoad.corps}) dla gracza z discorda\n`;
         }))
+        .then(() => {
+          message += `Dodanie brakującego korpusu ${userData.payLoad.corps}\n`;
+        })
         .catch((e) => {
           console.error(e);
           message += `Nie udało sie ustawic nowej roli(${userData.payLoad.corps}) dla gracza na discordzie\n`;

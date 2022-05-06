@@ -74,21 +74,12 @@ const add = async (client, interaction) => {
     if (!result.valid)
       return await interaction.editReply(result.errorMessage);
 
-    if (result.payLoad.value.currentNumber < 0) {
-      const degradedUser = await degradeUser(result.payLoad.value);
-      if (!degradedUser.valid) {
-        return await interaction.editReply(degradedUser.errorMessage);
+    if (result.payLoad.promotion === true)
+      if (!checkPromotion(result.payLoad.rank, result.payLoad.corps, result.payLoad.currentNumber)) {
+        const updatedUser = await updateUser(memberRecommended.user.id, { $set: { promotion: false } });
+        if (!updatedUser.valid)
+          return await interaction.editReply(updatedUser.errorMessage);
       }
-
-      const message = `Z powodu ujemnej rekomendacji gracza <@${memberRecommender.user.id}> ${degradedUser.payLoad.oldRank} <@${degradedUser.payLoad.userID}> został zdegradowany do stopnia ${degradedUser.payLoad.newRank}.\n\nNastąpi teraz nadanie odpowiednich ról.\n`;
-      return await repair(client, interaction, message);
-    }
-
-    if (!checkPromotion(result.payLoad.rank, result.payLoad.corps, result.payLoad.currentNumber)) {
-      const updatedUser = await updateUser(memberRecommended.user.id, { $set: { promotion: false } });
-      if (!updatedUser.valid)
-        return await interaction.reply(updatedUser.errorMessage);
-    }
 
     await interaction.editReply(`<@${memberRecommended.user.id}> otrzymał ujemną rekomendacje od <@${memberRecommender.user.id}> powód:\n ${reason}`);
   } else {

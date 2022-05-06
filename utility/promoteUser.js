@@ -32,7 +32,8 @@ const promoteUser = async (user) => {
       corps: response.payLoad.newCorps,
       promotion: false,
       currentNumber: 0,
-      recommendations: []
+      recommendations: [],
+      negativeRecommendations: []
     }
   });
 
@@ -45,10 +46,10 @@ const promoteUser = async (user) => {
       }
     }
 
-  user.roles.remove(oldRole);
-  user.roles.add(newRole);
-  user.roles.remove(oldCorpsRole);
-  user.roles.add(newCorpsRole);
+  user.roles.remove(oldRole).catch((e) => { console.error(e) });
+  user.roles.add(newRole).catch((e) => { console.error(e) });
+  user.roles.remove(oldCorpsRole).catch((e) => { console.error(e) });
+  user.roles.add(newCorpsRole).catch((e) => { console.error(e) });
 
   return {
     valid: true,

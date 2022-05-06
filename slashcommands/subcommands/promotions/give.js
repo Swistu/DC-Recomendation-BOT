@@ -3,6 +3,7 @@ const { getUserData } = require("../../../database/gerUserData");
 const { promoteUser } = require("../../../utility/promoteUser");
 const { updateUser } = require("../../../database/updateUser");
 const constants = require("../../../utility/constants");
+require("dotenv").config();
 
 const repairUnvalidUsers = async (unvalidUsers) => {
   let errorMessage = '';
@@ -49,7 +50,7 @@ const give = async (client, interaction) => {
   if (userList.payLoad.validUserList.length === 0)
     return await interaction.editReply("Nie ma graczy, których można awansować.");
 
-  const guildMembers = await client.guilds.cache.get(constants.GUILD_ID).members
+  const guildMembers = await client.guilds.cache.get(process.env.DICORD_GUILD_ID).members
   const responseList = [];
   const unvalidUsers = [];
 

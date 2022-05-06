@@ -66,19 +66,6 @@ module.exports = {
         }
       ]
     },
-    {
-      name: 'pokaż',
-      description: 'Pokazuje aktualne rekomendacje danego gracza.',
-      type: 1,
-      options: [
-        {
-          name: 'gracz',
-          description: 'Komu chcesz sprawdzić rekomendacje.',
-          type: 'USER',
-          required: true,
-        },
-      ]
-    }
   ],
   run
 };
