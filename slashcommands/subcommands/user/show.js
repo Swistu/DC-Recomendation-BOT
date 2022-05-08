@@ -2,27 +2,20 @@ const { getUserData } = require("../../../database/gerUserData");
 const constants = require("../../../utility/constants");
 
 const numberToPromote = (corps, rank) => {
-  let number = null;
-
   switch (corps) {
     case constants.CORPS.KORPUS_STRZELCOW:
       if (rank === constants.RANKS.PLUTONOWY)
-        number = '4';
-      number = '3';
-      break;
+        return number = '4';
+      return number = '3';
     case constants.CORPS.KORPUS_PODOFICEROW:
       if (rank === constants.RANKS.STARSZY_CHORAZY_SZTABOWY)
-        number = '5';
-      number = '4';
-      break;
+        return number = '5';
+      return number = '4';
     case constants.CORPS.KORPUS_OFICEROW:
-      number = '5';
-      break;
+      return number = '5';
   }
-  if (!isNaN(number))
-    return number
 
-  return 'nie wiem';
+  return null;
 };
 
 const show = async (interaction) => {
@@ -35,9 +28,10 @@ const show = async (interaction) => {
     return await interaction.editReply(userData.errorMessage);
 
   let userRecommendations = '';
-  userData.payLoad.recommendations.forEach(element => {
-    userRecommendations += `<@${element.userID}> - ${element.reason}\n`
-  });
+  if (typeof userData.payLoad.recommendations === typeof [])
+    userData.payLoad.recommendations.forEach(element => {
+      userRecommendations += `<@${element.userID}> - ${element.reason}\n`
+    });
   if (userRecommendations === '')
     userRecommendations = 'Brak';
 
