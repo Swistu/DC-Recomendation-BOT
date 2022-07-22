@@ -6,7 +6,6 @@ const getAllData = async () => {
         const db = await database.collections();
         const coll = await database.collection("users").find().toArray();
         const output = JSON.stringify(coll, null, 2);
-        //console.log(output);
         return output;
     } catch (e) {
         console.error(e);
