@@ -1,5 +1,8 @@
 const DiscordJS = require("discord.js");
+const { getAllData } = require("./database/getAllData");
+const { sendMessage } = require("./utility/sendMessage");
 require("dotenv").config();
+const fs = require("fs");
 
 
 const client = new DiscordJS.Client({
@@ -29,8 +32,11 @@ client.on("interactionCreate", interaction => {
 
 
 client.on('ready', async () => {
-
   console.log(`Logged in as ${client.user.tag}!`);
+  const data = await getAllData();
+  const timestamp = Date.now().toString()
+  fs.writeFile("./" + timestamp + ".json", data, (error) => {console.log(error)});
+  sendMessage(data, "935268120174682129", bot, timestamp);
 });
 
 client.login(process.env.BOT_TOKEN);
