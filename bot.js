@@ -36,7 +36,7 @@ client.on('ready', async () => {
   const data = await getAllData();
   const timestamp = Date.now().toString()
   fs.writeFile("./" + timestamp + ".json", data, (error) => {console.log(error)});
-  sendMessage(data, "935268120174682129", bot, timestamp);
+  sendMessage(data, process.env.BACKUP_CHANNEL_ID, bot, timestamp);
 });
 
 client.login(process.env.BOT_TOKEN);
