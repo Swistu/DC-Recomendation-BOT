@@ -21,6 +21,12 @@ jobs:
         node-version: '16.x'
         cache: 'npm'
     - run: npm ci
+    - name: 'Create env file'
+      run: |
+        touch .env
+        echo BOT_TOKEN=${{ env.BOT_TOKEN }} >> .env
+        cat .env
+    
     - run: npm run start --if-present
     
 
