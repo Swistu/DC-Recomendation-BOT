@@ -24,11 +24,9 @@ jobs:
     - name: 'Create env file'
       run: |
         touch .env
-        echo BOT_TOKEN=${{ env.BOT_TOKEN }} >> .env
+        echo BOT_TOKEN=${{secrets.BOT_TOKEN}} >> .env
         cat .env
-    
     - run: npm run start --if-present
-    
 
   deploy:
     needs: build
