@@ -30,13 +30,16 @@ client.on("interactionCreate", interaction => {
   slashcmd.run(client, interaction);
 });
 
-
 client.on('ready', async () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  const data = await getAllData();
-  const timestamp = Date.now().toString()
-  fs.writeFile("./" + timestamp + ".json", data, (error) => {console.log(error)});
-  sendMessage(data, process.env.BACKUP_CHANNEL_ID, bot, timestamp);
+
+  //Backup DB to channel only in production
+  if(process.env.NODE_ENV !== 'development'){
+    const data = await getAllData();
+    const timestamp = Date.now().toString()
+    fs.writeFile("./" + timestamp + ".json", data, (error) => {console.log(error)});
+    sendMessage(data, process.env.BACKUP_CHANNEL_ID, bot, timestamp);
+  }
 });
 
 client.login(process.env.BOT_TOKEN);
