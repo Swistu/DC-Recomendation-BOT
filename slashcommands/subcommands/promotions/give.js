@@ -3,6 +3,7 @@ const { getUserData } = require("../../../database/gerUserData");
 const { promoteUser } = require("../../../utility/promoteUser");
 const { updateUser } = require("../../../database/updateUser");
 const constants = require("../../../utility/constants");
+const { updateUserHistory } = require("../../../database/updateUserHistory");
 require("dotenv").config();
 
 const repairUnvalidUsers = async (unvalidUsers) => {

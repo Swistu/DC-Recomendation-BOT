@@ -1,8 +1,14 @@
+const { getUserData } = require('../database/gerUserData');
 const { getUserPromotionData } = require('../database/getUserPromotionData');
 const { updateUser } = require('../database/updateUser');
+const { updateUserHistory } = require('../database/updateUserHistory');
 
 const promoteUser = async (user) => {
   const response = await getUserPromotionData(user);
+  const userData = await getUserData(user.user.id, "rankData");
+
+  if (!userData.valid)
+    return { valid: false, errorMessage: userData.errorMessage };
 
   if (!response.valid)
     return { valid: false, errorMessage: response.errorMessage };
@@ -25,6 +31,8 @@ const promoteUser = async (user) => {
       }
     };
 
+
+
   const userUpdated = await updateUser(user.user.id, {
     $set: {
       'rankData.rank': response.payLoad.newRank,
@@ -44,6 +52,8 @@ const promoteUser = async (user) => {
         userID: user.user.id,
       }
     }
+
+  await updateUserHistory(user.user.id, response.payLoad.oldRank, userData.payLoad.rankData.positiveRecommendations, userData.payLoad.rankData.negativeRecommendations);
 
   user.roles.remove(oldRole).catch((e) => { console.error(e) });
   user.roles.add(newRole).catch((e) => { console.error(e) });
