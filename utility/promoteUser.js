@@ -25,15 +25,14 @@ const promoteUser = async (user) => {
       }
     };
 
-
   const userUpdated = await updateUser(user.user.id, {
     $set: {
-      rank: response.payLoad.newRank,
-      corps: response.payLoad.newCorps,
-      promotion: false,
-      currentNumber: 0,
-      recommendations: [],
-      negativeRecommendations: []
+      'rankData.rank': response.payLoad.newRank,
+      'rankData.corps': response.payLoad.newCorps,
+      'rankData.currentNumber': 0,
+      'rankData.promotion': false,
+      'rankData.negativeRecommendations': [],
+      'rankData.positiveRecommendations': [],
     }
   });
 

@@ -34,12 +34,17 @@ const repair = async (client, interaction, message = '') => {
         $set: {
           userID: user.user.id,
           discordTag: user.user.tag,
-          currentNumber: 0,
-          corps: rankData.payLoad.corps,
-          number: rankData.payLoad.number,
-          promotion: false,
-          rank: rankData.payLoad.name,
-          recommendations: [],
+          role: 'member',
+          accountActive: true,
+          rankData: {
+            rank: rankData.payLoad.name,
+            corps: rankData.payLoad.rankData.corps,
+            number: rankData.payLoad.rankData.number,
+            currentNumber: 0,
+            promotion: false,
+            negativeRecommendations: [],
+            positiveRecommendations: [],
+          }
         }
       }, { upsert: true });
 
@@ -57,30 +62,30 @@ const repair = async (client, interaction, message = '') => {
   }
 
   // Check if user is ready for promotion and repair any rank problems
-  if (userData.payLoad.promotion) {
-    const newRank = await getRankData({ number: userData.payLoad.number });
+  if (userData.payLoad.rankData.promotion) {
+    const newRank = await getRankData({ number: userData.payLoad.rankData.number });
 
     if (!newRank.valid) {
       if (newRank.errorMessage === 'Nie znaleziono rangi w bazie danych.') {
-        if (checkPromotion(userData.payLoad.rank, userData.payLoad.corps, userData.payLoad.currentNumber) === false) {
-          const updatedUser = await updateUser(userData.payLoad.userID, { $set: { promotion: false } });
+        if (checkPromotion(userData.payLoad.rankData.rank, userData.payLoad.rankData.corps, userData.payLoad.rankData.currentNumber) === false) {
+          const updatedUser = await updateUser(userData.payLoad.userID, { $set: { 'rankData.promotion': false } });
           if (!updatedUser.valid)
             message += `<@${userData.payLoad.userID} ma fałszywie ustawiony awans ale wystąpił błąd podczas aktualizowania.\nPowód: ${updatedUser.errorMessage}\n`
           else
             message += `Wykryto fałszywie ustawiony awans gracza. <@${userData.payLoad.userID}> nie jest teraz na liście do awansowania.\n`;
         } else {
           let newCorpsNumber;
-          switch (userData.payLoad.corps) {
+          switch (userData.payLoad.rankData.corps) {
             case constants.CORPS.KORPUS_OFICEROW:
               newCorpsNumber = 5;
               break;
             case constants.CORPS.KORPUS_PODOFICEROW:
-              if (userData.payLoad.rank === constants.RANKS.STARSZY_CHORAZY_SZTABOWY)
+              if (userData.payLoad.rankData.rank === constants.RANKS.STARSZY_CHORAZY_SZTABOWY)
                 newCorpsNumber = 5;
               newCorpsNumber = 4;
               break;
             case constants.CORPS.KORPUS_STRZELCOW:
-              if (userData.payLoad.rank === constants.RANKS.PLUTONOWY)
+              if (userData.payLoad.rankData.rank === constants.RANKS.PLUTONOWY)
                 newCorpsNumber = 4;
               newCorpsNumber = 3;
               break;
@@ -88,11 +93,11 @@ const repair = async (client, interaction, message = '') => {
               newCorpsNumber = false;
           }
           if (newCorpsNumber) {
-            const curretRank = await getRankData({ name: userData.payLoad.rank });
+            const curretRank = await getRankData({ name: userData.payLoad.rankData.rank });
             if (curretRank.valid) {
-              const newPossibleRank = await getRankData({ number: curretRank.payLoad.number + newCorpsNumber });
+              const newPossibleRank = await getRankData({ number: curretRank.payLoad.rankData.number + newCorpsNumber });
               if (newPossibleRank.valid) {
-                const updatedUser2 = await updateUser(userData.payLoad.userID, { $set: { number: curretRank.payLoad.number + newCorpsNumber } });
+                const updatedUser2 = await updateUser(userData.payLoad.userID, { $set: { number: curretRank.payLoad.rankData.number + newCorpsNumber } });
                 if (updatedUser2.valid)
                   message += `Poprawnie ustawiono nową liczbę wszystkich rekomedacji. <@${userData.payLoad.userID}> może teraz awansować\n`;
                 else
@@ -100,7 +105,7 @@ const repair = async (client, interaction, message = '') => {
               } else {
                 if (newPossibleRank.errorMessage === 'Nie znaleziono rangi w bazie danych.') {
                   message += `Nie znaleziono nowej rangi dla gracza. Awans <@${userData.payLoad.userID}> został fałyszwie ustawiony. Próba naprawy\n`;
-                  const updatedUser2 = await updateUser(userData.payLoad.userID, { $set: { promotion: false } });
+                  const updatedUser2 = await updateUser(userData.payLoad.userID, { $set: { 'rankData.promotion': false } });
                   if (!updatedUser2.valid)
                     message += `Nie udało sie ustawić promocji na fałsz.\nPowód: ${updatedUser2.errorMessage}\n`;
 
@@ -119,11 +124,9 @@ const repair = async (client, interaction, message = '') => {
         message += newRank.errorMessage;
     }
   } else {
-    if (checkPromotion(userData.payLoad.rank, userData.payLoad.corps, userData.payLoad.currentNumber)) {
+    if (checkPromotion(userData.payLoad.rankData.rank, userData.payLoad.rankData.corps, userData.payLoad.rankData.currentNumber)) {
       const updatedUser = await updateUser(userData.payLoad.userID, {
-        $set: {
-          promotion: true
-        }
+        $set: { 'rankData.promotion': false }
       });
 
       if (!updatedUser.valid)
@@ -138,36 +141,36 @@ const repair = async (client, interaction, message = '') => {
 
   // Checking if user have correct roles on discord server, add/remove incorrect one
   if (userRoles) {
-    if (!userRoles.find(role => role === userData.payLoad.rank)) {
-      await user.roles.add(await getRole(client, userData.payLoad.rank)
+    if (!userRoles.find(role => role === userData.payLoad.rankData.rank)) {
+      await user.roles.add(await getRole(client, userData.payLoad.rankData.rank)
         .catch((e) => {
           console.error(e);
-          message += `Nie udało sie pobrać nowej roli(${userData.payLoad.rank}) dla gracza z discorda\n`;
+          message += `Nie udało sie pobrać nowej roli(${userData.payLoad.rankData.rank}) dla gracza z discorda\n`;
         }))
         .then(() => {
-          message += `Dodanie brakującego stopnia ${userData.payLoad.rank}\n`;
+          message += `Dodanie brakującego stopnia ${userData.payLoad.rankData.rank}\n`;
         })
         .catch((e) => {
           console.error(e);
-          message += `Nie udało sie ustawic nowej roli(${userData.payLoad.rank}) dla gracza na discordzie\n`;
+          message += `Nie udało sie ustawic nowej roli(${userData.payLoad.rankData.rank}) dla gracza na discordzie\n`;
         });
     }
-    if (!userRoles.find(role => role === userData.payLoad.corps)) {
-      await user.roles.add(await getRole(client, userData.payLoad.corps)
+    if (!userRoles.find(role => role === userData.payLoad.rankData.corps)) {
+      await user.roles.add(await getRole(client, userData.payLoad.rankData.corps)
         .catch((e) => {
           console.error(e);
-          message += `Nie udało sie pobrać nowej roli(${userData.payLoad.corps}) dla gracza z discorda\n`;
+          message += `Nie udało sie pobrać nowej roli(${userData.payLoad.rankData.corps}) dla gracza z discorda\n`;
         }))
         .then(() => {
-          message += `Dodanie brakującego korpusu ${userData.payLoad.corps}\n`;
+          message += `Dodanie brakującego korpusu ${userData.payLoad.rankData.corps}\n`;
         })
         .catch((e) => {
           console.error(e);
-          message += `Nie udało sie ustawic nowej roli(${userData.payLoad.corps}) dla gracza na discordzie\n`;
+          message += `Nie udało sie ustawic nowej roli(${userData.payLoad.rankData.corps}) dla gracza na discordzie\n`;
         });
     }
     for (const role of userRoles) {
-      if (role === userData.payLoad.rank || role === userData.payLoad.corps)
+      if (role === userData.payLoad.rankData.rank || role === userData.payLoad.rankData.corps)
         continue;
 
       unvalidRolesName.push(role);
@@ -187,19 +190,19 @@ const repair = async (client, interaction, message = '') => {
       }
     }
   } else {
-    await user.roles.add(await getRole(client, userData.payLoad.rank).catch((e) => console.error(e)))
+    await user.roles.add(await getRole(client, userData.payLoad.rankData.rank).catch((e) => console.error(e)))
       .then(() => {
-        message += `Dodanie stopnia ${userData.payLoad.rank}.\n`;
+        message += `Dodanie stopnia ${userData.payLoad.rankData.rank}.\n`;
       })
       .catch(() => {
-        message += `Nieudało sie ustawić stopnia ${userData.payLoad.rank} graczowi.\n`;
+        message += `Nieudało sie ustawić stopnia ${userData.payLoad.rankData.rank} graczowi.\n`;
       });
-    await user.roles.add(await getRole(client, userData.payLoad.corps).catch((e) => console.error(e)))
+    await user.roles.add(await getRole(client, userData.payLoad.rankData.corps).catch((e) => console.error(e)))
       .then(() => {
-        message += `Dodanie stopnia ${userData.payLoad.corps}.\n`;
+        message += `Dodanie stopnia ${userData.payLoad.rankData.corps}.\n`;
       })
       .catch(() => {
-        message += `Nieudało sie ustawić stopnia ${userData.payLoad.corps} graczowi.\n`;
+        message += `Nieudało sie ustawić stopnia ${userData.payLoad.rankData.corps} graczowi.\n`;
       });
   }
 

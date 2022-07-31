@@ -6,11 +6,12 @@ const constants = require("../../../utility/constants");
 
 const set = async (client, interaction) => {
   const userProvider = interaction.member;
-  const providerRank = await getUserData(userProvider.id, "rank");
+  const providerRank = await getUserData(userProvider.id, "rankData");
+
   if (!providerRank.valid)
     return await interaction.editReply(providerRank.errorMessage);
 
-  if (![constants.RANKS.PODPULKOWNIK, constants.RANKS.PULKOWNIK, constants.RANKS.GENERAL].some(rank => rank === providerRank.payLoad.rank))
+  if (![constants.RANKS.PODPULKOWNIK, constants.RANKS.PULKOWNIK, constants.RANKS.GENERAL].some(rank => rank === providerRank.payLoad.rankData.rank))
     return await interaction.editReply('Twój stopień nie pozwala na ustawianie rang.');
 
   const user = interaction.options.getMember('gracz');
@@ -27,13 +28,15 @@ const set = async (client, interaction) => {
 
   const result = await updateUser(user.user.id, {
     $set: {
-      currentNumber: 0,
-      corps: newRankData.payLoad.corps,
-      number: newRankData.payLoad.number,
-      promotion: false,
-      rank: newRankData.payLoad.name,
-      recommendations: [],
-      negativeRecommendations: [],
+      rankData: {
+        rank: newRankData.payLoad.name,
+        corps: newRankData.payLoad.corps,
+        number: newRankData.payLoad.number,
+        currentNumber: 0,
+        promotion: false,
+        positiveRecommendations: [],
+        negativeRecommendations: [],
+      }
     }
   });
 

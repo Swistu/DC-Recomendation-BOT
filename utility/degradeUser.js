@@ -25,7 +25,7 @@ const degradeUser = async (userData) => {
   if (numberSubstracted === false)
     return { valid: false, errorMessage: `Nie udało sie ustalić nowej rangi dla <@${userData.userID}>.` };
 
-  const newRankData = await getRankData({ number: currentRankData.payLoad.number - numberSubstracted });
+  const newRankData = await getRankData({ number: currentRankData.payLoad.rankData.number - numberSubstracted });
   if (!newRankData.valid)
     return { valid: false, errorMessage: newRankData.errorMessage }
 
@@ -33,7 +33,7 @@ const degradeUser = async (userData) => {
   const userUpdated = await updateUser(userData.userID, {
     $set: {
       rank: newRankData.payLoad.name,
-      corps: newRankData.payLoad.corps,
+      corps: newRankData.payLoad.rankData.corps,
       promotion: false,
       currentNumber: 0,
       recommendations: [],
@@ -49,9 +49,9 @@ const degradeUser = async (userData) => {
     payLoad: {
       userID: userData.userID,
       oldRank: currentRankData.payLoad.name,
-      oldCorps: currentRankData.payLoad.corps,
+      oldCorps: currentRankData.payLoad.rankData.corps,
       newRank: newRankData.payLoad.name,
-      newCorps: newRankData.payLoad.corps
+      newCorps: newRankData.payLoad.rankData.corps
     }
   }
 };

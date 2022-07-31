@@ -7,10 +7,10 @@ const { repair } = require("../user/repair");
 const { degradeUser } = require("../../../utility/degradeUser");
 
 const checkUserRoles = (recommender, recommended, negativeRecommend) => {
-  const recommendedCorps = recommended.corps;
-  const recommenderCorps = recommender.corps;
-  const recommendedRank = recommended.rank;
-  const recommenderRank = recommender.rank;
+  const recommendedCorps = recommended.rankData.corps;
+  const recommenderCorps = recommender.rankData.corps;
+  const recommendedRank = recommended.rankData.rank;
+  const recommenderRank = recommender.rankData.rank;
 
   if (negativeRecommend)
     if ([constants.RANKS.PODPULKOWNIK, constants.RANKS.PULKOWNIK, constants.RANKS.GENERAL].some(rank => rank === recommenderRank))
@@ -74,9 +74,9 @@ const add = async (client, interaction) => {
     if (!result.valid)
       return await interaction.editReply(result.errorMessage);
 
-    if (result.payLoad.promotion === true)
-      if (!checkPromotion(result.payLoad.rank, result.payLoad.corps, result.payLoad.currentNumber)) {
-        const updatedUser = await updateUser(memberRecommended.user.id, { $set: { promotion: false } });
+    if (result.payLoad.rankData.promotion === true)
+      if (!checkPromotion(result.payLoad.rankData.rank, result.payLoad.rankData.corps, result.payLoad.rankData.currentNumber)) {
+        const updatedUser = await updateUser(memberRecommended.user.id, { $set: { 'rankData.promotion': false } });
         if (!updatedUser.valid)
           return await interaction.editReply(updatedUser.errorMessage);
       }
@@ -85,7 +85,7 @@ const add = async (client, interaction) => {
   } else {
     const result = await recommendUser(memberRecommender.user.id, memberRecommended.user.id, reason);
     if (!result.valid) {
-      if (result.errorMessage === `<@${memberRecommended.user.id}> już wcześniej otrzymał od Ciebie rekomendacje.`) {
+      if (result.errorMessage === `<@${memberRecommended.user.id}> już wcześniej otrzymał od Ciebie ${negativeRecommend ? 'ujemna' : ''} rekomendacje.`) {
         const message = await interaction.editReply(result.errorMessage);
         return message.react('🍄').catch(err => console.error(err));
       }
@@ -93,8 +93,8 @@ const add = async (client, interaction) => {
       return await interaction.editReply(result.errorMessage);
     }
 
-    if (checkPromotion(result.payLoad.value.rank, result.payLoad.value.corps, result.payLoad.value.currentNumber)) {
-      const updatedUser = await updateUser(memberRecommended.user.id, { $set: { promotion: true } });
+    if (checkPromotion(result.payLoad.rankData.rank, result.payLoad.rankData.corps, result.payLoad.rankData.currentNumber)) {
+      const updatedUser = await updateUser(memberRecommended.user.id, { $set: { 'rankData.promotion': true } });
 
       if (!updatedUser.valid)
         return repair(client, interaction, `<@${memberRecommender.user.id}> rekomenduje <@${memberRecommended.user.id}> - ${reason}\n<@${memberRecommended.user.id}> jest gotowy do awansu ale nie udało mu sie ustawić odpowiedniej flagi. \nNastępuje próba naprawy.\n`);

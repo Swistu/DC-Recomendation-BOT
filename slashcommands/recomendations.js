@@ -1,6 +1,5 @@
 const { add } = require('./subcommands/recomendations/add.js');
 const { delet } = require('./subcommands/recomendations/delete.js');
-const { show } = require('./subcommands/recomendations/show.js');
 
 const run = async (client, interaction) => {
   await interaction.reply('Trwa sprawdzanie rekomendacji...');
@@ -11,9 +10,6 @@ const run = async (client, interaction) => {
       break;
     case 'usuń':
       delet(interaction);
-      break;
-    case 'pokaż':
-      show(interaction);
       break;
     default:
       return await interaction.editReply('Niepoprawna komenda');

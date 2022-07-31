@@ -3,9 +3,11 @@ const { getUserRecommendations } = require('../../../database/getUserRecommendat
 const { updateUser } = require('../../../database/updateUser');
 const { checkPromotion } = require('../../../utility/checkPromotion');
 
-const getUserRecommendationIndex = (userID, recommendationsArray = []) => {
-  for (let i = 0; i < recommendationsArray.length; i++)
-    if (recommendationsArray[i].userID === userID)
+const getUserRecommendationIndex = (userID, recommendationsObject = {}) => {
+  const objectKeys = Object.keys(recommendationsObject);
+
+  for (let i = 0; i < recommendationsObject[objectKeys].length; i++)
+    if (recommendationsObject[objectKeys][i].userID === userID)
       return i;
 
   return null;
@@ -15,14 +17,14 @@ const delet = async (interaction) => {
   const memberRecommended = interaction.options.getMember('gracz');
   const memberRecommender = interaction.member;
   const negativeRecommend = interaction.options.getBoolean('ujemna');
-  let recommendations = 'recommendations';
+  let recommendations = 'rankData.positiveRecommendations';
   if (negativeRecommend)
-    recommendations = 'negativeRecommendations';
+    recommendations = 'rankData.negativeRecommendations';
 
   if (!memberRecommended || !memberRecommender)
     return await interaction.editReply('Niepoprawny użytkownik.');
 
-  const userData = await getUserData(memberRecommended.user.id, ['currentNumber', 'rank', 'corps']);
+  const userData = await getUserData(memberRecommended.user.id, 'rankData');
   if (!userData.valid)
     return await interaction.editReply(userData.errorMessage);
 
@@ -31,34 +33,34 @@ const delet = async (interaction) => {
   if (!userRecommendationsResponse.valid)
     return await interaction.editReply(userRecommendationsResponse.errorMessage);
 
-  const recommendationIndex = getUserRecommendationIndex(memberRecommender.id, userRecommendationsResponse.payLoad[recommendations]);
+  const recommendationIndex = getUserRecommendationIndex(memberRecommender.id, userRecommendationsResponse.payLoad);
   if (recommendationIndex === null)
     return await interaction.editReply(`<@${memberRecommended.user.id}> nie ma od Ciebie rekomendacji.`);
 
   let result;
   if (negativeRecommend) {
-    const promotion = checkPromotion(userData.payLoad.rank, userData.payLoad.corps, userData.payLoad.currentNumber + 1);
+    const promotion = checkPromotion(userData.payLoad.rankData.rank, userData.payLoad.rankData.corps, userData.payLoad.rankData.currentNumber + 1);
 
     result = await updateUser(memberRecommended.user.id, {
-      $inc: { number: 1, currentNumber: 1 },
+      $inc: { 'rankData.number': 1, 'rankData.currentNumber': 1 },
       $pull: {
         [recommendations]: { userID: memberRecommender.id }
       },
       $set: {
-        promotion: promotion
+        'rankData.promotion': promotion
       }
     })
   }
   else {
-    const promotion = checkPromotion(userData.payLoad.rank, userData.payLoad.corps, userData.payLoad.currentNumber - 1);
+    const promotion = checkPromotion(userData.payLoad.rankData.rank, userData.payLoad.rankData.corps, userData.payLoad.rankData.currentNumber - 1);
 
     result = await updateUser(memberRecommended.user.id, {
-      $inc: { number: -1, currentNumber: -1 },
+      $inc: { 'rankData.number': -1, 'rankData.currentNumber': -1 },
       $pull: {
         [recommendations]: { userID: memberRecommender.id }
       },
       $set: {
-        promotion: promotion
+        'rankData.promotion': promotion
       }
     })
 
@@ -67,7 +69,7 @@ const delet = async (interaction) => {
   }
 
 
-  await interaction.editReply(`Usunięto 1 rekomendacje graczowi <@${memberRecommended.user.id}>`);
+  await interaction.editReply(`Usunięto 1 ${negativeRecommend? 'ujemna': ''} rekomendacje graczowi <@${memberRecommended.user.id}>`);
 };
 
 module.exports = { delet };

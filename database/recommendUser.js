@@ -7,9 +7,9 @@ const recommendUser = async (recommenderID, recommendedID, reason, negativeRecom
     if (!canRecommend.valid)
       return { valid: false, errorMessage: canRecommend.errorMessage };
 
-    let array = 'recommendations';
+    let array = 'rankData.positiveRecommendations';
     if (negativeRecommend)
-      array = 'negativeRecommendations'
+      array = 'rankData.negativeRecommendations'
 
     if (negativeRecommend)
       numberValue = -1;
@@ -20,11 +20,12 @@ const recommendUser = async (recommenderID, recommendedID, reason, negativeRecom
     const result = await database.collection('users').findOneAndUpdate(
       { userID: recommendedID },
       {
-        $inc: { number: numberValue, currentNumber: numberValue },
+        $inc: { 'rankData.number': numberValue, 'rankData.currentNumber': numberValue },
         $push: {
           [array]: {
             userID: recommenderID,
-            reason: reason
+            reason: reason,
+            timestamp: Date.now()
           }
         }
       },
@@ -34,7 +35,7 @@ const recommendUser = async (recommenderID, recommendedID, reason, negativeRecom
     if (!result)
       return { valid: false, errorMessage: 'Błąd przy dodawaniu do serwera. Rekomendacja dla <@${recommendedID}> nie weszła' };
     if (result)
-      return { valid: true, payLoad: result };
+      return { valid: true, payLoad: result.value };
 
   } catch (e) {
     console.error(e);

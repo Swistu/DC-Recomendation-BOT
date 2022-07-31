@@ -8,9 +8,9 @@ require("dotenv").config();
 const repairUnvalidUsers = async (unvalidUsers) => {
   let errorMessage = '';
 
-  for (const element of unvalidUsers) {
-    await updateUser(element, { $set: { promotion: false } });
-    errorMessage += `Nie znaleziono gracza <@${element}> na discordzie.\n`;
+  for (const userID of unvalidUsers) {
+    await updateUser(userID, { $set: { 'rankData.promotion': false } });
+    errorMessage += `Nie znaleziono gracza <@${userID}> na discordzie.\n`;
   }
 
   errorMessage += '\nKażdy gracz, który nie został znaleziony na discordzie został usunięty z możliwosci awansowania.\n';
@@ -34,10 +34,10 @@ const give = async (client, interaction) => {
   const userToPromote = await interaction.options.getMember('gracz');
 
   const userProvider = interaction.member;
-  const providerRank = await getUserData(userProvider.id, "rank");
+  const providerRank = await getUserData(userProvider.id, "rankData");
   if (!providerRank.valid)
     return await interaction.editReply(providerRank.errorMessage);
-  if (![constants.RANKS.PODPULKOWNIK, constants.RANKS.PULKOWNIK, constants.RANKS.GENERAL].some(rank => rank === providerRank.payLoad.rank))
+  if (![constants.RANKS.PODPULKOWNIK, constants.RANKS.PULKOWNIK, constants.RANKS.GENERAL].some(rank => rank === providerRank.payLoad.rankData.rank))
     return await interaction.editReply('Twój stopień nie pozwala na awansowanie graczy.');
 
   if (userToPromote)
