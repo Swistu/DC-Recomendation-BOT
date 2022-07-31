@@ -5,14 +5,14 @@ const getUserPromotionData = async (userToPromote) => {
     await client.connect();
 
     const result = await database.collection("users").findOne(
-      { promotion: true, userID: userToPromote.id },
-      { projection: { userID: 1, rank: 1, corps: 1, number: 1, _id: 0 } }
+      { 'rankData.promotion': true, userID: userToPromote.id },
+      { projection: { userID: 1, rankData: 1, _id: 0 } }
     );
     if (!result)
       return { valid: false, errorMessage: `<@${userToPromote.id}> nie ma jeszcze awansu.` };
 
     const newRank = await database.collection("ranking").findOne(
-      { number: result.number },
+      { number: result.rankData.number },
       { projection: { name: 1, corps: 1, _id: 0 } }
     );
 
@@ -23,8 +23,8 @@ const getUserPromotionData = async (userToPromote) => {
       valid: true,
       payLoad: {
         userID: result.userID,
-        oldRank: result.rank,
-        oldCorps: result.corps,
+        oldRank: result.rankData.rank,
+        oldCorps: result.rankData.corps,
         newRank: newRank.name,
         newCorps: newRank.corps
       }

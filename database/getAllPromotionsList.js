@@ -5,8 +5,8 @@ const getAllPromotionsList = async () => {
     await client.connect();
 
     const result = await database.collection("users").find(
-      { promotion: true },
-      { projection: { userID: 1, rank: 1, corps: 1, number: 1, _id: 0 } }
+      { 'rankData.promotion': true },
+      { projection: { userID: 1, rankData: 1, _id: 0 } }
     );
 
     if (!await result.hasNext())
@@ -17,25 +17,25 @@ const getAllPromotionsList = async () => {
 
     for await (const doc of result) {
       const newRank = await database.collection("ranking").findOne(
-        { number: doc.number },
+        { number: doc.rankData.number },
         { projection: { name: 1, corps: 1, _id: 0 } }
       );
 
       if (!newRank) {
         unvalidUserList.push({
           userID: doc.userID,
-          corps: doc.corps,
-          number: doc.number,
-          rank: doc.rank,
+          corps: doc.rankData.corps,
+          number: doc.rankData.number,
+          rank: doc.rankData.rank,
         });
         continue;
       }
 
       validUserList.push({
         userID: doc.userID,
-        corps: doc.corps,
-        rank: doc.rank,
-        number: doc.number,
+        corps: doc.rankData.corps,
+        rank: doc.rankData.rank,
+        number: doc.rankData.number,
         newRank: newRank.name,
         newCorps: newRank.corps
       });

@@ -8,17 +8,17 @@ const canUserAddRecommendation = async (recommenderID, recommendedID, negativeRe
     await client.connect();
     const result = await database.collection('users').findOne({ userID: recommendedID });
 
-    let array = 'recommendations';
+    let array = 'positiveRecommendations';
     if (negativeRecommend)
       array = 'negativeRecommendations';
 
     if (result === null)
       return { valid: false, errorMessage: `Nie znaleziono <@${recommendedID}> w bazie.` };
-    if (result.promotion === true && !negativeRecommend)
+    if (result.rankData.promotion === true && !negativeRecommend)
       return { valid: false, errorMessage: `<@${recommendedID}> już ma awans na wyższy stopień.` };
-    if (result[array] !== undefined)
-      if (result[array].find(element => element.userID === recommenderID))
-        return { valid: false, errorMessage: `<@${recommendedID}> już wcześniej otrzymał od Ciebie rekomendacje.` };
+    if (result.rankData[array] !== undefined)
+      if (result.rankData[array].find(element => element.userID === recommenderID))
+        return { valid: false, errorMessage: `<@${recommendedID}> już wcześniej otrzymał od Ciebie ${negativeRecommend ? 'ujemna' : ''} rekomendacje.` };
 
     return { valid: true }
   } catch (e) {

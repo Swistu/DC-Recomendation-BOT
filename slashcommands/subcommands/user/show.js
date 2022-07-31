@@ -28,16 +28,16 @@ const show = async (interaction) => {
     return await interaction.editReply(userData.errorMessage);
 
   let userRecommendations = '';
-  if (typeof userData.payLoad.recommendations === typeof [])
-    userData.payLoad.recommendations.forEach(element => {
+  if (typeof userData.payLoad.rankData.positiveRecommendations === typeof [])
+    userData.payLoad.rankData.positiveRecommendations.forEach(element => {
       userRecommendations += `<@${element.userID}> - ${element.reason}\n`
     });
   if (userRecommendations === '')
     userRecommendations = 'Brak';
 
   let userNegativeRecommendations = '';
-  if (typeof userData.payLoad.negativeRecommendations === typeof [])
-    userData.payLoad.negativeRecommendations.forEach(element => {
+  if (typeof userData.payLoad.rankData.negativeRecommendations === typeof [])
+    userData.payLoad.rankData.negativeRecommendations.forEach(element => {
       userNegativeRecommendations += `<@${element.userID}> - ${element.reason}\n`
     });
   if (userNegativeRecommendations === '')
@@ -53,15 +53,15 @@ const show = async (interaction) => {
     },
     thumbnail: { url: `https://cdn.discordapp.com/avatars/${user.user.id}/${user.user.avatar}.jpeg` },
     fields: [
-      { name: 'Stopień:', value: `${userData.payLoad.rank}`, inline: true },
-      { name: 'Korpus', value: `${userData.payLoad.corps}`, inline: true },
+      { name: 'Stopień:', value: `${userData.payLoad.rankData.rank}`, inline: true },
+      { name: 'Korpus', value: `${userData.payLoad.rankData.corps}`, inline: true },
       { name: '\u200B', value: '\u200B' },
       { name: 'Rekomendacje:', value: userRecommendations },
       { name: 'Ujemne Rekomendacje:', value: userNegativeRecommendations },
-      { name: 'Całkowita liczba rekomendacji', value: `${userData.payLoad.number}` },
-      { name: 'Aktualna liczba ', value: `${userData.payLoad.currentNumber}`, inline: true },
-      { name: 'Liczba do awansu', value: numberToPromote(userData.payLoad.corps, userData.payLoad.rank), inline: true },
-      { name: 'Gotowy do awansu', value: userData.payLoad.promotion ? 'Tak' : 'Nie' },
+      { name: 'Całkowita liczba rekomendacji', value: `${userData.payLoad.rankData.number}` },
+      { name: 'Aktualna liczba ', value: `${userData.payLoad.rankData.currentNumber}`, inline: true },
+      { name: 'Liczba do awansu', value: numberToPromote(userData.payLoad.rankData.corps, userData.payLoad.rankData.rank), inline: true },
+      { name: 'Gotowy do awansu', value: userData.payLoad.rankData.promotion ? 'Tak' : 'Nie' },
     ],
   };
 

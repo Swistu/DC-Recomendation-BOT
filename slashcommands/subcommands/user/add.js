@@ -15,6 +15,7 @@ const add = async (client, interaction) => {
 
   if (userData.errorMessage === `Nie znaleziono gracza <@${user.user.id}> w bazie danych.`) {
     const userRankRoles = await getUserRoles(user, "rank");
+
     if (!userRankRoles)
       return await interaction.editReply('Użytkownik nie ma nadanych ról.\nDodaj odpowiedni stopień/role użytkownikowi.');
     if (userRankRoles.length > 1)
@@ -28,12 +29,17 @@ const add = async (client, interaction) => {
       $setOnInsert: {
         userID: user.user.id,
         discordTag: user.user.tag,
-        currentNumber: 0,
-        corps: rankData.payLoad.corps,
-        number: rankData.payLoad.number,
-        promotion: false,
-        rank: rankData.payLoad.name,
-        recommendations: [],
+        role: 'member',
+        accountActive: true,
+        rankData: {
+          rank: rankData.payLoad.name,
+          corps: rankData.payLoad.corps,
+          number: rankData.payLoad.number,
+          currentNumber: 0,
+          promotion: false,
+          negativeRecommendations: [],
+          positiveRecommendations: [],
+        }
       }
     }, { upsert: true });
     if (!result.valid)
@@ -42,8 +48,6 @@ const add = async (client, interaction) => {
     return await repair(client, interaction, `Dodano użytkownika <@${user.user.id}> do bazy.\n`);
   } else
     return await interaction.editReply(userData.errorMessage);
-
-
 };
 
 module.exports = { add };
