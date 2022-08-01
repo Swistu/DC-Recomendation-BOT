@@ -1,3 +1,4 @@
+const { updateUserHistory } = require("../../../database/updateUserHistory");
 const { getUserData } = require("../../../database/gerUserData");
 const { getRankData } = require("../../../database/getRankData");
 const { updateUser } = require("../../../database/updateUser");
@@ -16,7 +17,10 @@ const set = async (client, interaction) => {
 
   const user = interaction.options.getMember('gracz');
   const newRankName = interaction.options.getString('rank');
+  const userData = await getUserData(user.user.id, "rankData");
 
+  if (!userData.valid)
+    return { valid: false, errorMessage: userData.errorMessage };
   if (!user)
     return await interaction.editReply('Podano niewłaściwego gracza.');
   if (!newRankName)
@@ -42,6 +46,8 @@ const set = async (client, interaction) => {
 
   if (!result.valid)
     return await interaction.editReply(result.errorMessage);
+
+  await updateUserHistory(user.user.id, userData.payLoad.rankData.rank, userData.payLoad.rankData.positiveRecommendations, userData.payLoad.rankData.negativeRecommendations);
 
   repair(client, interaction, `Poprawnie zaktualizowano stopień <@${user.user.id}> w bazie.\nBot sam naprawił:\n\n`);
 };
