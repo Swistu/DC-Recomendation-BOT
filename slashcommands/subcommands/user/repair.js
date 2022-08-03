@@ -95,9 +95,9 @@ const repair = async (client, interaction, message = '') => {
           if (newCorpsNumber) {
             const curretRank = await getRankData({ name: userData.payLoad.rankData.rank });
             if (curretRank.valid) {
-              const newPossibleRank = await getRankData({ number: curretRank.payLoad.rankData.number + newCorpsNumber });
+              const newPossibleRank = await getRankData({ number: curretRank.payLoad.number + newCorpsNumber });
               if (newPossibleRank.valid) {
-                const updatedUser2 = await updateUser(userData.payLoad.userID, { $set: { 'rankData.number': curretRank.payLoad.rankData.number + newCorpsNumber } });
+                const updatedUser2 = await updateUser(userData.payLoad.userID, { $set: { 'rankData.number': curretRank.payLoad.number + newCorpsNumber } });
                 if (updatedUser2.valid)
                   message += `Poprawnie ustawiono nową liczbę wszystkich rekomedacji. <@${userData.payLoad.userID}> może teraz awansować\n`;
                 else
