@@ -60,10 +60,19 @@ const checkUserRoles = (recommender, recommended, negativeRecommend) => {
   }
 
   if (
-    recommendedRank === constants.RANKS.PLUTONOWY &&
-    recommenderRank === constants.CORPS.KORPUS_PODOFICEROW
-  )
-    return { valid: false, errorMessage: "Nie możesz rekomendować tej osoby" };
+    recommenderCorps === constants.CORPS.KORPUS_PODOFICEROW &&
+    recommendedCorps === constants.CORPS.KORPUS_STRZELCOW
+  ) {
+    if (
+      recommendedRank === constants.RANKS.PLUTONOWY &&
+      recommenderCorps === constants.CORPS.KORPUS_PODOFICEROW
+    )
+      return {
+        valid: false,
+        errorMessage: "Nie możesz rekomendować tej osoby",
+      };
+    return { valid: true };
+  }
 
   if (recommenderCorps === constants.CORPS.KORPUS_OFICEROW)
     return { valid: true };
