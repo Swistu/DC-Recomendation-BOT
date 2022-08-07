@@ -15,6 +15,7 @@ const repair = async (client, interaction, message = '') => {
   if (message === '')
     message = `Bot naprawił <@${user.user.id}>:\n`;
 
+    
   // checking if we have user in database if not try to add one
   const userData = await getUserData(user.user.id);
   if (!userData.valid) {
@@ -58,6 +59,14 @@ const repair = async (client, interaction, message = '') => {
     } else {
       message += userData.errorMessage + "\n";
       return await interaction.editReply(message);
+    }
+  }
+
+  //Check if account is active, if not then set to true
+  if (userData.payLoad.accountActive == false) {
+    const updateActivity = await updateUser(user.user.id, { $set: { "accountActive": true } });
+    if (updateActivity.valid) {
+      message += "Ustawiono konto jako aktywne.\n";
     }
   }
 
