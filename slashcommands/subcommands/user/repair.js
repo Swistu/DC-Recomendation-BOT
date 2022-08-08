@@ -136,11 +136,11 @@ const repair = async (client, interaction, message = '') => {
   } else {
     if (checkPromotion(userData.payLoad.rankData.rank, userData.payLoad.rankData.corps, userData.payLoad.rankData.currentNumber)) {
       const updatedUser = await updateUser(userData.payLoad.userID, {
-        $set: { 'rankData.promotion': false }
+        $set: { 'rankData.promotion': true }
       });
 
       if (!updatedUser.valid)
-        message += `<@${userData.payLoad.userID} powinien mieć awans ale wystąpił błąd podczas aktualizowania.\nPowód: ${updatedUser.errorMessage}\n`
+        message += `<@${userData.payLoad.userID}> powinien mieć awans ale wystąpił błąd podczas aktualizowania.\nPowód: ${updatedUser.errorMessage}\n`
       else
         message += `Naprawiono możliwość awansu. <@${userData.payLoad.userID}> jest teraz na liście do awansowania.\n`;
     }
