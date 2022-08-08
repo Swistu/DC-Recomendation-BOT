@@ -63,9 +63,11 @@ const repair = async (client, interaction, message = '') => {
 
   //Check if account is active, if not then set to true
   if (userData.payLoad.accountActive === false) {
-    const updateActivity = await updateUser(user.user.id, { $set: { "accountActive": true } });
-    if (!updateActivity.valid)
-      return message += "Błąd podczas ustawiania konta jako aktywne, skontaktuj się z Simonem.\n";
+    const updateActivity = updateUser(user.user.id, { $set: { "accountActive": true } });
+    if (!updateActivity.valid) {
+      message += userData.errorMessage + "\n";
+      return await interaction.editReply(message);
+    }
     message += "Ustawiono konto jako aktywne.\n";
   }
 
