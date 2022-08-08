@@ -52,7 +52,6 @@ client.on("ready", async () => {
 });
 
 client.on("guildMemberRemove", async (member) => {
-  console.log("testestets");
   await updateUser(member.user.id, { $set: { "accountActive": false } });
 });
 
