@@ -1,11 +1,13 @@
 const DiscordJS = require("discord.js");
 const { getAllData } = require("./database/getAllData");
 const { sendMessage } = require("./utility/sendMessage");
+const { updateUser } = require("./database/updateUser");
+
 require("dotenv").config();
 const fs = require("fs");
 
 const client = new DiscordJS.Client({
-  intents: ["GUILDS"],
+  intents: ["GUILDS", "GUILD_MEMBERS"],
 });
 
 let bot = {
@@ -47,6 +49,10 @@ client.on("ready", async () => {
     });
     sendMessage(process.env.BACKUP_CHANNEL_ID, bot, timestamp);
   }
+});
+
+client.on("guildMemberRemove", async (member) => {
+  await updateUser(member.user.id, { $set: { "accountActive": false } });
 });
 
 client.login(process.env.BOT_TOKEN);

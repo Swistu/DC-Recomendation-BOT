@@ -62,6 +62,7 @@ const show = async (interaction) => {
       { name: 'Aktualna liczba ', value: `${userData.payLoad.rankData.currentNumber}`, inline: true },
       { name: 'Liczba do awansu', value: numberToPromote(userData.payLoad.rankData.corps, userData.payLoad.rankData.rank), inline: true },
       { name: 'Gotowy do awansu', value: userData.payLoad.rankData.promotion ? 'Tak' : 'Nie' },
+      { name: 'Konto aktywne', value: userData.payLoad.accountActive ? 'Tak' : 'Nie'}
     ],
   };
 

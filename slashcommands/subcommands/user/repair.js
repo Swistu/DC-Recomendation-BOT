@@ -38,8 +38,8 @@ const repair = async (client, interaction, message = '') => {
           accountActive: true,
           rankData: {
             rank: rankData.payLoad.name,
-            corps: rankData.payLoad.rankData.corps,
-            number: rankData.payLoad.rankData.number,
+            corps: rankData.payLoad.corps,
+            number: rankData.payLoad.number,
             currentNumber: 0,
             promotion: false,
             negativeRecommendations: [],
@@ -59,6 +59,16 @@ const repair = async (client, interaction, message = '') => {
       message += userData.errorMessage + "\n";
       return await interaction.editReply(message);
     }
+  }
+
+  //Check if account is active, if not then set to true
+  if (userData.payLoad.accountActive === false) {
+    const updateActivity = await updateUser(user.user.id, { $set: { "accountActive": true } });
+    if (!updateActivity.valid) {
+      message += "Nie udało się ustawić konta jako aktywne, skontaktuj się z Simonem.\n Kod błędu: " + updateActivity.errorMessage + "\n";
+      return await interaction.editReply(message);
+    }
+    message += "Ustawiono konto jako aktywne.\n";
   }
 
   // Check if user is ready for promotion and repair any rank problems
