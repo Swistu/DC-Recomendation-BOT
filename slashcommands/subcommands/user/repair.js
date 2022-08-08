@@ -15,7 +15,6 @@ const repair = async (client, interaction, message = '') => {
   if (message === '')
     message = `Bot naprawił <@${user.user.id}>:\n`;
 
-    
   // checking if we have user in database if not try to add one
   const userData = await getUserData(user.user.id);
   if (!userData.valid) {
@@ -39,8 +38,8 @@ const repair = async (client, interaction, message = '') => {
           accountActive: true,
           rankData: {
             rank: rankData.payLoad.name,
-            corps: rankData.payLoad.rankData.corps,
-            number: rankData.payLoad.rankData.number,
+            corps: rankData.payLoad.corps,
+            number: rankData.payLoad.number,
             currentNumber: 0,
             promotion: false,
             negativeRecommendations: [],
@@ -63,11 +62,11 @@ const repair = async (client, interaction, message = '') => {
   }
 
   //Check if account is active, if not then set to true
-  if (userData.payLoad.accountActive == false) {
+  if (userData.payLoad.accountActive === false) {
     const updateActivity = await updateUser(user.user.id, { $set: { "accountActive": true } });
-    if (updateActivity.valid) {
-      message += "Ustawiono konto jako aktywne.\n";
-    }
+    if (!updateActivity.valid)
+      return message += "Błąd podczas ustawiania konta jako aktywne, skontaktuj się z Simonem.\n";
+    message += "Ustawiono konto jako aktywne.\n";
   }
 
   // Check if user is ready for promotion and repair any rank problems
