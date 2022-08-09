@@ -1,10 +1,8 @@
+require("dotenv").config();
 const DiscordJS = require("discord.js");
 const { getAllData } = require("./database/getAllData");
 const { sendMessage } = require("./utility/sendMessage");
 const { updateUser } = require("./database/updateUser");
-
-require("dotenv").config();
-const fs = require("fs");
 
 const client = new DiscordJS.Client({
   intents: ["GUILDS", "GUILD_MEMBERS"],
