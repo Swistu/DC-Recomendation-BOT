@@ -1,9 +1,9 @@
-const sendMessage = async (channelId, bot, timestamp) => {
+const sendMessage = async (channelId, bot, fileName) => {
   const { client } = bot;
   const channel = await client.channels.fetch(channelId);
-  const filename = "./" + timestamp + ".json";
+  const fullName = "./" + fileName + ".json";
   await channel.send({
-    files: [filename]
+    files: [fullName]
   });
 }
 

@@ -1,6 +1,6 @@
 require("dotenv").config();
 const DiscordJS = require("discord.js");
-const { getAllData } = require("./database/getAllData");
+const { getAllData, doBackup } = require("./database/doBackup");
 const { sendMessage } = require("./utility/sendMessage");
 const { updateUser } = require("./database/updateUser");
 
@@ -28,7 +28,7 @@ client.on("interactionCreate", (interaction) => {
       content: "Niepoprawna komenda",
       ephemeral: true,
     });
-
+    createJSONFile
   if (slashcmd.perms && !interaction.member.permissions.has(slashcmd.perm))
     return interaction.reply("Nie masz uprawnień do tej komendy");
 
@@ -39,14 +39,12 @@ client.on("ready", async () => {
   console.log(`Logged in as ${client.user.tag}!`);
 
   //Backup DB to channel only in production
-  if (process.env.NODE_ENV !== "development") {
-    const data = await getAllData();
-    const timestamp = Date.now().toString();
-    fs.writeFile("./" + timestamp + ".json", data, (error) => {
-      console.log(error);
-    });
-    sendMessage(process.env.BACKUP_CHANNEL_ID, bot, timestamp);
-  }
+  //if (process.env.NODE_ENV !== "development") {
+  //  const message = await doBackup(client);
+  //  if (!message.valid) console.log(message.message);
+  //}
+  const message = await doBackup(client);
+  //if (!message.valid) console.log(message.message);
 });
 
 client.on("guildMemberRemove", async (member) => {

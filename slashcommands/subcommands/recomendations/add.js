@@ -1,6 +1,6 @@
 const { checkPromotion } = require("../../../utility/checkPromotion");
 const { recommendUser } = require("../../../database/recommendUser");
-const { getUserData } = require("../../../database/gerUserData");
+const { getUserData } = require("../../../database/getUserData");
 const { updateUser } = require("../../../database/updateUser");
 const constants = require("../../../utility/constants");
 const { repair } = require("../user/repair");

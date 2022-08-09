@@ -1,5 +1,5 @@
 const { updateUserHistory } = require("../../../database/updateUserHistory");
-const { getUserData } = require("../../../database/gerUserData");
+const { getUserData } = require("../../../database/getUserData");
 const { getRankData } = require("../../../database/getRankData");
 const { updateUser } = require("../../../database/updateUser");
 const { repair } = require("./repair");
