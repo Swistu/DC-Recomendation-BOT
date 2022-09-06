@@ -8,8 +8,8 @@ const doBackup = async (bot) => {
         await client.connect();
         const session = client.startSession();
         const db = await database.listCollections().toArray();
-        const collections = []
-        const fileNames = []
+        const collections = [];
+        const fileNames = [];
         const timestamp = Date.now().toString();
 
         for (coll of db) {
