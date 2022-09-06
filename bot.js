@@ -1,7 +1,6 @@
 require("dotenv").config();
 const DiscordJS = require("discord.js");
-const { getAllData, doBackup } = require("./database/doBackup");
-const { sendMessage } = require("./utility/sendMessage");
+const { doBackup } = require("./database/doBackup");
 const { updateUser } = require("./database/updateUser");
 
 const client = new DiscordJS.Client({
@@ -37,14 +36,8 @@ client.on("interactionCreate", (interaction) => {
 
 client.on("ready", async () => {
   console.log(`Logged in as ${client.user.tag}!`);
-
-  //Backup DB to channel only in production
-  //if (process.env.NODE_ENV !== "development") {
-  //  const message = await doBackup(client);
-  //  if (!message.valid) console.log(message.message);
-  //}
   const message = await doBackup(client);
-  //if (!message.valid) console.log(message.message);
+  console.log(message.message);
 });
 
 client.on("guildMemberRemove", async (member) => {

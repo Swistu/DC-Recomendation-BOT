@@ -1,9 +1,10 @@
-const fs = require("fs");
+const fs = require("fs").promises;
 
 const createJSONFile = async (data, fileName) => {
-    fs.writeFile("./" + fileName + ".json", data, (error) => {
-      if (error != null) console.log(error);
+    const result = fs.writeFile(fileName, data, (error) => {
+      console.log("Jest problem mordo");
     });
+    return result
 }
 
 module.exports = { createJSONFile };
