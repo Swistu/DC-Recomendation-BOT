@@ -65,15 +65,17 @@ client.on("channelCreate", async (newChannel) => {
     const row = new MessageActionRow().addComponents(
       new MessageButton()
         .setCustomId("refreshStorage")
-        .setLabel("Odswież")
-        .setStyle("SUCCESS")
+        .setLabel("Odswież timer")
+        .setStyle("PRIMARY")
     );
 
     newChannel.send({
       content:
-        "Magazyn wygaśnie <t:" + parseInt(newDate.getTime() / 1000) + ":R>",
+        "Magazyn wygaśnie <t:" + parseInt(newDate.getTime() / 1000) + ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*",
       components: [row],
     });
+
+    channelListener(client);
   }
 });
 

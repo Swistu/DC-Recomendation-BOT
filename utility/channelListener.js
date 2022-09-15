@@ -16,7 +16,7 @@ const channelListener = async (client) => {
       });
       const msg = fetchmessages.first();
 
-      msg.edit("Magazyn wygaśnie <t:" + parseInt(refreshedDate.getTime() / 1000) + ":R>",);
+      msg.edit("Magazyn wygaśnie <t:" + parseInt(refreshedDate.getTime() / 1000) + ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*",);
       i.reply({
         content: 'Odświeżyłeś magazyn!',
         ephemeral: true
