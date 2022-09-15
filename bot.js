@@ -1,10 +1,12 @@
-const DiscordJS = require("discord.js");
+const { channelListener } = require("./utility/channelListener");
 const { getAllData } = require("./database/getAllData");
 const { sendMessage } = require("./utility/sendMessage");
 const { updateUser } = require("./database/updateUser");
-
-require("dotenv").config();
+const { EmbedBuilder } = require("discord.js");
+const { MessageButton, MessageActionRow } = require("discord.js");
+const DiscordJS = require("discord.js");
 const fs = require("fs");
+require("dotenv").config();
 
 const client = new DiscordJS.Client({
   intents: ["GUILDS", "GUILD_MEMBERS"],
@@ -40,6 +42,7 @@ client.on("interactionCreate", (interaction) => {
 client.on("ready", async () => {
   console.log(`Logged in as ${client.user.tag}!`);
 
+  channelListener(client);
   //Backup DB to channel only in production
   if (process.env.NODE_ENV !== "development") {
     const data = await getAllData();
@@ -52,7 +55,26 @@ client.on("ready", async () => {
 });
 
 client.on("guildMemberRemove", async (member) => {
-  await updateUser(member.user.id, { $set: { "accountActive": false } });
+  await updateUser(member.user.id, { $set: { accountActive: false } });
+});
+client.on("channelCreate", async (newChannel) => {
+  if (newChannel.parentId === process.env.STORAGE_CHANNEL_ID) {
+    const newDate = new Date();
+    newDate.setHours(newDate.getHours() + 49);
+
+    const row = new MessageActionRow().addComponents(
+      new MessageButton()
+        .setCustomId("refreshStorage")
+        .setLabel("Odswież")
+        .setStyle("SUCCESS")
+    );
+
+    newChannel.send({
+      content:
+        "Magazyn wygaśnie <t:" + parseInt(newDate.getTime() / 1000) + ":R>",
+      components: [row],
+    });
+  }
 });
 
 client.login(process.env.BOT_TOKEN);
