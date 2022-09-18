@@ -1,6 +1,6 @@
 require("dotenv").config();
 const DiscordJS = require("discord.js");
-const { doBackup } = require("./database/doBackup");
+const { doBackup } = require("./utility/doBackup");
 const { updateUser } = require("./database/updateUser");
 
 const client = new DiscordJS.Client({
@@ -27,7 +27,6 @@ client.on("interactionCreate", (interaction) => {
       content: "Niepoprawna komenda",
       ephemeral: true,
     });
-    createJSONFile
   if (slashcmd.perms && !interaction.member.permissions.has(slashcmd.perm))
     return interaction.reply("Nie masz uprawnień do tej komendy");
 
@@ -36,8 +35,12 @@ client.on("interactionCreate", (interaction) => {
 
 client.on("ready", async () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  const message = await doBackup(client);
-  console.log(message.message);
+  if (process.env.NODE_ENV !== "development") {
+    const message = await doBackup(client);
+    if (!message.valid) {
+      console.log(message);
+    }
+  }
 });
 
 client.on("guildMemberRemove", async (member) => {
