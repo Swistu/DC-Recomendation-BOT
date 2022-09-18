@@ -21,7 +21,7 @@ const doBackup = async (bot) => {
         //easter egg
         const channel = await bot.channels.fetch(process.env.BACKUP_CHANNEL_ID);
         const today = new Date().toLocaleDateString();
-        await channel.send("Backup danych z dnia " + today + ".\nWykonano w " + ((Date.now() - timestamp) * 0.001) + " sekund.");
+        await channel.send("Backup danych z dnia " + today + ".\nWykonano w " + ((Date.now() - timestamp) * 0.001).toFixed(3) + " sekund.");
         return { valid: true, message: "Backup zakończony!" };
     } catch (e) {
         console.error(e);

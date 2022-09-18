@@ -1,5 +1,4 @@
-const sendFile = async (channelId, bot, fileName) => {
-  const client = bot;
+const sendFile = async (channelId, client, fileName) => {
   const channel = await client.channels.fetch(channelId);
   await channel.send({
     files: [fileName]
