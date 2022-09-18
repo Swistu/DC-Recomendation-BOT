@@ -1,10 +1,6 @@
 const { channelListener } = require("./utility/channelListener");
-const { getAllData } = require("./database/getAllData");
-const { sendMessage } = require("./utility/sendMessage");
-const { updateUser } = require("./database/updateUser");
 const { updateUser } = require("./database/updateUser");
 const { doBackup } = require("./utility/doBackup");
-const { EmbedBuilder } = require("discord.js");
 const { MessageButton, MessageActionRow } = require("discord.js");
 const DiscordJS = require("discord.js");
 const fs = require("fs");
