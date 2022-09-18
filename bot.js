@@ -2,6 +2,8 @@ const { channelListener } = require("./utility/channelListener");
 const { getAllData } = require("./database/getAllData");
 const { sendMessage } = require("./utility/sendMessage");
 const { updateUser } = require("./database/updateUser");
+const { updateUser } = require("./database/updateUser");
+const { doBackup } = require("./utility/doBackup");
 const { EmbedBuilder } = require("discord.js");
 const { MessageButton, MessageActionRow } = require("discord.js");
 const DiscordJS = require("discord.js");
@@ -32,7 +34,6 @@ client.on("interactionCreate", (interaction) => {
       content: "Niepoprawna komenda",
       ephemeral: true,
     });
-
   if (slashcmd.perms && !interaction.member.permissions.has(slashcmd.perm))
     return interaction.reply("Nie masz uprawnień do tej komendy");
 
@@ -41,16 +42,14 @@ client.on("interactionCreate", (interaction) => {
 
 client.on("ready", async () => {
   console.log(`Logged in as ${client.user.tag}!`);
-
+  
   channelListener(client);
   //Backup DB to channel only in production
   if (process.env.NODE_ENV !== "development") {
-    const data = await getAllData();
-    const timestamp = Date.now().toString();
-    fs.writeFile("./" + timestamp + ".json", data, (error) => {
-      console.log(error);
-    });
-    sendMessage(process.env.BACKUP_CHANNEL_ID, bot, timestamp);
+    const message = await doBackup(client);
+    if (!message.valid) {
+      console.log(message);
+    }
   }
 });
 

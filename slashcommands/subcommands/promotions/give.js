@@ -1,5 +1,5 @@
 const { getAllPromotionsList } = require("../../../database/getAllPromotionsList");
-const { getUserData } = require("../../../database/gerUserData");
+const { getUserData } = require("../../../database/getUserData");
 const { promoteUser } = require("../../../utility/promoteUser");
 const { updateUser } = require("../../../database/updateUser");
 const constants = require("../../../utility/constants");

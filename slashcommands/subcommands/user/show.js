@@ -1,4 +1,4 @@
-const { getUserData } = require("../../../database/gerUserData");
+const { getUserData } = require("../../../database/getUserData");
 const constants = require("../../../utility/constants");
 
 const numberToPromote = (corps, rank) => {

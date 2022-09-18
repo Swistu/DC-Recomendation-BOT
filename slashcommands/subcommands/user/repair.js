@@ -1,6 +1,6 @@
 const { checkPromotion } = require("../../../utility/checkPromotion");
 const { getUserRoles } = require("../../../utility/getUserRoles");
-const { getUserData } = require("../../../database/gerUserData");
+const { getUserData } = require("../../../database/getUserData");
 const { getRankData } = require("../../../database/getRankData");
 const { updateUser } = require("../../../database/updateUser");
 const { getRole } = require("../../../utility/getRole");

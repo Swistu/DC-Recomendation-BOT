@@ -1,4 +1,4 @@
-const { getUserData } = require('../database/gerUserData');
+const { getUserData } = require('../database/getUserData');
 const { getUserPromotionData } = require('../database/getUserPromotionData');
 const { updateUser } = require('../database/updateUser');
 const { updateUserHistory } = require('../database/updateUserHistory');
