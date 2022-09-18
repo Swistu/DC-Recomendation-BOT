@@ -6,7 +6,11 @@ const { getAllData} = require("../database/getAllData");
 const doBackup = async (bot) => {
     const timestamp = Date.now();
     const fileNames = [];
-    const collections = (await getAllData()).payload;
+    const colls = await getAllData();
+    if (!colls.valid) {
+        return { valid: false, message: colls.message };
+    }
+    const collections = colls.payload;
     try {
         for (coll of collections) {
             const fileName = coll.name + "_" + timestamp.toString() + ".json";
