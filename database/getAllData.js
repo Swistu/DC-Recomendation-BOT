@@ -5,7 +5,8 @@ const getAllData = async () => {
     const collections = [];
     const colls = await getCollectionsList();
     if (!colls.valid) {
-        return { valid: false, message: colls.message };
+        console.log(colls.message);
+        return { valid: false, message: "Błąd podczas pobierania danych." };
     }
     const db = colls.payload;
     try {
@@ -13,10 +14,10 @@ const getAllData = async () => {
         for (coll of db) {
             collections.push({ name: coll.name, data: await database.collection(coll.name).find().toArray() });
         }
-        return { valid: false, payload: collections };
+        return { valid: true, payload: collections };
     } catch (e) {
         console.error(e);
-        return { valid: false, message: "Błąd podczas pobierania bazy danych." };
+        return { valid: false, message: "Błąd podczas pobierania danych." };
     } finally {
         await client.close();
     }
