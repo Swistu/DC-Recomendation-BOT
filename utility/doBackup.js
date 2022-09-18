@@ -8,7 +8,8 @@ const doBackup = async (bot) => {
     const fileNames = [];
     const colls = await getAllData();
     if (!colls.valid) {
-        return { valid: false, message: colls.message };
+        console.log(colls.message);
+        return { valid: false, message: "Błąd podczas backupowania." };
     }
     const collections = colls.payload;
     try {
@@ -29,7 +30,7 @@ const doBackup = async (bot) => {
         return { valid: true, message: "Backup zakończony!" };
     } catch (e) {
         console.error(e);
-        return { valid: false, message: "Błąd połączenia z bazą mordo..." };
+        return { valid: false, message: "Błąd podczas backupowania." };
     }
 };
 
