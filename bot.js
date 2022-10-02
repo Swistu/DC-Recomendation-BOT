@@ -36,10 +36,14 @@ client.on("interactionCreate", (interaction) => {
 });
 
 client.on("ready", async () => {
+  channelListener(client);
+
   console.log(`Logged in as ${client.user.tag}!`);
   
-  channelListener(client);
+  // easter egg
+  const channel = await client.channels.fetch(process.env.BACKUP_CHANNEL_ID);
   await channel.send("Pobrano jedną koszulkę z Town Halla.");
+  
   //Backup DB to channel only in production
   if (process.env.NODE_ENV !== "development") {
     const message = await doBackup(client);
