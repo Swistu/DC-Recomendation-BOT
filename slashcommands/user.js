@@ -2,6 +2,7 @@ const { repair } = require("./subcommands/user/repair");
 const { show } = require("./subcommands/user/show");
 const { add } = require("./subcommands/user/add");
 const { set } = require("./subcommands/user/set");
+const { active } = require("./subcommands/user/active");
 const constants = require("../utility/constants");
 
 const getAllRanks = (ranks) => {
@@ -26,6 +27,9 @@ const run = async (client, interaction) => {
       break;
     case 'napraw':
       repair(client, interaction);
+      break;
+    case 'konto':
+      active(interaction);
       break;
     default:
       return await interaction.editReply('Niepoprawna subkomenda');
@@ -95,6 +99,25 @@ module.exports = {
         },
       ],
     },
+    {
+      name: 'konto',
+      description: 'Ustawianie aktywności konta gracza w bazie danych.',
+      type: 1,
+      options: [
+        {
+          name: 'gracz',
+          description: 'Nick gracza do zmiany aktywności.',
+          type: 'USER',
+          required: true,
+        },
+        {
+          name: 'aktywne',
+          description: 'Aktywny (true) dla obecnych członków klanu. Nieaktywny (false) jak ktoś opuści klan.',
+          type: 'BOOLEAN',
+          required: true,
+        }
+      ]  
+    }
   ],
-  run,
+  run
 };
