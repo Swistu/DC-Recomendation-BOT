@@ -7,6 +7,11 @@ const active = async (interaction) => {
     if (!user) {
         return await interaction.editReply('Podano niewłaściwego gracza.');
     }
+    
+    //easter egg
+    if (user.user.id === "815379684094246914" && active == false) {
+        return await interaction.editReply("Generał zawsze patrzy...");
+    }
 
     const userData = await getUserData(user.user.id);
 
