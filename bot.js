@@ -80,3 +80,13 @@ process.on("uncaughtException", (err) => {
   console.error("There was an uncaught error", err);
   process.exit(1);
 });
+client.on('guildMemberAdd', async(member) => {
+  const channel = await client.channels.fetch(process.env.LOG_CHANNEL_ID);
+
+  channel.send('<@' + member.user.id + '> -> Do sprawdzenia');
+});
+client.on('guildMemberRemove', async(member) => {
+  const channel = await client.channels.fetch(process.env.LOG_CHANNEL_ID);
+
+  channel.send('Problem <@' + member.user.id + '> z głowy');
+});
