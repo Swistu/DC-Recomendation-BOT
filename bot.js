@@ -3,7 +3,6 @@ const { updateUser } = require("./database/updateUser");
 const { doBackup } = require("./utility/doBackup");
 const { MessageButton, MessageActionRow } = require("discord.js");
 const DiscordJS = require("discord.js");
-const fs = require("fs");
 require("dotenv").config();
 
 const client = new DiscordJS.Client({
@@ -40,6 +39,7 @@ client.on("ready", async () => {
   console.log(`Logged in as ${client.user.tag}!`);
   
   channelListener(client);
+  //await channel.send("Pobrano jedną koszulkę z Town Halla.");
   //Backup DB to channel only in production
   if (process.env.NODE_ENV !== "development") {
     const message = await doBackup(client);
