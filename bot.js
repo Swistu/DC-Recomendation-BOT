@@ -40,12 +40,12 @@ client.on("ready", async () => {
 
   console.log(`Logged in as ${client.user.tag}!`);
   
-  // easter egg
-  const channel = await client.channels.fetch(process.env.BACKUP_CHANNEL_ID);
-  await channel.send("Pobrano jedną koszulkę z Town Halla.");
-  
   //Backup DB to channel only in production
   if (process.env.NODE_ENV !== "development") {
+    // easter egg
+    const channel = await client.channels.fetch(process.env.BACKUP_CHANNEL_ID);
+    await channel.send("Pobrano jedną koszulkę z Town Halla.");
+    
     const message = await doBackup(client);
     if (!message.valid) {
       console.log(message);
