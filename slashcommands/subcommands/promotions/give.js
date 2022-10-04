@@ -73,11 +73,11 @@ const give = async (client, interaction) => {
 
   responseList.forEach((element) => {
     if (element.valid) {
-      if (!ncoCorps && element.newCorps === constants.CORPS.KORPUS_PODOFICEROW) {
+      if (!ncoCorps && element.payLoad.newCorps === constants.CORPS.KORPUS_PODOFICEROW) {
         promotionApproved += '\n';
         ncoCorps = true;
       }
-      if (!privateCorps && element.newCorps === constants.CORPS.KORPUS_STRZELCOW) {
+      if (!privateCorps && element.payLoad.newCorps === constants.CORPS.KORPUS_STRZELCOW) {
         promotionApproved += '\n';
         privateCorps = true;
       }
@@ -93,8 +93,10 @@ const give = async (client, interaction) => {
     promotionApproved = 'Nikogo nie awansowano.\n';
   if (promotionUnapproved === 'Lista niezatwierdzonych awansów:\n')
     promotionUnapproved = ' ';
-
-  await interaction.editReply(promotionApproved + "\n" + promotionUnapproved);
+  
+  const final_message = promotionApproved + "\n" + promotionUnapproved + "\n```\n" + promotionApproved + "```\n";
+  
+  await interaction.editReply(final_message);
 };
 
 module.exports = { give };
