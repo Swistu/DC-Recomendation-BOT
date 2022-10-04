@@ -93,8 +93,10 @@ const give = async (client, interaction) => {
     promotionApproved = 'Nikogo nie awansowano.\n';
   if (promotionUnapproved === 'Lista niezatwierdzonych awansów:\n')
     promotionUnapproved = ' ';
-
-  await interaction.editReply(promotionApproved + "\n" + promotionUnapproved);
+  
+  const final_message = promotionApproved + "\n" + promotionUnapproved + "\n```\n" + promotionApproved + "```\n";
+  
+  await interaction.editReply(final_message);
 };
 
 module.exports = { give };
