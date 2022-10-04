@@ -73,11 +73,11 @@ const give = async (client, interaction) => {
 
   responseList.forEach((element) => {
     if (element.valid) {
-      if (!ncoCorps && element.newCorps === constants.CORPS.KORPUS_PODOFICEROW) {
+      if (!ncoCorps && element.payLoad.newCorps === constants.CORPS.KORPUS_PODOFICEROW) {
         promotionApproved += '\n';
         ncoCorps = true;
       }
-      if (!privateCorps && element.newCorps === constants.CORPS.KORPUS_STRZELCOW) {
+      if (!privateCorps && element.payLoad.newCorps === constants.CORPS.KORPUS_STRZELCOW) {
         promotionApproved += '\n';
         privateCorps = true;
       }
