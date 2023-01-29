@@ -1,144 +1,73 @@
-<div id="top">
-<br />
-<div align="center">
-  <a href="https://github.com/Swistu/DC-Recomendation-BOT">
-    <img src="https://cdn.discordapp.com/app-icons/971105894886703195/441d22ce53b1ae0947e8236257f60584.png" alt="Logo" width="80" height="80">
-  </a>
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
 
-<h3 align="center">Discord Recommendation Bot</h3>
-  <p align="center">
-    Bot for promotion system on Discord
-    <br />
-    <a href="https://github.com/Swistu/DC-Recomendation-BOT/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/Swistu/DC-Recomendation-BOT/issues">Request Feature</a>
-  </p>
-</div>
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+## Description
 
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Installation
 
-## About The Project
-<div align="center">
-  <img src="https://i.ibb.co/X88qVDM/awefawef.png" alt="">
-</div>
-<br />
-The project was created for the clan "Błękitna Armia" playing the game foxhole. 
-<br />
-<br />
-The main goal of the bot is to facilitate the system of promoting players in the clan. The bot itself checks the possibility to give new promotions, the correctness of given recommendations and sets the appropriate roles on the discord server. Most of the data used by the bot is stored in a database set up on mongodb. 
+```bash
+$ npm install
+```
 
-<br />
-<br />
+## Running the app
 
-### Built With
+```bash
+# development
+$ npm run start
 
-- [Node.js](https://nodejs.org/)
-- [Discord.js](https://discord.js.org/#/)
-- [MongoDB](https://www.mongodb.com/)
+# watch mode
+$ npm run start:dev
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+# production mode
+$ npm run start:prod
+```
 
-## Getting Started
+## Test
 
-### Prerequisites
+```bash
+# unit tests
+$ npm run test
 
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-* Create new database at [MongoDB](https://www.mongodb.com/)
-* Add new application at [Discord](https://discord.com/developers/applications)
+# e2e tests
+$ npm run test:e2e
 
-### Installation
+# test coverage
+$ npm run test:cov
+```
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/Swistu/DC-Recomendation-BOT.git
-   ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
-3. Create `.env` file and set your Database and Discord Bot settings
-   ```env
-    BOT_TOKEN=BotToken123
-    DB_USERNAME=Username
-    DB_PASSWORD=Password
-    DB_DATABASE=DatabaseName
-    DICORD_GUILD_ID=1234567890
-   ```
+## Support
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
+## Stay in touch
 
-## Usage
-
-To use any bot command you need to type on any text channel on discord that bot have permission to use. 
-After typing `/` on text channel you should see all avaible commands.
-
-Command list `/`
-<br />
-<br />
-<img src="https://i.ibb.co/mSqDpQr/coommandlist.png" alt="">
-<br />
-<br />
-Checking player information `/gracz pokaż`
-<br />
-<br />
-<img src="https://i.ibb.co/XX5gDt1/botaaa.png" alt="">
-<br />
-<br />
-Adding new recommendation `/rekomendacje dodaj`
-<br />
-<br />
-<img src="https://i.ibb.co/SycQtBJ/daaa.png" alt="">
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-## Roadmap
-
-- [ ] Automated Backup to text channel on discord
-- [ ] Saving information about previous player promotion
-
-See the [open issues](https://github.com/Swistu/DC-Recomendation-BOT/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-<p align="right">(<a href="#top">back to top</a>)</p>
 
-## Contact
-
-Szymon Świst - <a href="mailto:szymonswist97@gmail.com">szymonswist97@gmail.com</a>
-
-Project Link: [https://github.com/Swistu/DC-Recomendation-BOT](https://github.com/Swistu/DC-Recomendation-BOT)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+Nest is [MIT licensed](LICENSE).

@@ -1,8 +1,0 @@
-const { MongoClient } = require("mongodb");
-require("dotenv").config();
-
-const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@discordbot.mqrll.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-const client = new MongoClient(uri);
-const database = client.db(process.env.DB_DATABASE);
-
-module.exports = { client, database };
