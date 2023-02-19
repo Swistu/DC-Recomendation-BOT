@@ -4,7 +4,7 @@ import { from, Observable } from 'rxjs';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 
 import { UsersEntity } from '../models/users.entity';
-import { Users } from '../models/users.interface';
+import { Users } from '../models/users.dto';
 
 @Injectable()
 export class UsersService {

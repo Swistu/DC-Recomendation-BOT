@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { UpdateResult } from 'typeorm';
-import { Users } from '../models/users.interface';
+import { Users } from '../models/users.dto';
 import { UsersService } from '../services/users.service';
 
 @Controller('users')
