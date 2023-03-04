@@ -1,12 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
+import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { UserRole } from './user.dto';
 @Entity('users')
 export class UsersEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({ type: 'bigint' })
+  discordId: string;
 
-  @Column({ default: '' })
-  body: string;
+  @Column({ type: 'boolean', default: false })
+  accountActive: boolean;
+
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.MEMBER })
+  role: UserRole;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { UpdateResult } from 'typeorm';
-import { Users } from '../models/users.dto';
+import { User } from '../models/user.dto';
 import { UsersService } from '../services/users.service';
 
 @Controller('users')
@@ -17,27 +17,31 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  create(@Body() user: Users): Observable<Users> {
+  create(@Body() user: User): Observable<User> {
     return this.usersService.createUser(user);
   }
 
   @Get()
-  getAll(): Observable<Users[]> {
+  getAll(): Observable<User[]> {
     return this.usersService.getAllUsers();
+  }
+  @Get(':id')
+  getUser(@Param('id') id: string) {
+    return this.usersService.getUser(id);
   }
 
   @Put(':id')
   update(
     @Param('id')
-    id: number,
+    discordId: string,
     @Body()
-    user: Users,
+    user: User,
   ): Observable<UpdateResult> {
-    return this.usersService.updateUser(id, user);
+    return this.usersService.updateUser(discordId, user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.usersService.deleteUser(id);
+  remove(@Param('id') discordId: string) {
+    return this.usersService.deleteUser(discordId);
   }
 }
