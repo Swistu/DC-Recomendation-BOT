@@ -3,10 +3,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GatewayIntentBits } from 'discord.js';
+import { ActivityLogModule } from './activitylog/activitylog.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BotSlashCommandsModule } from './bot-commands/bot-slash-commands.module';
 import { BotModule } from './bot/bot.module';
+import { PromotionRankingModule } from './promotionRanking/promotionRanking.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -31,6 +33,8 @@ import { UsersModule } from './users/users.module';
       }),
     }),
     UsersModule,
+    ActivityLogModule,
+    PromotionRankingModule,
     BotModule,
     BotSlashCommandsModule,
   ],
