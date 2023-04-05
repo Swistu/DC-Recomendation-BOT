@@ -1,9 +1,12 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('promotion_ranking')
-export class PromotionRankingEntity {
-  @PrimaryGeneratedColumn()
-  id: string;
+@Entity('ranks')
+export class RanksEntity {
+  @PrimaryGeneratedColumn({ type: 'int' })
+  id: number;
+
+  @Column({ type: 'int' })
+  order: number;
 
   @Column({ type: 'int' })
   number: number;
