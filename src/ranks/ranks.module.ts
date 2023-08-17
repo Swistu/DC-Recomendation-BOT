@@ -5,4 +5,4 @@ import { RanksEntity } from './models/ranks.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([RanksEntity])],
 })
-export class PromotionRankingModule {}
+export class RanksModule {}

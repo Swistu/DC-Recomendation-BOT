@@ -3,7 +3,7 @@ import { Handler, IA, SubCommand } from '@discord-nestjs/core';
 import { Injectable } from '@nestjs/common';
 import { PlayerShowDto } from './player-show.dto';
 
-@SubCommand({ name: 'pokazuj', description: 'pokazuje infromacje o graczu' })
+@SubCommand({ name: 'pokaż', description: 'pokazuje infromacje o graczu' })
 @Injectable()
 export class PlayerShowSubCommand {
   @Handler()

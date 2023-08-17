@@ -1,10 +1,15 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { UserRole } from './userRole.dto';
+import { UsersEntity } from 'src/users/models/users.entity';
 
 @Entity('userRoles')
 export class UserRolesEntity {
-  @PrimaryColumn({ type: 'bigint' })
-  id: string;
+  @PrimaryGeneratedColumn({ type: 'int' })
+  id: number;
 
   @Column()
   name: string;
+
+  @OneToMany(() => UsersEntity, (user) => user.role)
+  user: UsersEntity[];
 }

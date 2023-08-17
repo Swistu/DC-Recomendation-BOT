@@ -8,8 +8,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BotSlashCommandsModule } from './bot-commands/bot-slash-commands.module';
 import { BotModule } from './bot/bot.module';
-import { PromotionRankingModule } from './promotionRanking/promotionRanking.module';
 import { UsersModule } from './users/users.module';
+import { UserRolesModule } from './userRoles/userRoles.module';
+import { UserRankModule } from './userRank/userRank.module';
+import { RanksModule } from './ranks/ranks.module';
 
 @Module({
   imports: [
@@ -33,12 +35,14 @@ import { UsersModule } from './users/users.module';
       }),
     }),
     UsersModule,
+    UserRolesModule,
+    UserRankModule,
+    RanksModule,
     ActivityLogModule,
-    PromotionRankingModule,
     BotModule,
     BotSlashCommandsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

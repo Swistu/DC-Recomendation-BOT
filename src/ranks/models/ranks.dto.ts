@@ -1,5 +1,5 @@
 export class RanksDto {
-  id?: string;
+  id: string;
   numberToPromote: number;
   order: number;
   rank: string;

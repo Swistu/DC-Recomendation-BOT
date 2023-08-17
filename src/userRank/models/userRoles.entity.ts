@@ -1,10 +1,21 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { RanksEntity } from 'src/ranks/models/ranks.entity';
+import { UsersEntity } from 'src/users/models/users.entity';
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 
-@Entity('userRoles')
-export class UserRolesEntity {
+@Entity('userRank')
+export class UserRankEntity {
   @PrimaryColumn({ type: 'bigint' })
-  id: string;
+  discordId: string;
+  @OneToOne(() => UsersEntity, { "cascade": true })
+  @JoinColumn({ name: "discordId" } )  // This matches @PrimaryColumn name
+  user: UsersEntity;
 
   @Column()
-  name: string;
+  rankId: number;
+  @OneToOne(() => RanksEntity, { "cascade": true })
+  @JoinColumn({ name: "rankId" })
+  rank: RanksEntity;
+
+  @CreateDateColumn()
+  rankStartDate: Date;
 }

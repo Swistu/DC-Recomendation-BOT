@@ -10,7 +10,7 @@ export class UserRolesService {
     private readonly userRolesRepository: Repository<UserRolesEntity>,
   ) {}
 
-  getRole(roleId: string): Observable<UserRolesEntity> {
+  getRole(roleId: number): Observable<UserRolesEntity> {
     return from(this.userRolesRepository.findOneBy({ id: roleId }));
   }
 }

@@ -14,9 +14,10 @@ import {
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 
 import { UsersEntity } from '../models/users.entity';
-import { User } from '../models/user.dto';
+import { CreateUser, User } from '../models/user.dto';
 import { InjectDiscordClient } from '@discord-nestjs/core';
 import { Client, GuildMember } from 'discord.js';
+import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
 
 @Injectable()
 export class UsersService {
@@ -26,17 +27,31 @@ export class UsersService {
 
     @InjectRepository(UsersEntity)
     private readonly usersRepository: Repository<UsersEntity>,
-  ) {}
+    @InjectRepository(UserRolesEntity)
+    private readonly userRolesEntity: Repository<UserRolesEntity>,
+  ) { }
 
-  createUser(user: User): Observable<User> {
-    return from(this.usersRepository.save(user));
+  async createUser(user: CreateUser) {
+
+    const userRole = await this.userRolesEntity.findOneBy({
+      id: user.roleId
+    });
+    const newUser = this.usersRepository.create({
+      account_active: true,
+      discord_id: user.discordId,
+      role: userRole
+    });
+
+    const savedUser = await this.usersRepository.save(newUser);
+
+    return savedUser;
   }
 
-  async getUser(discordId: string): Promise<User> {
+  async getUser(discordId: string) {
     const userDatabaseObservable = this.getUserDatabaseData(discordId);
     const userDiscordObservable = this.getUserDiscordData(discordId);
 
-    const userDatabaseData = await firstValueFrom(userDatabaseObservable);
+    const userDatabaseData = userDatabaseObservable;
     const userDiscordData = await firstValueFrom(userDiscordObservable);
 
     const user: User = {
@@ -51,25 +66,25 @@ export class UsersService {
     return user;
   }
 
-  getAllUsers(): Observable<User[]> {
+  getAllUsers() {
     return this.getAllUsersDatabaseData();
   }
 
-  updateUser(discordId: string, user: User): Observable<UpdateResult> {
+  updateUser(discordId: string, user: User) {
     return from(this.usersRepository.update(discordId, user));
   }
 
-  deleteUser(discordId: string): Observable<DeleteResult> {
+  deleteUser(discordId: string) {
     return from(this.usersRepository.delete(discordId));
   }
 
   // Helper functions
-  getAllUsersDatabaseData(): Observable<User[]> {
+  getAllUsersDatabaseData() {
     const userDatabaseData = from(this.usersRepository.find()).pipe(
       mergeMap((user) => user),
       map((user) => ({
         databaseData: user,
-        discordData: this.getUserDiscordData(user.discordId),
+        discordData: this.getUserDiscordData(user.discord_id),
       })),
       mergeMap((resultA) => {
         return combineLatest([
@@ -91,21 +106,19 @@ export class UsersService {
     return userDatabaseData;
   }
 
-  getUserDatabaseData(discordId: string): Observable<UsersEntity[]> {
-    const userDatabaseData = from(
-      this.usersRepository.find({
-        where: {
-          discordId: discordId,
-        },
-      }),
-    );
+  getUserDatabaseData(discordId: string) {
+    const userDatabaseData = this.usersRepository.find({
+      where: {
+        discord_id: discordId,
+      },
+    });
 
     return userDatabaseData;
   }
 
-  getUserDiscordData(discordId: string): Observable<GuildMember> {
+  getUserDiscordData(discordId: string) {
     const userDiscordData = from(
-      this.client.guilds.fetch(process.env.DICORD_GUILD_ID),
+      this.client.guilds.fetch(process.env.DISCORD_GUILD_ID),
     ).pipe(
       switchMap((guild) => guild.members.fetch(discordId)),
       map((res) => res),
