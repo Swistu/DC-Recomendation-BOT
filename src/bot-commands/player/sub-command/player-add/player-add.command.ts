@@ -16,24 +16,26 @@ export class PlayerAddSubCommand {
   ) { }
 
   @Handler()
-  async onBaseInfo(@InteractionEvent(SlashCommandPipe) dto: PlayerAddDto, @InteractionEvent() interaction: CommandInteraction): Promise<void> {
+  async onBaseInfo(@InteractionEvent(SlashCommandPipe) dto: PlayerAddDto, @InteractionEvent() interaction: CommandInteraction) {
     const user = interaction.options.getMember('user') as GuildMember;
 
     if (!user) {
-      interaction.editReply('Podano niewłaściwego gracza.');
+      await interaction.editReply('Podano niewłaściwego gracza.');
       return;
     }
 
-    const userDatabase = await this.usersService.getUserDatabaseData(user.user.id);
+    const embed = new EmbedBuilder().setDescription('Trwa sprawdzanie gracza!');
+    await interaction.reply({ embeds: [embed], ephemeral: false });
 
-    console.log('database', userDatabase);
+    const createUser = await this.usersService.createUser({ discordId: user.user.id, roleId: UserRole.MEMBER })
 
-    console.log(user.user.id);
-    console.log(interaction.user.id);
-    const embed = new EmbedBuilder().setDescription('Pong!');
-    interaction.reply({ embeds: [embed], ephemeral: false });
+    if(createUser){
+      embed.setDescription('Dodano gracza do bazy!');
+    }else{
+      embed.setDescription('Nie udało się dodać gracza do bazy!');
+    }
 
-    this.usersService.createUser({ discordId: user.user.id, roleId: UserRole.MEMBER })
+    await interaction.editReply({ embeds: [embed] });
 
     return;
   }

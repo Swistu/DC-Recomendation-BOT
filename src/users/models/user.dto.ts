@@ -14,6 +14,5 @@ export class User {
 export class CreateUser {
   discordId: string;
   accountactive?: boolean | true;
-  createdDate?: Date;
-  roleId?: number;
+  roleId: number;
 }

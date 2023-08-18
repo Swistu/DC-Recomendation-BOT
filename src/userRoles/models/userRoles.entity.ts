@@ -10,6 +10,6 @@ export class UserRolesEntity {
   @Column()
   name: string;
 
-  @OneToMany(() => UsersEntity, (user) => user.role)
+  @OneToMany(() => UsersEntity, (user) => user.role, { onDelete: 'NO ACTION' })
   user: UsersEntity[];
 }

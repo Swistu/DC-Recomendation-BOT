@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
-import { UserRole } from 'src/userRoles/models/userRole.dto';
 import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
-
+import { UserRankEntity } from 'src/userRank/models/userRank.entity';
+ 
 @Entity('users')
 export class UsersEntity {
   @PrimaryColumn({ type: 'bigint' })
@@ -15,7 +15,7 @@ export class UsersEntity {
 
   @ManyToOne(() => UserRolesEntity, (userRolesEntity) => userRolesEntity.user, { nullable: false })
   @JoinColumn({
-		name: 'role_id',
-	})
+    name: 'role_id',
+  })
   role: UserRolesEntity;
 }

@@ -1,20 +1,71 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { from, Observable } from 'rxjs';
 import { Repository, UpdateResult } from 'typeorm';
-import { UserRankEntity } from '../models/userRoles.entity';
-import { UserRank } from '../models/userRank.dto';
+import { UserRankEntity } from '../models/userRank.entity';
+import { createUserRankWithId, createUserRankWithOrderNumber, createUserRankWithRankName, UserRank } from '../models/userRank.dto';
+import { RanksEntity } from 'src/ranks/models/ranks.entity';
+import { UsersService } from 'src/users/services/users.service';
+import { UsersEntity } from 'src/users/models/users.entity';
 
 export class UserRankService {
   constructor(
     @InjectRepository(UserRankEntity)
     private readonly userRankRepository: Repository<UserRankEntity>,
-  ) {}
+    @InjectRepository(RanksEntity)
+    private readonly rankRepository: Repository<RanksEntity>,
+    @InjectRepository(UsersEntity)
+    private readonly usersRepository: Repository<UsersEntity>,
+  ) { }
 
-  getUserRankByDiscordId(discordId: any): Observable<UserRankEntity> {
-    return from(this.userRankRepository.findOneBy({ discordId: discordId }));
+  getUserRankByDiscordId(discordId: any) {
+    return this.userRankRepository.findOneBy({ discord_id: discordId });
   }
 
-  updateUserRank(discordId: string, dto: UserRank): Observable<UpdateResult>{
-    return from(this.userRankRepository.update(discordId, dto));
+  async createUserRank(createUserRankDto: createUserRankWithId | createUserRankWithOrderNumber | createUserRankWithRankName) {
+    const { discordId, rankId, rankName, rankOrderNumber } = createUserRankDto;
+    const user = await this.usersRepository.findOneBy({
+      discord_id: discordId
+    })
+
+    if (!user) {
+      return;
+    }
+
+    let rank: RanksEntity;
+    if (rankId !== undefined) {
+      rank = await this.rankRepository.findOneBy({
+        id: rankId
+      })
+    } else if (rankName !== undefined) {
+      rank = await this.rankRepository.findOneBy({
+        rank: rankName
+      })
+    } else if (rankOrderNumber !== undefined) {
+      rank = await this.rankRepository.findOneBy({
+        order: rankOrderNumber
+      })
+    }
+
+    if (!rank) {
+      const error = new Error();
+      error.name = "RankNotFound";
+      error.message = `Rank was not found`;
+      throw error;
+    }
+
+    const userRank = this.userRankRepository.create({
+      discord_id: user,
+      rank: rank
+    })
+
+    if (!userRank) {
+      const error = new Error();
+      error.name = "UserRankNotCreated";
+      error.message = `Cannot create user rank`;
+      throw error;
+    }
+
+    const savedUserRank = await this.userRankRepository.save(userRank);
+    return savedUserRank;
   }
 }

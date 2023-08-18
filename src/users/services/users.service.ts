@@ -6,18 +6,20 @@ import {
   from,
   map,
   mergeMap,
-  Observable,
   of,
   switchMap,
   toArray,
 } from 'rxjs';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
 
 import { UsersEntity } from '../models/users.entity';
 import { CreateUser, User } from '../models/user.dto';
 import { InjectDiscordClient } from '@discord-nestjs/core';
 import { Client, GuildMember } from 'discord.js';
 import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
+import { RanksEntity } from 'src/ranks/models/ranks.entity';
+import { UserRankService } from 'src/userRank/services/userRank.service';
+import { createUserRankWithOrderNumber } from 'src/userRank/models/userRank.dto';
 
 @Injectable()
 export class UsersService {
@@ -28,21 +30,60 @@ export class UsersService {
     @InjectRepository(UsersEntity)
     private readonly usersRepository: Repository<UsersEntity>,
     @InjectRepository(UserRolesEntity)
-    private readonly userRolesEntity: Repository<UserRolesEntity>,
+    private readonly userRolesRepository: Repository<UserRolesEntity>,
+
+    private dataSource: DataSource,
+    private userRankService: UserRankService
   ) { }
 
   async createUser(user: CreateUser) {
+    const { discordId, roleId, accountactive } = user;
+    const queryRunner = this.dataSource.createQueryRunner();
+    let savedUser;
 
-    const userRole = await this.userRolesEntity.findOneBy({
-      id: user.roleId
-    });
-    const newUser = this.usersRepository.create({
-      account_active: true,
-      discord_id: user.discordId,
-      role: userRole
-    });
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    const savedUser = await this.usersRepository.save(newUser);
+    try {
+      const userRole = await this.userRolesRepository.findOneBy({
+        id: roleId
+      });
+
+      if (!userRole) {
+        throw new Error('No userRole was found');
+      }
+      const existUser = await this.usersRepository.findOneBy({ discord_id: discordId })
+      if (existUser) {
+        const error = new Error();
+        error.name = "UserExist";
+        error.message = `User with discord_id ${discordId} already exist`;
+        throw error;
+      }
+
+      const newUser = this.usersRepository.create({
+        account_active: accountactive,
+        discord_id: discordId,
+        role: userRole
+      });
+      savedUser = await this.usersRepository.save(newUser);
+
+      const userRank = this.userRankService.createUserRank({
+        discordId: discordId,
+        rankOrderNumber: 1
+      } as createUserRankWithOrderNumber)
+
+      if (!userRank) {
+        return;
+      }
+
+      savedUser = await this.usersRepository.save(newUser);
+
+    } catch (err) {
+      console.error(err);
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
 
     return savedUser;
   }
@@ -71,11 +112,11 @@ export class UsersService {
   }
 
   updateUser(discordId: string, user: User) {
-    return from(this.usersRepository.update(discordId, user));
+    return this.usersRepository.update(discordId, user);
   }
 
   deleteUser(discordId: string) {
-    return from(this.usersRepository.delete(discordId));
+    return this.usersRepository.delete(discordId);
   }
 
   // Helper functions
