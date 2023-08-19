@@ -9,7 +9,7 @@ export class RankService {
   ) {}
 
   getRankByName(rankName: string) {
-    return this.rankRepository.findOneBy({ rank: rankName });
+    return this.rankRepository.findOneBy({ name: rankName });
   }
 
   getRankByOrderNumber( orderNumber: number) {

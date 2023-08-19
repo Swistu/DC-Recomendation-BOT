@@ -38,7 +38,7 @@ export class UserRankService {
       })
     } else if (rankName !== undefined) {
       rank = await this.rankRepository.findOneBy({
-        rank: rankName
+        name: rankName
       })
     } else if (rankOrderNumber !== undefined) {
       rank = await this.rankRepository.findOneBy({

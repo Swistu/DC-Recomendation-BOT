@@ -38,7 +38,7 @@ export class RanksEntity {
   number: number;
 
   @Column({ type: 'enum', enum: RankTypes })
-  rank: string;
+  name: string;
 
   @Column({ type: 'enum', enum: CorpsTypes })
   corps: string;

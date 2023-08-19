@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
 import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
- 
+
 @Entity('users')
 export class UsersEntity {
   @PrimaryColumn({ type: 'bigint' })
@@ -18,4 +18,7 @@ export class UsersEntity {
     name: 'role_id',
   })
   role: UserRolesEntity;
+
+  @OneToOne(() => UserRankEntity, (userRank) => userRank.discord_id)
+  userRank: UserRankEntity
 }

@@ -13,7 +13,7 @@ import {
 import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
 
 import { UsersEntity } from '../models/users.entity';
-import { CreateUser, User } from '../models/user.dto';
+import { CreateUser, User, UserAllData } from '../models/user.dto';
 import { InjectDiscordClient } from '@discord-nestjs/core';
 import { Client, GuildMember } from 'discord.js';
 import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
@@ -40,7 +40,6 @@ export class UsersService {
     const { discordId, roleId, accountactive } = user;
     const queryRunner = this.dataSource.createQueryRunner();
     let savedUser;
-
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
@@ -89,19 +88,16 @@ export class UsersService {
   }
 
   async getUser(discordId: string) {
-    const userDatabaseObservable = this.getUserDatabaseData(discordId);
-    const userDiscordObservable = this.getUserDiscordData(discordId);
+    const userDatabaseData = await this.getUserDatabaseData(discordId);
+    const userDiscordData = await this.getUserDiscordData(discordId);
 
-    const userDatabaseData = userDatabaseObservable;
-    const userDiscordData = await firstValueFrom(userDiscordObservable);
-
-    const user: User = {
-      ...userDatabaseData[0],
+    const user = {
+      ...userDatabaseData,
+      ...userDiscordData,
       discordTag:
         userDiscordData.user.username +
         '#' +
         userDiscordData.user.discriminator,
-      discordDisplayName: userDiscordData.displayName,
     };
 
     return user;
@@ -120,50 +116,39 @@ export class UsersService {
   }
 
   // Helper functions
-  getAllUsersDatabaseData() {
-    const userDatabaseData = from(this.usersRepository.find()).pipe(
-      mergeMap((user) => user),
-      map((user) => ({
-        databaseData: user,
-        discordData: this.getUserDiscordData(user.discord_id),
-      })),
-      mergeMap((resultA) => {
-        return combineLatest([
-          of(resultA.databaseData),
-          from(resultA.discordData),
-        ]);
-      }),
-      map(
-        ([usersEntity, guildMember]): User => ({
-          ...usersEntity,
-          discordTag:
-            guildMember.user.username + '#' + guildMember.user.discriminator,
-          discordDisplayName: guildMember.displayName,
-        }),
-      ),
-      toArray(),
-    );
-
-    return userDatabaseData;
-  }
-
-  getUserDatabaseData(discordId: string) {
-    const userDatabaseData = this.usersRepository.find({
-      where: {
-        discord_id: discordId,
-      },
+  async getAllUsersDatabaseData() {
+    const userDatabaseData = await this.usersRepository.find({
+      relations: {
+        role: true,
+        userRank: {
+          rank: true
+        }
+      }
     });
 
     return userDatabaseData;
   }
 
-  getUserDiscordData(discordId: string) {
-    const userDiscordData = from(
-      this.client.guilds.fetch(process.env.DISCORD_GUILD_ID),
-    ).pipe(
-      switchMap((guild) => guild.members.fetch(discordId)),
-      map((res) => res),
-    );
+  async getUserDatabaseData(discordId: string) {
+    const userDatabaseData = await this.usersRepository.findOne({
+      where: {
+        discord_id: discordId,
+      },
+      relations: {
+        role: true,
+        userRank: {
+          rank: true
+        }
+      }
+    });
+
+    return userDatabaseData;
+  }
+
+  async getUserDiscordData(discordId: string) {
+    const guild = await this.client.guilds.fetch(process.env.DISCORD_GUILD_ID)
+    const userDiscordData = await guild.members.fetch(discordId)
+
     return userDiscordData;
   }
 }
