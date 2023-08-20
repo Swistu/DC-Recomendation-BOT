@@ -7,8 +7,6 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { UpdateResult } from 'typeorm';
 import { CreateUser, User } from '../models/user.dto';
 import { UsersService } from '../services/users.service';
 

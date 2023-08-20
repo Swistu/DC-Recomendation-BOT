@@ -35,4 +35,8 @@ export class RecommendationsService {
 
     return await this.recommendationsRepository.save(newRecommendation);
   }
+
+  async checkUserPromotion(discordId: string){
+    const userRecommendations = await this.getUserRecommendations(discordId);
+  }
 }

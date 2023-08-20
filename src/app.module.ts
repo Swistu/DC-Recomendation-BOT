@@ -13,6 +13,8 @@ import { UserRolesModule } from './userRoles/userRoles.module';
 import { UserRankModule } from './userRank/userRank.module';
 import { RanksModule } from './ranks/ranks.module';
 import { RecommendationsModule } from './recommendations/recommendations.module';
+import { UserRankHistoryModule } from './userRankHistory/userRankHistory.module';
+import { RecommendationsHistoryModule } from './recommendationsHistory/recommendationsHistory.module';
 
 @Module({
   imports: [
@@ -35,11 +37,12 @@ import { RecommendationsModule } from './recommendations/recommendations.module'
         },
       }),
     }),
+    UserRankHistoryModule,
+    RecommendationsHistoryModule,
     UsersModule,
     UserRolesModule,
     UserRankModule,
     RanksModule,
-    ActivityLogModule,
     BotModule,
     BotSlashCommandsModule,
     RecommendationsModule,

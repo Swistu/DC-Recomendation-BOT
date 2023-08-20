@@ -2,6 +2,8 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, One
 import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
 import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
+import { RecommendationsHistoryEntity } from 'src/recommendationsHistory/models/recommendationsHistory.entity';
+import { UserRankHistoryEntity } from 'src/userRankHistory/models/userRankHistory.entity';
 
 @Entity('users')
 export class UsersEntity {
@@ -23,9 +25,12 @@ export class UsersEntity {
   @OneToOne(() => UserRankEntity, (userRank) => userRank.discord_id)
   userRank: UserRankEntity
 
-  @OneToMany(() => RecommendationsEntity, user => user.recommended_user)
+  @OneToMany(() => RecommendationsEntity, reccomendation => reccomendation.recommended_user)
   recommendations_recived: RecommendationsEntity[]
 
-  @OneToMany(() => RecommendationsEntity, user => user.recommender_user)
+  @OneToMany(() => RecommendationsEntity, reccomendation => reccomendation.recommender_user)
   recommendations_given: RecommendationsEntity[]
+
+  @OneToMany(() => UserRankHistoryEntity, (userRankHistory) => userRankHistory.discord_id)
+  userRankHistory: UserRankHistoryEntity
 }
