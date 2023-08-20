@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
 import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
+import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
 
 @Entity('users')
 export class UsersEntity {
@@ -21,4 +22,10 @@ export class UsersEntity {
 
   @OneToOne(() => UserRankEntity, (userRank) => userRank.discord_id)
   userRank: UserRankEntity
+
+  @OneToMany(() => RecommendationsEntity, user => user.recommended_user)
+  recommendations_recived: RecommendationsEntity[]
+
+  @OneToMany(() => RecommendationsEntity, user => user.recommender_user)
+  recommendations_given: RecommendationsEntity[]
 }

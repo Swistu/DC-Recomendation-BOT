@@ -12,6 +12,7 @@ import { UsersModule } from './users/users.module';
 import { UserRolesModule } from './userRoles/userRoles.module';
 import { UserRankModule } from './userRank/userRank.module';
 import { RanksModule } from './ranks/ranks.module';
+import { RecommendationsModule } from './recommendations/recommendations.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { RanksModule } from './ranks/ranks.module';
     ActivityLogModule,
     BotModule,
     BotSlashCommandsModule,
+    RecommendationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
