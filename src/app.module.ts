@@ -15,6 +15,7 @@ import { RanksModule } from './ranks/ranks.module';
 import { RecommendationsModule } from './recommendations/recommendations.module';
 import { UserRankHistoryModule } from './userRankHistory/userRankHistory.module';
 import { RecommendationsHistoryModule } from './recommendationsHistory/recommendationsHistory.module';
+import { UserPromotionSettingsModule } from './userPromotionSettings/userPromotionSettingsModule.module';
 
 @Module({
   imports: [
@@ -38,11 +39,12 @@ import { RecommendationsHistoryModule } from './recommendationsHistory/recommend
       }),
     }),
     UserRankHistoryModule,
-    RecommendationsHistoryModule,
     UsersModule,
     UserRolesModule,
     UserRankModule,
+    UserPromotionSettingsModule,
     RanksModule,
+    RecommendationsHistoryModule,
     BotModule,
     BotSlashCommandsModule,
     RecommendationsModule,
