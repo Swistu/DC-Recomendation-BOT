@@ -20,6 +20,8 @@ import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
 import { RanksEntity } from 'src/ranks/models/ranks.entity';
 import { UserRankService } from 'src/userRank/services/userRank.service';
 import { createUserRankWithOrderNumber } from 'src/userRank/models/userRank.dto';
+import { UserPromotionService } from 'src/userPromotion/services/userPromotion.service';
+import { UserExistsError } from 'src/utility/errorTypes';
 
 @Injectable()
 export class UsersService {
@@ -33,17 +35,28 @@ export class UsersService {
     private readonly userRolesRepository: Repository<UserRolesEntity>,
 
     private dataSource: DataSource,
-    private userRankService: UserRankService
+    private userRankService: UserRankService,
+    private userPromotionService: UserPromotionService,
   ) { }
 
   async createUser(user: CreateUser) {
     const { discordId, roleId, accountactive } = user;
+    let savedUser: undefined | UsersEntity;
+
     const queryRunner = this.dataSource.createQueryRunner();
-    let savedUser;
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
+      const aa = await this.usersRepository.findOne({ where: { discord_id: discordId }, relations: { userPromotion: true } })
+
+      console.log(aa);
+
+      const existUser = await this.usersRepository.findOneBy({ discord_id: discordId })
+      if (existUser) {
+        throw new UserExistsError;
+      }
+
       const userRole = await this.userRolesRepository.findOneBy({
         id: roleId
       });
@@ -51,20 +64,21 @@ export class UsersService {
       if (!userRole) {
         throw new Error('No userRole was found');
       }
-      const existUser = await this.usersRepository.findOneBy({ discord_id: discordId })
-      if (existUser) {
-        const error = new Error();
-        error.name = "UserExist";
-        error.message = `User with discord_id ${discordId} already exist`;
-        throw error;
-      }
+
+
 
       const newUser = this.usersRepository.create({
         account_active: accountactive,
         discord_id: discordId,
-        role: userRole
+        role: userRole,
       });
       savedUser = await this.usersRepository.save(newUser);
+
+      const userPromotion = await this.userPromotionService.createUserPromotion({
+        discordId: discordId,
+        blocked: false,
+        ready: false,
+      });
 
       const userRank = this.userRankService.createUserRank({
         discordId: discordId,
@@ -75,11 +89,14 @@ export class UsersService {
         return;
       }
 
-      savedUser = await this.usersRepository.save(newUser);
-
     } catch (err) {
-      console.error(err);
       await queryRunner.rollbackTransaction();
+
+      if (err instanceof UserExistsError) {
+        throw new UserExistsError(err.message);
+      } else {
+        console.error(err);
+      }
     } finally {
       await queryRunner.release();
     }
@@ -138,7 +155,10 @@ export class UsersService {
         role: true,
         userRank: {
           rank: true
-        }
+        },
+        userPromotion: true,
+        recommendations_recived: true,
+        recommendations_given: true,
       }
     });
 

@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { PlayerShowDto } from './player-show.dto';
 import { CommandInteraction, EmbedBuilder, GuildMember } from 'discord.js';
 import { UsersService } from 'src/users/services/users.service';
+import { calcCurrentRecommendationNumber, checkRecommendationRequiredToPromote } from 'src/utility/recommendation.utility';
 
 @SubCommand({ name: 'pokaż', description: 'pokazuje infromacje o graczu' })
 @Injectable()
@@ -28,6 +29,25 @@ export class PlayerShowSubCommand {
 
     const userData = await this.usersService.getUser(user.id)
 
+    userData.recommendations_recived;
+
+    let userPositiveRecommendations = '';
+    let userNegativeRecommendations = '';
+    userData.recommendations_recived.forEach(element => {
+      if (element.type)
+        userPositiveRecommendations += `<@${element.recommender_discord_id}> - ${element.reason}\n`;
+      else
+        userNegativeRecommendations += `<@${element.recommender_discord_id}> - ${element.reason}\n`;
+    });
+
+    if(userPositiveRecommendations === ''){
+      userPositiveRecommendations = 'brak';
+    }
+    
+    if(userNegativeRecommendations === ''){
+      userNegativeRecommendations = 'brak';
+    }
+
     if (userData) {
       embed.setDescription(`<@${userData.discord_id}>`);
       embed.setTitle('Dane gracza');
@@ -40,20 +60,17 @@ export class PlayerShowSubCommand {
         { name: 'Stopień:', value: userData.userRank.rank.name, inline: true },
         { name: 'Korpus', value: userData.userRank.rank.corps, inline: true },
         { name: '\u200B', value: '\u200B' },
-        { name: 'Rekomendacje:', value: '2' },
-        { name: 'Ujemne Rekomendacje:', value: '2' },
-        { name: 'Całkowita liczba rekomendacji', value: `2` },
-        { name: 'Aktualna liczba ', value: `0`, inline: true },
-        { name: 'Liczba do awansu', value: `0`, inline: true },
-        { name: 'Gotowy do awansu', value: `0` },
-        { name: 'Konto aktywne', value: userData.account_active ? 'Tak' : 'Nie'}
+        { name: 'Rekomendacje:', value: userPositiveRecommendations },
+        { name: 'Ujemne Rekomendacje:', value: userNegativeRecommendations },
+        { name: 'Aktualna liczba ', value: `${calcCurrentRecommendationNumber(userData.recommendations_recived)}`, inline: true },
+        { name: 'Liczba do awansu', value: `${checkRecommendationRequiredToPromote(userData.userRank.rank.name)}`, inline: true },
+        { name: 'Gotowy do awansu', value: userData.userPromotion.ready ? 'Tak' : 'Nie' },
+        { name: 'Konto aktywne', value: userData.account_active ? 'Tak' : 'Nie' }
       )
     } else {
       embed.setDescription('Nie udało się sprawdzić gracza!');
     }
 
     await interaction.editReply({ embeds: [embed] });
-
-    return;
   }
 }

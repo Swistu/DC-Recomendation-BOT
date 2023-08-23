@@ -3,12 +3,16 @@ import { from, Observable } from 'rxjs';
 import { Repository, UpdateResult } from 'typeorm';
 import { UserPromotionEntity } from '../models/userPromotion.entity';
 import { CreateUserPromotionDto, UpdatePromotionDto, UpdateUserPromotionDto, UserPromotionList } from '../models/userPromotion.dto';
+import { UsersEntity } from 'src/users/models/users.entity';
 
 
 export class UserPromotionService {
   constructor(
     @InjectRepository(UserPromotionEntity)
     private readonly userPromotionRepository: Repository<UserPromotionEntity>,
+
+    @InjectRepository(UsersEntity)
+    private readonly userRepository: Repository<UsersEntity>,
   ) { }
 
   async getUserPromotion(discordId: string) {
@@ -22,13 +26,17 @@ export class UserPromotionService {
   }
 
   async createUserPromotion(userPromotionDto: CreateUserPromotionDto) {
-    const updateUserPromotion = this.userPromotionRepository.create({
+    const newUserPromotion = this.userPromotionRepository.create({
       ...userPromotionDto,
       discord_id: userPromotionDto.discordId
     })
 
-    const savedUserPromotion = await this.userPromotionRepository.save(updateUserPromotion);
+    const savedUserPromotion = await this.userPromotionRepository.save(newUserPromotion);
 
+    await this.userRepository.update({discord_id: userPromotionDto.discordId}, {
+      userPromotion: newUserPromotion
+    });
+    
     return savedUserPromotion;
   }
 

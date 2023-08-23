@@ -5,6 +5,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { CommandInteraction, EmbedBuilder, GuildMember, InteractionCollector, InteractionReplyOptions } from "discord.js";
 import { UsersService } from "src/users/services/users.service";
 import { RecommendationsService } from "src/recommendations/service/recommendations.service";
+import { RecommendationsEntity } from "src/recommendations/models/recommendations.entity";
 
 @SubCommand({ name: 'dodaj', description: 'pokazuje infromacje o graczu' })
 @Injectable()
@@ -29,24 +30,23 @@ export class RecommendationAddSubCommand {
       recommenderDiscordId: interaction.user.id,
       recommendedDiscordId: dto.user,
       reason: dto.reason,
-      type: dto.type.toString(),
+      type: dto.type,
     }
 
     const embed = new EmbedBuilder().setDescription('Trwa sprawdzanie rekomendacji!');
     await interaction.reply({ embeds: [embed], ephemeral: false });
 
+    try {
+      const giveRecommendation = await this.recommendationsService.giveUserRecommendation(giveRecommendationDto);
 
-    console.log(giveRecommendationDto);
-    const giveRecommendation = await this.recommendationsService.giveUserRecommendation(giveRecommendationDto);
-
-    if (giveRecommendation) {
-      embed.setDescription('Dodano rekomendacje!');
-    } else {
-      embed.setDescription('Nie udało się dodać rekomendacji!');
+      if (giveRecommendation) {
+        embed.setDescription('Dodano rekomendacje!');
+      } else {
+        embed.setDescription('Nie udało się dodać rekomendacji!');
+      }
+    } catch (err) {
+      embed.setDescription(err.message);
+      await interaction.editReply({ embeds: [embed] });
     }
-
-    await interaction.editReply({ embeds: [embed] });
-
-    return;
   }
 }

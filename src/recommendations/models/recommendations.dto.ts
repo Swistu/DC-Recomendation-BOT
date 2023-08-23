@@ -11,5 +11,5 @@ export class GiveRecommendationDto {
   recommenderDiscordId: string; 
   recommendedDiscordId: string;
   reason: string; 
-  type: string;
+  type: number;
 }

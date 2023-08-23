@@ -4,6 +4,7 @@ import { UserRankEntity } from 'src/userRank/models/userRank.entity';
 import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
 import { RecommendationsHistoryEntity } from 'src/recommendationsHistory/models/recommendationsHistory.entity';
 import { UserRankHistoryEntity } from 'src/userRankHistory/models/userRankHistory.entity';
+import { UserPromotionEntity } from 'src/userPromotion/models/userPromotion.entity';
 
 @Entity('users')
 export class UsersEntity {
@@ -33,4 +34,8 @@ export class UsersEntity {
 
   @OneToMany(() => UserRankHistoryEntity, (userRankHistory) => userRankHistory.discord_id)
   userRankHistory: UserRankHistoryEntity
+
+  @OneToOne(() => UserPromotionEntity, userPromotion => userPromotion.id)
+  @JoinColumn()
+  userPromotion: UserPromotionEntity
 }
