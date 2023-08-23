@@ -1,15 +1,15 @@
 import { SlashCommandPipe } from "@discord-nestjs/common";
 import { Handler, IA, InteractionEvent, SubCommand } from "@discord-nestjs/core";
-import { RecommendationAddDto } from "./recommendations-add.dto";
+import { RecommendationRemoveDto } from "./recommendations-remove.dto";
 import { Inject, Injectable } from "@nestjs/common";
 import { CommandInteraction, EmbedBuilder, GuildMember, InteractionCollector, InteractionReplyOptions } from "discord.js";
 import { UsersService } from "src/users/services/users.service";
 import { RecommendationsService } from "src/recommendations/service/recommendations.service";
 import { RecommendationsEntity } from "src/recommendations/models/recommendations.entity";
 
-@SubCommand({ name: 'dodaj', description: 'Dodaje rekomendacje' })
+@SubCommand({ name: 'usuń', description: 'Usuwa rekomendację' })
 @Injectable()
-export class RecommendationAddSubCommand {
+export class RecommendationRemoveSubCommand {
   constructor(
     @Inject(UsersService)
     private readonly usersService: UsersService,
@@ -18,7 +18,7 @@ export class RecommendationAddSubCommand {
   ) { }
 
   @Handler()
-  async onBaseInfo(@InteractionEvent(SlashCommandPipe) dto: RecommendationAddDto, @InteractionEvent() interaction: CommandInteraction) {
+  async onBaseInfo(@InteractionEvent(SlashCommandPipe) dto: RecommendationRemoveDto, @InteractionEvent() interaction: CommandInteraction) {
     const user = interaction.options.getMember('user') as GuildMember;
 
     if (!user) {
@@ -26,23 +26,24 @@ export class RecommendationAddSubCommand {
       return;
     }
 
-    const giveRecommendationDto = {
+    const removeRecommendationDto = {
       recommenderDiscordId: interaction.user.id,
       recommendedDiscordId: dto.user,
-      reason: dto.reason,
       type: dto.type,
     }
 
     const embed = new EmbedBuilder().setDescription('Trwa sprawdzanie rekomendacji!');
     await interaction.reply({ embeds: [embed], ephemeral: false });
 
-    try {
-      const giveRecommendation = await this.recommendationsService.giveUserRecommendation(giveRecommendationDto);
+    
 
-      if (giveRecommendation)
-        embed.setDescription(`<@${giveRecommendation.recommender_discord_id}> dał rekomendacje dla<@${giveRecommendation.recommended_discord_id}>\n ${giveRecommendation.reason}`);
+    try {
+      const removeRecommendation = await this.recommendationsService.removeUserRecommendation(removeRecommendationDto);
+
+      if (removeRecommendation.affected)
+        embed.setDescription(`<@${removeRecommendationDto.recommenderDiscordId}> usunął swoją rekomendacje <@${removeRecommendationDto.recommendedDiscordId}>!`);
       else
-        embed.setDescription('Nie udało się dodać rekomendacji!');
+        embed.setDescription(`Nie udało się usunąc rekomendacji <@${removeRecommendationDto.recommendedDiscordId}>!`);
 
       await interaction.editReply({ embeds: [embed] });
 

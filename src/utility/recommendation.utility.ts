@@ -67,9 +67,9 @@ export function calcCurrentRecommendationNumber(recommendationList: Recommendati
   }, 0);
 }
 
-export function isUserRecommendationInList(recommenderDiscordId: string, recommendationList: RecommendationsEntity[]) {
+export function isUserRecommendationInList(recommenderDiscordId: string, recommendationList: RecommendationsEntity[], type: string) {
   return recommendationList.find((element) => {
-    if (element.recommender_discord_id === recommenderDiscordId)
+    if (element.recommender_discord_id === recommenderDiscordId && element.type === type)
       return true;
   })
 }

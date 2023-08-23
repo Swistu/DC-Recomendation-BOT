@@ -69,7 +69,7 @@ export class UserPromotionService {
     const usersPromotion = await this.userPromotionRepository.createQueryBuilder('promotion')
       .select(selectFields)
       .where("promotion.ready = true")
-      .andWhere("promotion.blocked = true")
+      .andWhere("promotion.blocked = false")
       .leftJoin("promotion.userRank", "userRank")
       .leftJoin("userRank.rank", "currentRank")
       .leftJoin("ranks", "newRank", '"currentRank"."order" + 1 = "newRank"."order"')

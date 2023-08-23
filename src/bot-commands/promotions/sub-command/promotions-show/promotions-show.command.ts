@@ -21,6 +21,10 @@ export class PromotionsShowSubCommand {
     const usersToPromote = await this.userPromotionService.checkAllPromotions();
 
     let responseText = 'Ludzie do awansu\n';
+    if (usersToPromote.length)
+      responseText = 'Ludzie do awansu\n';
+    else
+      responseText = 'Brak ludzi do awansu\n';
 
     usersToPromote.forEach((promotion) => {
       responseText += `${promotion.currentRankName} <@${promotion.discordId}> awansuje na ${promotion.newRankName}\n`;
