@@ -54,7 +54,7 @@ export class UserRankService {
     }
 
     const userRank = this.userRankRepository.create({
-      discord_id: user,
+      discord_id: discordId,
       rank: rank
     })
 
@@ -65,7 +65,14 @@ export class UserRankService {
       throw error;
     }
 
+
     const savedUserRank = await this.userRankRepository.save(userRank);
+    const userUpdated = this.usersRepository.create({
+      discord_id: discordId,
+      userRank: userRank
+    });
+
+    await this.usersRepository.save(userUpdated);
     return savedUserRank;
   }
 }

@@ -22,7 +22,6 @@ export class UserRankHistoryService {
 
   async saveUserHistory(saveUserDto: saveUserDto){
     const userRecommendations = await this.recommendationsService.getUserRecommendations(saveUserDto.discordId);
-    console.log(userRecommendations);
 
     return userRecommendations[0];
   }

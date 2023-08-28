@@ -4,6 +4,9 @@ import { Repository, UpdateResult } from 'typeorm';
 import { UserPromotionEntity } from '../models/userPromotion.entity';
 import { CreateUserPromotionDto, UpdatePromotionDto, UpdateUserPromotionDto, UserPromotionList } from '../models/userPromotion.dto';
 import { UsersEntity } from 'src/users/models/users.entity';
+import { UserRankEntity } from 'src/userRank/models/userRank.entity';
+import { UserRank } from 'src/userRank/models/userRank.dto';
+import { RanksService } from 'src/ranks/services/ranks.service';
 
 
 export class UserPromotionService {
@@ -13,6 +16,11 @@ export class UserPromotionService {
 
     @InjectRepository(UsersEntity)
     private readonly userRepository: Repository<UsersEntity>,
+
+    @InjectRepository(UserRankEntity)
+    private readonly userRankRepository: Repository<UserRankEntity>,
+
+    private rankService: RanksService,
   ) { }
 
   async getUserPromotion(discordId: string) {
@@ -26,17 +34,26 @@ export class UserPromotionService {
   }
 
   async createUserPromotion(userPromotionDto: CreateUserPromotionDto) {
+    const userRank = await this.userRankRepository.findOne({
+      where: {
+        discord_id: userPromotionDto.discordId
+      }
+    })
+
+
+
     const newUserPromotion = this.userPromotionRepository.create({
       ...userPromotionDto,
-      discord_id: userPromotionDto.discordId
-    })
+      discord_id: userPromotionDto.discordId,
+      userRank: userRank
+    });
 
     const savedUserPromotion = await this.userPromotionRepository.save(newUserPromotion);
 
-    await this.userRepository.update({discord_id: userPromotionDto.discordId}, {
+    await this.userRepository.update({ discord_id: userPromotionDto.discordId }, {
       userPromotion: newUserPromotion
     });
-    
+
     return savedUserPromotion;
   }
 
@@ -76,5 +93,22 @@ export class UserPromotionService {
       .getRawMany();
 
     return usersPromotion as UserPromotionList[];
+  }
+
+  async grantAllPromotions() {
+    const usersToPromotion = await this.checkAllPromotions();
+    const allRanks = await this.rankService.getAllRanks();
+    const promotionList: UserRankEntity[] = [];
+
+    usersToPromotion.forEach(async (promotion) => {
+      const newRank = allRanks.find((rank) => rank.order === promotion.newRankOrder);
+
+      const promotionEntity = await this.userRankRepository.createQueryBuilder().update()
+        .set({
+          rank: newRank,
+        })
+        .where("discord_id = :discordId", { discordId: promotion.discordId })
+        .execute();
+    });
   }
 }

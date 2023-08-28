@@ -48,10 +48,6 @@ export class UsersService {
     await queryRunner.startTransaction();
 
     try {
-      const aa = await this.usersRepository.findOne({ where: { discord_id: discordId }, relations: { userPromotion: true } })
-
-      console.log(aa);
-
       const existUser = await this.usersRepository.findOneBy({ discord_id: discordId })
       if (existUser) {
         throw new UserExistsError;
@@ -74,13 +70,7 @@ export class UsersService {
       });
       savedUser = await this.usersRepository.save(newUser);
 
-      const userPromotion = await this.userPromotionService.createUserPromotion({
-        discordId: discordId,
-        blocked: false,
-        ready: false,
-      });
-
-      const userRank = this.userRankService.createUserRank({
+      const userRank = await this.userRankService.createUserRank({
         discordId: discordId,
         rankOrderNumber: 1
       } as createUserRankWithOrderNumber)
@@ -89,6 +79,11 @@ export class UsersService {
         return;
       }
 
+      await this.userPromotionService.createUserPromotion({
+        discordId: discordId,
+        blocked: false,
+        ready: false,
+      });
     } catch (err) {
       await queryRunner.rollbackTransaction();
 

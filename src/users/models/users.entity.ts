@@ -24,6 +24,7 @@ export class UsersEntity {
   role: UserRolesEntity;
 
   @OneToOne(() => UserRankEntity, (userRank) => userRank.discord_id)
+  @JoinColumn()
   userRank: UserRankEntity
 
   @OneToMany(() => RecommendationsEntity, reccomendation => reccomendation.recommended_user)

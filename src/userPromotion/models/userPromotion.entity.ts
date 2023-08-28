@@ -23,6 +23,7 @@ export class UserPromotionEntity {
   })
   user_entity: UsersEntity
 
-  @OneToOne(() => UserRankEntity, (userRank) => userRank.discord_id)
+  @OneToOne(() => UserRankEntity, (userRank) => userRank.id)
+  @JoinColumn({ name: 'userRank_id' })
   userRank: UserRankEntity
 }
