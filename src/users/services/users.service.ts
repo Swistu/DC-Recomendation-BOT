@@ -50,7 +50,7 @@ export class UsersService {
     try {
       const existUser = await this.usersRepository.findOneBy({ discord_id: discordId })
       if (existUser) {
-        throw new UserExistsError;
+        throw new UserExistsError(`Użytkownik <@${discordId}> już istnieje w bazie.`);
       }
 
       const userRole = await this.userRolesRepository.findOneBy({

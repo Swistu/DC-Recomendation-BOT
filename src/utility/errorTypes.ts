@@ -18,3 +18,10 @@ export class RecommendationForbiddenError extends Error {
     this.name = "RecommendationForbidden";
   }
 }
+
+export class RankDontExistError extends Error {
+  constructor(message: string = "Ranga nie istnieje!") {
+    super(message);
+    this.name = "RankDontExist";
+  }
+}

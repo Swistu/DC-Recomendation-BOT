@@ -1,12 +1,13 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { from, Observable } from 'rxjs';
-import { Repository, UpdateResult } from 'typeorm';
+import { DataSource, Repository, UpdateResult } from 'typeorm';
 import { UserPromotionEntity } from '../models/userPromotion.entity';
 import { CreateUserPromotionDto, UpdatePromotionDto, UpdateUserPromotionDto, UserPromotionList } from '../models/userPromotion.dto';
 import { UsersEntity } from 'src/users/models/users.entity';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
 import { UserRank } from 'src/userRank/models/userRank.dto';
 import { RanksService } from 'src/ranks/services/ranks.service';
+import { RankDontExistError } from 'src/utility/errorTypes';
 
 
 export class UserPromotionService {
@@ -20,6 +21,7 @@ export class UserPromotionService {
     @InjectRepository(UserRankEntity)
     private readonly userRankRepository: Repository<UserRankEntity>,
 
+    private dataSource: DataSource,
     private rankService: RanksService,
   ) { }
 
@@ -96,19 +98,50 @@ export class UserPromotionService {
   }
 
   async grantAllPromotions() {
-    const usersToPromotion = await this.checkAllPromotions();
-    const allRanks = await this.rankService.getAllRanks();
-    const promotionList: UserRankEntity[] = [];
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    usersToPromotion.forEach(async (promotion) => {
-      const newRank = allRanks.find((rank) => rank.order === promotion.newRankOrder);
+    try {
+      const usersToPromotion = await this.checkAllPromotions();
+      const allRanks = await this.rankService.getAllRanks();
+      const promotionList: Array<UpdateResult> = [];
 
-      const promotionEntity = await this.userRankRepository.createQueryBuilder().update()
-        .set({
-          rank: newRank,
-        })
-        .where("discord_id = :discordId", { discordId: promotion.discordId })
-        .execute();
-    });
+      for (const promotion of usersToPromotion) {
+        if (!promotion.newRankOrder) {
+          throw new RankDontExistError();
+        }
+
+        const newRank = allRanks.find((rank) => rank.order === promotion.newRankOrder);
+        if (!newRank) {
+          throw new RankDontExistError(`Ranga ${promotion.newRankName} nie istnieje`);
+        }
+
+        const promotionDone = await this.userRankRepository.createQueryBuilder().update()
+          .set({
+            rank: newRank,
+          })
+          .where("discord_id = :discordId", { discordId: promotion.discordId })
+          .execute();
+
+        await this.updateUserPromotion(promotion.discordId, { blocked: false, ready: false });
+
+
+        promotionList.push(promotionDone);
+      }
+
+      await queryRunner.commitTransaction();
+      return promotionList;
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+
+      if (err instanceof RankDontExistError) {
+        throw new RankDontExistError(err.message);
+      } else {
+        console.error(err);
+      }
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

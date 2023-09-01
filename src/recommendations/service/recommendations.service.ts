@@ -38,7 +38,7 @@ export class RecommendationsService {
     let newRecommendation: RecommendationsEntity | undefined;
 
     if (recommendedDiscordId === recommenderDiscordId)
-      throw new RecommendationForbiddenError;
+      throw new RecommendationForbiddenError(`Nie możesz dać sobie rekomendacji!`);
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -56,7 +56,7 @@ export class RecommendationsService {
         }
       });
       if (!recommenderUser) {
-        throw new UserDontExistError;
+        throw new UserDontExistError(`Nie znaleziono <@${recommenderDiscordId}> w bazie!`);
       }
 
       const recommendedUser = await this.userRepository.findOne({
@@ -72,10 +72,10 @@ export class RecommendationsService {
         }
       });
       if (!recommendedUser)
-        throw new UserDontExistError;
+        throw new UserDontExistError(`Nie znaleziono <@${recommendedDiscordId}> w bazie!`);
 
       if (recommendedUser.userPromotion.ready && type)
-        throw new RecommendationForbiddenError('Gracz już ma awans!');
+        throw new RecommendationForbiddenError(`<@${recommendedUser.discord_id}> już ma awans!`);
 
       if (isUserRecommendationInList(recommenderUser.discord_id, recommendedUser.recommendations_recived, type.toString()))
         throw new RecommendationForbiddenError('Już dałeś rekomendację graczowi');
@@ -89,7 +89,7 @@ export class RecommendationsService {
         }
         if (recommenderCorpsNumber > recommendedCorpsNumber) {
           if (recommenderUser.userRank.rank.corps === CorpsTypes.PODOFICEROW && recommendedUser.userRank.rank.name === RankTypes.PLUTONOWY) {
-            throw new RecommendationForbiddenError('Masz za niski stopień, aby dać rekomendacje tej osobie!');
+            throw new RecommendationForbiddenError(`Masz za niski stopień, aby dać rekomendacje graczowi <@${recommendedUser.discord_id}>!`);
           }
         } else {
           throw new RecommendationForbiddenError;
@@ -110,7 +110,7 @@ export class RecommendationsService {
       if (err instanceof RecommendationForbiddenError) {
         throw new RecommendationForbiddenError(err.message);
       } else if (err instanceof UserDontExistError) {
-        throw new UserDontExistError;
+        throw new UserDontExistError(err.message);
       } else {
         console.error(err);
       }

@@ -17,22 +17,21 @@ export class PromotionsGrantSubCommand {
 
   @Handler()
   async onBaseInfo(@InteractionEvent() interaction: CommandInteraction) {
+    await interaction.reply('Trwa przyznawanie awansów');
 
-    await this.userPromotionService.grantAllPromotions();
-    // await interaction.reply('Trwa sprawdzanie awansów');
-    // const usersToPromote = await this.userPromotionService.checkAllPromotions();
+    try {
+      const allPromotion = await this.userPromotionService.grantAllPromotions();
 
-    // let responseText = 'Ludzie do awansu\n';
-    // if (usersToPromote.length)
-    //   responseText = 'Ludzie do awansu\n';
-    // else
-    //   responseText = 'Brak ludzi do awansu\n';
+      console.log(allPromotion, 'hehe');
+      await interaction.editReply('konic');
+    } catch (error) {
+      if (error?.message)
+        await interaction.editReply(error.message);
+      else {
+        await interaction.editReply('Wystąpił błąd');
+      }
 
-    // usersToPromote.forEach((promotion) => {
-    //   responseText += `${promotion.currentRankName} <@${promotion.discordId}> awansuje na ${promotion.newRankName}\n`;
-    // });
-    // await interaction.editReply(responseText);
-
-    return;
+      console.error(error);
+    }
   }
 }

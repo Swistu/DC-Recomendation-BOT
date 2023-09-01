@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class UserRank {
   discord_id: string;
@@ -36,3 +36,8 @@ export class createUserRankWithOrderNumber extends createUserRankBase {
   rankOrderNumber: number;
 }
 
+export class setUserRank extends createUserRankBase {
+  @IsNotEmpty()
+  @IsString()
+  rankName: string;
+}
