@@ -30,7 +30,10 @@ export class PlayerSetSubCommand {
     if (!user) await interaction.editReply('Podano niewłaściwego gracza.');
 
     try {
-      const intreactionUser = await this.usersService.getUser(user.id);
+      const intreactionUser = await this.usersService.getUser(
+        interaction.user.id,
+      );
+
       if (intreactionUser.userRank.rank.name !== RankTypes.PULKOWNIK) {
         await interaction.editReply('Nie możesz ustawiać rang graczy');
         return;
