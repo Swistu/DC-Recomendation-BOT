@@ -18,10 +18,12 @@ export class CreateUserPromotionDto extends CreatePromotionDto {
 
 export class UserPromotionList {
   discordId: string;
+  currentRankId: number;
   currentRankOrder: number;
   currentRankNumber: number;
   currentRankName: string;
   currentRankCorps: string;
+  newRankId: number;
   newRankOrder: number;
   newRankNumber: number;
   newRankName: string;

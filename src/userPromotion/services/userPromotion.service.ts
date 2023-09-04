@@ -14,6 +14,9 @@ import { UserRank } from 'src/userRank/models/userRank.dto';
 import { RanksService } from 'src/ranks/services/ranks.service';
 import { RankDontExistError } from 'src/utility/errorTypes';
 import { ServiceOptions } from 'src/utility/generalClasses';
+import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
+import { RecommendationsHistoryEntity } from 'src/recommendationsHistory/models/recommendationsHistory.entity';
+import { UserRankHistoryService } from 'src/userRankHistory/services/userRankHistory.service';
 
 export class UserPromotionService {
   constructor(
@@ -28,6 +31,7 @@ export class UserPromotionService {
 
     private dataSource: DataSource,
     private rankService: RanksService,
+    private userRankHistoryService: UserRankHistoryService,
   ) {}
 
   async getUserPromotion(discordId: string) {
@@ -42,8 +46,7 @@ export class UserPromotionService {
     options?: ServiceOptions,
   ) {
     const entityManager =
-      options?.transactionManager ||
-      this.dataSource.createQueryRunner().manager;
+      options?.entityManager || this.dataSource.createQueryRunner().manager;
 
     const update = await entityManager.upsert(
       UserPromotionEntity,
@@ -95,21 +98,26 @@ export class UserPromotionService {
     return promotionData;
   }
 
-  async checkAllPromotions() {
+  async checkAllPromotions(options?: ServiceOptions) {
+    const entityManager =
+      options?.entityManager || this.dataSource.createQueryRunner().manager;
+
     const selectFields = [
       'promotion.discord_id as "discordId"',
+      'currentRank.id as "currentRankId"',
       'currentRank.order as "currentRankOrder"',
       'currentRank.number as "currentRankNumber"',
       'currentRank.name as "currentRankName"',
       'currentRank.corps as "currentRankCorps"',
+      'newRank.id as "newRankId"',
       'newRank.order as "newRankOrder"',
       'newRank.number as "newRankNumber"',
       'newRank.name as "newRankName"',
       'newRank.corps as "newRankCorps"',
     ];
 
-    const usersPromotion = await this.userPromotionRepository
-      .createQueryBuilder('promotion')
+    const usersPromotion = await entityManager
+      .createQueryBuilder(UserPromotionEntity, 'promotion')
       .select(selectFields)
       .where('promotion.ready = true')
       .andWhere('promotion.blocked = false')
@@ -127,16 +135,21 @@ export class UserPromotionService {
 
   async grantAllPromotions(options?: ServiceOptions) {
     const queryRunner =
-      options?.transactionManager?.queryRunner ||
+      options?.entityManager?.queryRunner ||
       this.dataSource.createQueryRunner();
 
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
     const entityManager = queryRunner.manager;
 
     try {
-      const usersToPromotion = await this.checkAllPromotions();
-      const allRanks = await this.rankService.getAllRanks();
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      const usersToPromotion = await this.checkAllPromotions({
+        entityManager: entityManager,
+      });
+      const allRanks = await this.rankService.getAllRanks({
+        entityManager: entityManager,
+      });
       const promotionList: Array<UserPromotionList> = [];
 
       for (let i = 0; i < usersToPromotion.length; i++) {
@@ -154,13 +167,11 @@ export class UserPromotionService {
             `Ranga ${promotion.newRankName} nie istnieje`,
           );
         }
-        console.log(promotion.newRankName);
 
         const userRank = await entityManager.findOneBy(UserRankEntity, {
           discord_id: promotion.discordId,
         });
         userRank.rank = newRank;
-
         await entityManager.save(userRank);
 
         await this.updateUserPromotion(
@@ -169,17 +180,28 @@ export class UserPromotionService {
             blocked: false,
             ready: false,
           },
-          { transactionManager: entityManager },
+          { entityManager: entityManager },
         );
+
+        await this.userRankHistoryService.saveUserRankHistory(
+          {
+            discordId: promotion.discordId,
+            promotionRankingId: promotion.currentRankId,
+            rankStartDate: userRank.rank_start_date,
+          },
+          { entityManager },
+        );
+
+        await entityManager.delete(RecommendationsEntity, {
+          recommended_discord_id: promotion.discordId,
+        });
 
         promotionList.push({ ...promotion });
       }
 
-      console.log('commit');
       await queryRunner.commitTransaction();
       return promotionList;
     } catch (err) {
-      console.log('rollback');
       await queryRunner.rollbackTransaction();
 
       if (err instanceof RankDontExistError) {

@@ -1,11 +1,13 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { from, Observable } from 'rxjs';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { UserRankHistoryEntity } from '../models/userRankHistory.entity';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
 import { RecommendationsService } from 'src/recommendations/service/recommendations.service';
-import { saveUserDto } from '../models/userRankHistory.dto';
+import { SaveUserRankHistoryDto } from '../models/userRankHistory.dto';
+import { ServiceOptions } from 'src/utility/generalClasses';
+import { RecommendationsHistoryEntity } from 'src/recommendationsHistory/models/recommendationsHistory.entity';
 
 @Injectable()
 export class UserRankHistoryService {
@@ -13,16 +15,74 @@ export class UserRankHistoryService {
     @InjectRepository(UserRankHistoryEntity)
     private readonly userRankHistoryRepository: Repository<UserRankHistoryEntity>,
 
-    private readonly recommendationsService: RecommendationsService,
+    private dataSource: DataSource,
   ) {}
 
-  getRole(roleId: number){
+  getRole(roleId: number) {
     return from(this.userRankHistoryRepository.findOneBy({ id: roleId }));
   }
 
-  async saveUserHistory(saveUserDto: saveUserDto){
-    const userRecommendations = await this.recommendationsService.getUserRecommendations(saveUserDto.discordId);
+  async saveUserRankHistory(
+    saveUserRankHistoryDto: SaveUserRankHistoryDto,
+    options?: ServiceOptions,
+  ) {
+    const { discordId, promotionRankingId, rankStartDate } =
+      saveUserRankHistoryDto;
+    const queryRunner =
+      options?.entityManager?.queryRunner ||
+      this.dataSource.createQueryRunner();
+    const entityManager = queryRunner.manager;
 
-    return userRecommendations[0];
+    try {
+      if (!options?.entityManager) {
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+      }
+
+      const userRecommendations = await entityManager.find(
+        RecommendationsEntity,
+        {
+          where: {
+            recommended_discord_id: discordId,
+          },
+        },
+      );
+      const userRankHistory = entityManager.create(UserRankHistoryEntity, {
+        discord_id: discordId,
+        rank_id: promotionRankingId,
+        rank_start_date: rankStartDate,
+      });
+      await entityManager.save(userRankHistory);
+
+      const userRecommendationHistory = userRecommendations.map(
+        (recommendation) => {
+          const recommendationHistory = entityManager.create(
+            RecommendationsHistoryEntity,
+            {
+              ...recommendation,
+              user_rank_history_id: userRankHistory.id,
+              user_rank_history_entity: userRankHistory,
+            },
+          );
+          return recommendationHistory;
+        },
+      );
+      await entityManager.save(userRecommendationHistory);
+
+      if (!options?.entityManager) {
+        await queryRunner.commitTransaction();
+      }
+
+      return userRecommendationHistory;
+    } catch (error) {
+      if (!options?.entityManager) {
+        await queryRunner.rollbackTransaction();
+      }
+      console.error(error);
+    } finally {
+      if (!options?.entityManager) {
+        await queryRunner.release();
+      }
+    }
   }
 }

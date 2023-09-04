@@ -2,11 +2,11 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { UserRankHistoryEntity } from '../models/userRankHistory.entity';
 import { UserRankHistoryService } from '../services/userRankHistory.service';
-import { saveUserDto } from '../models/userRankHistory.dto';
+import { SaveUserRankHistoryDto } from '../models/userRankHistory.dto';
 
 @Controller('userRankHistory')
 export class UserRankHistoryController {
-  constructor(private userRankHistoryService: UserRankHistoryService) { }
+  constructor(private userRankHistoryService: UserRankHistoryService) {}
 
   @Get('')
   gettest(@Param('id') id: number) {
@@ -19,7 +19,7 @@ export class UserRankHistoryController {
   }
 
   @Post()
-  saveUserHistory(@Body() saveUserDto: saveUserDto) {
-    return this.userRankHistoryService.saveUserHistory(saveUserDto);
+  saveUserHistory(@Body() saveUserDto: SaveUserRankHistoryDto) {
+    return this.userRankHistoryService.saveUserRankHistory(saveUserDto);
   }
 }

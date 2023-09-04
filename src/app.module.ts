@@ -6,16 +6,16 @@ import { GatewayIntentBits } from 'discord.js';
 import { ActivityLogModule } from './activitylog/activitylog.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BotSlashCommandsModule } from './bot-commands/bot-slash-commands.module';
-import { BotModule } from './bot/bot.module';
 import { UsersModule } from './users/users.module';
 import { UserRolesModule } from './userRoles/userRoles.module';
 import { UserRankModule } from './userRank/userRank.module';
-import { RanksModule } from './ranks/ranks.module';
-import { RecommendationsModule } from './recommendations/recommendations.module';
-import { UserRankHistoryModule } from './userRankHistory/userRankHistory.module';
-import { RecommendationsHistoryModule } from './recommendationsHistory/recommendationsHistory.module';
 import { UserPromotionModule } from './userPromotion/userPromotion.module';
+import { UserRankHistoryModule } from './userRankHistory/userRankHistory.module';
+import { RecommendationsModule } from './recommendations/recommendations.module';
+import { RanksModule } from './ranks/ranks.module';
+import { RecommendationsHistoryModule } from './recommendationsHistory/recommendationsHistory.module';
+import { BotModule } from './bot/bot.module';
+import { BotSlashCommandsModule } from './bot-commands/bot-slash-commands.module';
 
 @Module({
   imports: [
@@ -38,18 +38,18 @@ import { UserPromotionModule } from './userPromotion/userPromotion.module';
         },
       }),
     }),
-    UserRankHistoryModule,
     UsersModule,
     UserRolesModule,
     UserRankModule,
+    UserRankHistoryModule,
     UserPromotionModule,
     RanksModule,
+    RecommendationsModule,
     RecommendationsHistoryModule,
     BotModule,
     BotSlashCommandsModule,
-    RecommendationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
