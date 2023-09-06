@@ -10,10 +10,12 @@ import { RanksEntity } from 'src/ranks/models/ranks.entity';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
 import { UserRankHistoryModule } from 'src/userRankHistory/userRankHistory.module';
 import { RecommendationsModule } from 'src/recommendations/recommendations.module';
+import { DiscordModule } from '@discord-nestjs/core';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
-    forwardRef(() => UserRankHistoryModule),
+    DiscordModule.forFeature(),
     TypeOrmModule.forFeature([
       UserPromotionEntity,
       UserRankEntity,

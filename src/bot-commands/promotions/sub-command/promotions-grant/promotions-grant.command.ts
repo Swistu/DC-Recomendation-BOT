@@ -31,6 +31,14 @@ export class PromotionsGrantSubCommand {
   async onBaseInfo(@InteractionEvent() interaction: CommandInteraction) {
     await interaction.reply('Trwa przyznawanie awansów');
 
+    let loadingMessage = '.';
+    const messageInterval = setInterval(async () => {
+      await interaction.editReply('Trwa przyznawanie awansów' + loadingMessage);
+
+      loadingMessage += '.';
+      if (loadingMessage.length > 3) loadingMessage = '.';
+    }, 1000);
+
     try {
       const intreactionUser = await this.usersService.getUser(
         interaction.user.id,
@@ -48,20 +56,27 @@ export class PromotionsGrantSubCommand {
       }
       let responseText: string;
       if (allPromotion.length) responseText = 'Lista zatwierdzonych awansów:\n';
-      else return await interaction.editReply('Brak ludzi do awansu\n');
-
+      else {
+        clearInterval(messageInterval);
+        return await interaction.editReply('Brak ludzi do awansu\n');
+      }
       allPromotion.forEach((promotion) => {
         responseText += `${promotion.currentRankName} <@${promotion.discordId}> awansuje na ${promotion.newRankName}\n`;
       });
+      clearInterval(messageInterval);
 
       await interaction.editReply(
         responseText + '\n```\n' + responseText.slice(29) + '```\n',
       );
     } catch (error) {
+      clearInterval(messageInterval);
+
       if (error?.message) await interaction.editReply(error.message);
       else await interaction.editReply('Wystąpił błąd');
 
       console.error(error);
+    } finally {
+      clearInterval(messageInterval);
     }
   }
 }

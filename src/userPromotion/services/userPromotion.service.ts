@@ -12,12 +12,15 @@ import { UsersEntity } from 'src/users/models/users.entity';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
 import { UserRank } from 'src/userRank/models/userRank.dto';
 import { RanksService } from 'src/ranks/services/ranks.service';
-import { RankDontExistError } from 'src/utility/errorTypes';
+import { RankDontExistError, UserDontExistError } from 'src/utility/errorTypes';
 import { ServiceOptions } from 'src/utility/generalClasses';
 import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
 import { RecommendationsHistoryEntity } from 'src/recommendationsHistory/models/recommendationsHistory.entity';
 import { UserRankHistoryService } from 'src/userRankHistory/services/userRankHistory.service';
-
+import { Client, GuildBan, GuildMember } from 'discord.js';
+import { InjectDiscordClient } from '@discord-nestjs/core';
+import { getDiscordGuild, getUserDiscordRoles } from 'src/utility/discordUtils';
+import { CorpsTypes } from 'src/ranks/models/ranks.entity';
 export class UserPromotionService {
   constructor(
     @InjectRepository(UserPromotionEntity)
@@ -28,6 +31,9 @@ export class UserPromotionService {
 
     @InjectRepository(UserRankEntity)
     private readonly userRankRepository: Repository<UserRankEntity>,
+
+    @InjectDiscordClient()
+    private readonly client: Client,
 
     private dataSource: DataSource,
     private rankService: RanksService,
@@ -198,6 +204,7 @@ export class UserPromotionService {
 
         promotionList.push({ ...promotion });
       }
+      await this.promoteDiscordUsers(promotionList);
 
       await queryRunner.commitTransaction();
       return promotionList;
@@ -211,6 +218,64 @@ export class UserPromotionService {
       }
     } finally {
       await queryRunner.release();
+    }
+  }
+
+  async promoteDiscordUsers(usersList: UserPromotionList[]) {
+    const guild = await getDiscordGuild(this.client);
+
+    for (const userPromotion of usersList) {
+      const guildMember = await guild.members.fetch(userPromotion.discordId);
+
+      if (!guildMember)
+        throw new UserDontExistError(
+          `Nie znaleziono użytkownika na discord <@${userPromotion.discordId}>`,
+        );
+      const data = await this.promoteUser(guildMember, userPromotion);
+
+      if (!data) {
+        throw new Error(
+          `Nie udało się nadać ról <@${userPromotion.discordId}>`,
+        );
+      }
+    }
+  }
+
+  async promoteUser(user: GuildMember, userPromotion: UserPromotionList) {
+    const { newRankName, newRankCorps } = userPromotion;
+    const userRoles = getUserDiscordRoles(user);
+
+    const newRankNameRole = user.guild.roles.cache.find(
+      (role) => role.name === newRankName,
+    );
+    const newRankCorpsRole = user.guild.roles.cache.find(
+      (role) => role.name === 'Korpus ' + newRankCorps,
+    );
+
+    await user.roles.add(newRankNameRole);
+    await user.roles.add(newRankCorpsRole);
+
+    await this.removeInvalidRoles(user, userRoles, [
+      newRankName,
+      'Korpus ' + newRankCorps,
+    ]);
+
+    return true;
+  }
+
+  async removeInvalidRoles(
+    user: GuildMember,
+    userRoles: String[],
+    validRoles: String[],
+  ) {
+    for (let userRole of userRoles) {
+      if (validRoles.some((validRole) => validRole === userRole)) continue;
+
+      const roleToDelete = user.guild.roles.cache.find(
+        (role) => role.name === userRole,
+      );
+
+      if (roleToDelete) await user.roles.remove(roleToDelete);
     }
   }
 }
