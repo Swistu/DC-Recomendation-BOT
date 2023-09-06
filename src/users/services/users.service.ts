@@ -21,7 +21,7 @@ import { RanksEntity } from 'src/ranks/models/ranks.entity';
 import { UserRankService } from 'src/userRank/services/userRank.service';
 import { createUserRankWithOrderNumber } from 'src/userRank/models/userRank.dto';
 import { UserPromotionService } from 'src/userPromotion/services/userPromotion.service';
-import { UserExistsError } from 'src/utility/errorTypes';
+import { UserDontExistError, UserExistsError } from 'src/utility/errorTypes';
 
 @Injectable()
 export class UsersService {
@@ -37,7 +37,7 @@ export class UsersService {
     private dataSource: DataSource,
     private userRankService: UserRankService,
     private userPromotionService: UserPromotionService,
-  ) { }
+  ) {}
 
   async createUser(user: CreateUser) {
     const { discordId, roleId, accountactive } = user;
@@ -48,20 +48,22 @@ export class UsersService {
     await queryRunner.startTransaction();
 
     try {
-      const existUser = await this.usersRepository.findOneBy({ discord_id: discordId })
+      const existUser = await this.usersRepository.findOneBy({
+        discord_id: discordId,
+      });
       if (existUser) {
-        throw new UserExistsError(`Użytkownik <@${discordId}> już istnieje w bazie.`);
+        throw new UserExistsError(
+          `Użytkownik <@${discordId}> już istnieje w bazie.`,
+        );
       }
 
       const userRole = await this.userRolesRepository.findOneBy({
-        id: roleId
+        id: roleId,
       });
 
       if (!userRole) {
         throw new Error('No userRole was found');
       }
-
-
 
       const newUser = this.usersRepository.create({
         account_active: accountactive,
@@ -72,8 +74,8 @@ export class UsersService {
 
       const userRank = await this.userRankService.createUserRank({
         discordId: discordId,
-        rankOrderNumber: 1
-      } as createUserRankWithOrderNumber)
+        rankOrderNumber: 1,
+      } as createUserRankWithOrderNumber);
 
       if (!userRank) {
         return;
@@ -100,19 +102,31 @@ export class UsersService {
   }
 
   async getUser(discordId: string) {
-    const userDatabaseData = await this.getUserDatabaseData(discordId);
-    const userDiscordData = await this.getUserDiscordData(discordId);
+    try {
+      const userDatabaseData = await this.getUserDatabaseData(discordId);
+      const userDiscordData = await this.getUserDiscordData(discordId);
 
-    const user = {
-      ...userDatabaseData,
-      ...userDiscordData,
-      discordTag:
-        userDiscordData.user.username +
-        '#' +
-        userDiscordData.user.discriminator,
-    };
+      if (!userDatabaseData || !userDiscordData) {
+        throw new UserDontExistError();
+      }
 
-    return user;
+      const user = {
+        ...userDatabaseData,
+        ...userDiscordData,
+        discordTag:
+          userDiscordData.user.username +
+          '#' +
+          userDiscordData.user.discriminator,
+      };
+
+      return user;
+    } catch (err) {
+      if (err instanceof UserDontExistError) {
+        throw new UserDontExistError(err.message);
+      }
+
+      console.error();
+    }
   }
 
   getAllUsers() {
@@ -133,9 +147,9 @@ export class UsersService {
       relations: {
         role: true,
         userRank: {
-          rank: true
-        }
-      }
+          rank: true,
+        },
+      },
     });
 
     return userDatabaseData;
@@ -149,20 +163,20 @@ export class UsersService {
       relations: {
         role: true,
         userRank: {
-          rank: true
+          rank: true,
         },
         userPromotion: true,
         recommendations_recived: true,
         recommendations_given: true,
-      }
+      },
     });
 
     return userDatabaseData;
   }
 
   async getUserDiscordData(discordId: string) {
-    const guild = await this.client.guilds.fetch(process.env.DISCORD_GUILD_ID)
-    const userDiscordData = await guild.members.fetch(discordId)
+    const guild = await this.client.guilds.fetch(process.env.DISCORD_GUILD_ID);
+    const userDiscordData = await guild.members.fetch(discordId);
 
     return userDiscordData;
   }

@@ -43,7 +43,6 @@ export class PromotionsGrantSubCommand {
 
       const allPromotion = await this.userPromotionService.grantAllPromotions();
 
-      console.log(allPromotion);
       if (!allPromotion) {
         throw new Error();
       }

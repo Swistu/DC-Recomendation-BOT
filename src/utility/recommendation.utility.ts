@@ -1,5 +1,5 @@
-import { CorpsTypes, RankTypes } from "src/ranks/models/ranks.entity";
-import { RecommendationsEntity } from "src/recommendations/models/recommendations.entity";
+import { CorpsTypes, RankTypes } from 'src/ranks/models/ranks.entity';
+import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
 
 export function checkRecommendationRequiredToPromote(rankName: string) {
   let number: number;
@@ -32,44 +32,53 @@ export function checkRecommendationRequiredToPromote(rankName: string) {
   return number;
 }
 
-export function checkPromotionAvaiable(rankName: string, corpsName: string, recommendationCount: number): boolean {
+export function checkPromotionAvaiable(
+  rankName: string,
+  corpsName: string,
+  recommendationCount: number,
+): boolean {
   let promotion = false;
 
   switch (corpsName) {
     case CorpsTypes.STRZELCOW:
       if (recommendationCount >= 3)
-        if (rankName !== RankTypes.PLUTONOWY)
-          promotion = true;
-        else if (recommendationCount >= 4)
-          promotion = true;
+        if (rankName !== RankTypes.PLUTONOWY) promotion = true;
+        else if (recommendationCount >= 4) promotion = true;
       break;
     case CorpsTypes.PODOFICEROW:
       if (recommendationCount >= 4)
-        if (rankName !== RankTypes.STARSZY_CHORAZY)
-          promotion = true;
-        else if (recommendationCount >= 5)
-          promotion = true;
+        if (rankName !== RankTypes.STARSZY_CHORAZY) promotion = true;
+        else if (recommendationCount >= 5) promotion = true;
       break;
     case CorpsTypes.OFICEROW:
-      if (recommendationCount >= 5)
-        promotion = true;
+      if (recommendationCount >= 5) promotion = true;
       break;
   }
   return promotion;
 }
 
-export function calcCurrentRecommendationNumber(recommendationList: RecommendationsEntity[]) {
+export function calcCurrentRecommendationNumber(
+  recommendationList: RecommendationsEntity[],
+) {
   return recommendationList.reduce((previous, current) => {
-    if (current.type)
-      return previous + 1;
-    else
-      return previous - 1;
+    if (current.type) return previous + 1;
+    else return previous - 1;
   }, 0);
 }
 
-export function isUserRecommendationInList(recommenderDiscordId: string, recommendationList: RecommendationsEntity[], type: string) {
-  return recommendationList.find((element) => {
-    if (element.recommender_discord_id === recommenderDiscordId && element.type === type)
+export function isUserRecommendationInList(
+  recommenderDiscordId: string,
+  recommendationList: RecommendationsEntity[],
+  type: string,
+): boolean {
+  const isUserInList = recommendationList.find((element) => {
+    if (
+      element.recommender_discord_id === recommenderDiscordId &&
+      element.type == type
+    )
       return true;
-  })
+  });
+
+  if (isUserInList) return true;
+  else return false;
 }
