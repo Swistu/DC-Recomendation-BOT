@@ -16,7 +16,6 @@ const channelListener = async (client) => {
       });
       const msg = fetchmessages.first();
       console.log("cokolwiek");
-      // console.log(i);
       await i.deferReply({
         ephemeral: true
       });

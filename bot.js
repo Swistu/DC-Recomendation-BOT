@@ -74,7 +74,6 @@ client.on("channelCreate", async (newChannel) => {
       components: [row],
     });
 
-    // channelListener(client);
     const collector = newChannel.createMessageComponentCollector();
 
     collector.on("collect", async (i) => {
