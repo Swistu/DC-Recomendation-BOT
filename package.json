@@ -14,12 +14,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^13.6.0",
+    "discord.js": "13.6.0",
     "dotenv": "^14.3.2",
     "mongodb": "^4.3.1",
-    "node-cron": "^3.0.2"
+    "node-cron": "^3.0.2",
+    "nvm": "^0.0.4",
+    "package.json": "^0.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.19"
+    "nodemon": "^3.0.2"
   }
 }
