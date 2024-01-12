@@ -68,13 +68,33 @@ client.on("channelCreate", async (newChannel) => {
         .setStyle("PRIMARY")
     );
 
-    newChannel.send({
+    await newChannel.send({
       content:
         "Magazyn wygaśnie <t:" + parseInt(newDate.getTime() / 1000) + ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*",
       components: [row],
     });
 
-    channelListener(client);
+    // channelListener(client);
+    const collector = newChannel.createMessageComponentCollector();
+
+    collector.on("collect", async (i) => {
+      const refreshedDate = new Date();
+      refreshedDate.setHours(refreshedDate.getHours() + 49);
+      const fetchmessages = await newChannel.messages.fetch({
+        after: 1,
+        limit: 1,
+      });
+      const msg = fetchmessages.first();
+      console.log("cokolwiek");
+      await i.deferReply({
+        ephemeral: true
+      });
+      await msg.edit("Magazyn wygaśnie <t:" + parseInt(refreshedDate.getTime() / 1000) + ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*",);
+      await i.editReply({
+        content: 'Odświeżyłeś magazyn!',
+        ephemeral: true
+      })
+    });
   }
 });
 
