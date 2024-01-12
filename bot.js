@@ -84,7 +84,6 @@ client.on("channelCreate", async (newChannel) => {
         limit: 1,
       });
       const msg = fetchmessages.first();
-      console.log("cokolwiek");
       await i.deferReply({
         ephemeral: true
       });
