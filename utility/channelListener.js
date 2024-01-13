@@ -6,6 +6,8 @@ const channelListener = async (client) => {
     (channel) => channel.parentId === process.env.STORAGE_CHANNEL_ID
   );
 
+  let lastClickedTime = 0;
+  const debouncePeriod = 5000;
   const roleToPing = process.env.LOGI_ROLE_ID; // ID of the logistics role
   const reminderReaction = "⏰"; // Reaction that marks the reminder message
 
@@ -13,6 +15,15 @@ const channelListener = async (client) => {
     const collector = channel.createMessageComponentCollector();
 
     collector.on("collect", async (i) => {
+      const currentTime = Date.now();
+
+      if (currentTime - lastClickedTime < debouncePeriod) {
+        await i.reply({ content: 'Poczekaj zanim odświeżysz magazyn ponownie', ephemeral: true });
+        return;
+      }
+
+      lastClickedTime = currentTime;
+
       const refreshedDate = new Date();
       refreshedDate.setHours(refreshedDate.getHours() + 49);
 
@@ -24,12 +35,19 @@ const channelListener = async (client) => {
         }
       }
 
-      const fetchmessages = await channel.messages.fetch({ after: 1, limit: 1 });
+      const fetchmessages = await channel.messages.fetch({
+        after: 1,
+        limit: 1,
+      });
       const msg = fetchmessages.first();
-
-      await i.deferReply({ ephemeral: true });
-      await msg.edit("Magazyn wygaśnie <t:" + parseInt(refreshedDate.getTime() / 1000) + ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*");
-      await i.editReply({ content: 'Odświeżyłeś magazyn!', ephemeral: true });
+      await i.deferReply({
+        ephemeral: true
+      });
+      await msg.edit("Magazyn wygaśnie <t:" + parseInt(refreshedDate.getTime() / 1000) + ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*",);
+      await i.editReply({
+        content: 'Odświeżyłeś magazyn!',
+        ephemeral: true
+      })
     });
   });
 
