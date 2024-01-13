@@ -14,7 +14,15 @@ const channelListener = async (client) => {
 
     collector.on("collect", async (i) => {
       const refreshedDate = new Date();
-      refreshedDate.setHours(refreshedDate.getHours() + 6);
+      refreshedDate.setHours(refreshedDate.getHours() + 49);
+
+      const messages = await channel.messages.fetch({ limit: 100 });
+      for (const message of messages.values()) {
+        if (message.author.id === client.user.id && message.reactions.cache.has(reminderReaction)) {
+          await message.delete();
+          break;
+        }
+      }
 
       const fetchmessages = await channel.messages.fetch({ after: 1, limit: 1 });
       const msg = fetchmessages.first();
@@ -29,7 +37,7 @@ const channelListener = async (client) => {
     for (const channel of categoryChannels.values()) {
       const currentTime = new Date();
       const TimeLimit = 9; // Time under which it will ping (in hours)
-      const reminderCheckInterval = TimeLimit * 60 * 60 * 10 * 100; //time it will wait untill it pings again (in milliseconds)
+      const reminderCheckInterval = TimeLimit * 60 * 60 * 10 * 100; // Time it will wait untill it pings again (in milliseconds)
 
       try {
         let lastReminderMessage = null;
@@ -69,9 +77,8 @@ const channelListener = async (client) => {
       }
     }
   };
-  
+  //checking all the storage channels every 1 hour
   cron.schedule('0 */1 * * *', () => {
-    console.log('Check');
     checkChannels();
   });
 };
