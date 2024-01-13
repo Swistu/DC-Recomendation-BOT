@@ -37,15 +37,14 @@ client.on("interactionCreate", (interaction) => {
 
 client.on("ready", async () => {
   channelListener(client);
-
   console.log(`Logged in as ${client.user.tag}!`);
-  
+
   //Backup DB to channel only in production
   if (process.env.NODE_ENV !== "development") {
     // easter egg
     const channel = await client.channels.fetch(process.env.BACKUP_CHANNEL_ID);
     await channel.send("Pobrano jedną koszulkę z Town Halla.");
-    
+
     const message = await doBackup(client);
     if (!message.valid) {
       console.log(message);
@@ -70,7 +69,9 @@ client.on("channelCreate", async (newChannel) => {
 
     await newChannel.send({
       content:
-        "Magazyn wygaśnie <t:" + parseInt(newDate.getTime() / 1000) + ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*",
+        "Magazyn wygaśnie <t:" +
+        parseInt(newDate.getTime() / 1000) +
+        ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*",
       components: [row],
     });
 
@@ -85,13 +86,17 @@ client.on("channelCreate", async (newChannel) => {
       });
       const msg = fetchmessages.first();
       await i.deferReply({
-        ephemeral: true
+        ephemeral: true,
       });
-      await msg.edit("Magazyn wygaśnie <t:" + parseInt(refreshedDate.getTime() / 1000) + ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*",);
+      await msg.edit(
+        "Magazyn wygaśnie <t:" +
+          parseInt(refreshedDate.getTime() / 1000) +
+          ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*"
+      );
       await i.editReply({
-        content: 'Odświeżyłeś magazyn!',
-        ephemeral: true
-      })
+        content: "Odświeżyłeś magazyn!",
+        ephemeral: true,
+      });
     });
   }
 });
@@ -102,13 +107,13 @@ process.on("uncaughtException", (err) => {
   console.error("There was an uncaught error", err);
   process.exit(1);
 });
-client.on('guildMemberAdd', async(member) => {
+client.on("guildMemberAdd", async (member) => {
   const channel = await client.channels.fetch(process.env.LOG_CHANNEL_ID);
 
-  channel.send('<@' + member.user.id + '> -> Do sprawdzenia');
+  channel.send("<@" + member.user.id + "> -> Do sprawdzenia");
 });
-client.on('guildMemberRemove', async(member) => {
+client.on("guildMemberRemove", async (member) => {
   const channel = await client.channels.fetch(process.env.LOG_CHANNEL_ID);
 
-  channel.send('Problem <@' + member.user.id + '> z głowy');
+  channel.send("Problem <@" + member.user.id + "> z głowy");
 });
