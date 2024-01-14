@@ -14,7 +14,7 @@ const channelListener = async (client) => {
       const currentTime = Date.now();
 
       const refreshedDate = new Date();
-      refreshedDate.setHours(refreshedDate.getHours() + 6);
+      refreshedDate.setHours(refreshedDate.getHours() + 49);
 
       const fetchmessages = await channel.messages.fetch({
         after: 1,
@@ -93,8 +93,3 @@ const channelListener = async (client) => {
 };
 
 module.exports = { channelListener };
-
-
-//opcja first message
-//reminder action
-//
