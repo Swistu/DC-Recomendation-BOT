@@ -90,6 +90,10 @@ The main goal of the bot is to facilitate the system of promoting players in the
     DB_PASSWORD=Password
     DB_DATABASE=DatabaseName
     DICORD_GUILD_ID=1234567890
+    STORAGE_CHANNEL_ID=1234567890
+    BACKUP_CHANNEL_ID=1234567890
+    LOGI_ROLE_ID=1234567890
+    NODE_ENV=development #use only while developing
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>

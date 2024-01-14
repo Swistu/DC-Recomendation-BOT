@@ -1,8 +1,10 @@
 const { channelListener } = require("./utility/channelListener");
+const { checkChannels } = require("./utility/cronOperations");
 const { updateUser } = require("./database/updateUser");
 const { doBackup } = require("./utility/doBackup");
 const { MessageButton, MessageActionRow } = require("discord.js");
 const DiscordJS = require("discord.js");
+const cron = require("node-cron");
 require("dotenv").config();
 
 const client = new DiscordJS.Client({
@@ -50,6 +52,17 @@ client.on("ready", async () => {
       console.log(message);
     }
   }
+  const categoryChannels = client.channels.cache.filter(
+    (channel) => channel.parentId === process.env.STORAGE_CHANNEL_ID
+  );
+
+  cron.schedule("*/60 * * * * *", () => {
+    try {
+      checkChannels(client, categoryChannels);
+    } catch (error) {
+      console.error("Error during scheduled channel check:", error);
+    }
+  });
 });
 
 client.on("guildMemberRemove", async (member) => {
