@@ -2,9 +2,7 @@ require("dotenv").config();
 const { MessageButton, MessageActionRow } = require("discord.js");
 
 const checkChannels = async (client, categoryChannels) => {
-
   for (const channel of categoryChannels.values()) {
-
     const roleToPing = process.env.LOGI_ROLE_ID;
     const currentTime = new Date();
     const TimeLimit = 10; // Time under which it will ping (in hours)
@@ -22,7 +20,7 @@ const checkChannels = async (client, categoryChannels) => {
 
     if (lastReminderMessage) {
       const lastReminderTime = new Date(lastReminderMessage.createdTimestamp);
-      if ((currentTime - lastReminderTime) < reminderCheckInterval) {
+      if (currentTime - lastReminderTime < reminderCheckInterval) {
         continue;
       }
     }
@@ -34,7 +32,7 @@ const checkChannels = async (client, categoryChannels) => {
     if (matches) {
       const timestamp = parseInt(matches[1]);
       const expirationDate = new Date(timestamp * 1000);
-      const diffInHours = Math.abs(expirationDate - currentTime) / 36e5;
+      const diffInHours = (expirationDate - currentTime) / 36e5;
 
       if (diffInHours > 1 && diffInHours <= TimeLimit) {
         const sentMessage = await channel.send(reminderMessageContent);

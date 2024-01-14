@@ -1,13 +1,11 @@
 const { channelListener } = require("./utility/channelListener");
-const { checkChannels } = require('./utility/cronOperations');
+const { checkChannels } = require("./utility/cronOperations");
 const { updateUser } = require("./database/updateUser");
 const { doBackup } = require("./utility/doBackup");
 const { MessageButton, MessageActionRow } = require("discord.js");
 const DiscordJS = require("discord.js");
-const cron = require('node-cron');
+const cron = require("node-cron");
 require("dotenv").config();
-
-cronFrequency = 1 // Cron job frequency (in minutes)
 
 const client = new DiscordJS.Client({
   intents: ["GUILDS", "GUILD_MEMBERS"],
@@ -58,10 +56,9 @@ client.on("ready", async () => {
     (channel) => channel.parentId === process.env.STORAGE_CHANNEL_ID
   );
 
-  cron.schedule('*/'+ (cronFrequency * 60) +' * * * * *', () => {
+  cron.schedule("*/60 * * * * *", () => {
     try {
       checkChannels(client, categoryChannels);
-      console.log("check")
     } catch (error) {
       console.error("Error during scheduled channel check:", error);
     }
@@ -106,8 +103,8 @@ client.on("channelCreate", async (newChannel) => {
       });
       await msg.edit(
         "Magazyn wygaśnie <t:" +
-        parseInt(refreshedDate.getTime() / 1000) +
-        ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*"
+          parseInt(refreshedDate.getTime() / 1000) +
+          ":R>\n***Nie klikaj**, jeżeli nie odświeżyłeś magazynu w foxhole!*"
       );
       await i.editReply({
         content: "Odświeżyłeś magazyn!",
