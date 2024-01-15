@@ -6,7 +6,7 @@ const channelListener = async (client) => {
     (channel) => channel.parentId === process.env.STORAGE_CHANNEL_ID
   );
   const reminderMessageRegex = new RegExp(
-    `UWAGA: Magazyn wygasa za ok \\d+ godzin!`
+    `UWAGA: Magazyn wygasa za <t:\\d+:R>!`
   );
 
   categoryChannels.forEach(async (channel) => {

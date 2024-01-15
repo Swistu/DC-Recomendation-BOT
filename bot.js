@@ -11,6 +11,8 @@ const client = new DiscordJS.Client({
   intents: ["GUILDS", "GUILD_MEMBERS"],
 });
 
+const inaccessibleChannels = new Set();
+
 let bot = {
   client,
 };
@@ -58,7 +60,7 @@ client.on("ready", async () => {
 
   cron.schedule("*/60 * * * * *", () => {
     try {
-      checkChannels(client, categoryChannels);
+      checkChannels(client, categoryChannels, inaccessibleChannels);
     } catch (error) {
       console.error("Error during scheduled channel check:", error);
     }
