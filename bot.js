@@ -10,9 +10,6 @@ require("dotenv").config();
 const client = new DiscordJS.Client({
   intents: ["GUILDS", "GUILD_MEMBERS"],
 });
-
-const inaccessibleChannels = new Set();
-
 let bot = {
   client,
 };
@@ -54,13 +51,10 @@ client.on("ready", async () => {
       console.log(message);
     }
   }
-  const categoryChannels = client.channels.cache.filter(
-    (channel) => channel.parentId === process.env.STORAGE_CHANNEL_ID
-  );
 
   cron.schedule("*/60 * * * * *", () => {
     try {
-      checkChannels(client, categoryChannels, inaccessibleChannels);
+      checkChannels(client);
     } catch (error) {
       console.error("Error during scheduled channel check:", error);
     }

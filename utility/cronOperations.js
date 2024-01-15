@@ -1,15 +1,11 @@
 require("dotenv").config();
 const Discord = require("discord.js");
 
-const checkChannels = async (
-  client,
-  categoryChannels,
-  inaccessibleChannels
-) => {
+const checkChannels = async (client) => {
+  const categoryChannels = client.channels.cache.filter(
+    (channel) => channel.parentId === process.env.STORAGE_CHANNEL_ID
+  );
   for (const channel of categoryChannels.values()) {
-    if (inaccessibleChannels.has(channel.id)) {
-      continue; // Skips inaccessible channels
-    }
     try {
       const roleToPing = process.env.LOGI_ROLE_ID;
       const currentTime = new Date();
@@ -51,12 +47,13 @@ const checkChannels = async (
     } catch (error) {
       if (error instanceof Discord.DiscordAPIError && error.code === 10003) {
         console.error(`Channel not found or inaccessible: ${channel.id}`);
-        inaccessibleChannels.add(channel.id);
-        continue; // Skip to the next channel
+        continue; 
       } else {
-        throw error; // Re-throw the error if it's not a channel not found error
+        console.error(
+          `Error checking messages in channel ${channel.id}: ${error}`
+        ); 
       }
-    }
+    } 
   }
 };
 
