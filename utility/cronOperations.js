@@ -5,14 +5,15 @@ const checkChannels = async (client) => {
   const categoryChannels = client.channels.cache.filter(
     (channel) => channel.parentId === process.env.STORAGE_CHANNEL_ID
   );
+
+  const roleToPing = process.env.LOGI_ROLE_ID;
+  const currentTime = new Date();
+  const TimeLimit = 10; // Time under which it will ping (in hours)
+  const reminderCheckInterval = (TimeLimit + 1) * 60 * 60 * 10 * 100; // Time it will wait untill it pings again (in milliseconds)
+  const reminderMessagePattern = `<@&${roleToPing}> UWAGA: Magazyn wygasa`; // Pattern to identify reminder messages
+
   for (const channel of categoryChannels.values()) {
     try {
-      const roleToPing = process.env.LOGI_ROLE_ID;
-      const currentTime = new Date();
-      const TimeLimit = 10; // Time under which it will ping (in hours)
-      const reminderCheckInterval = (TimeLimit + 1) * 60 * 60 * 10 * 100; // Time it will wait untill it pings again (in milliseconds)
-      const reminderMessagePattern = `<@&${roleToPing}> UWAGA: Magazyn wygasa`; // Pattern to identify reminder messages
-
       let lastReminderMessage = null;
 
       const messages = await channel.messages.fetch({ user: client.user.id });
@@ -47,13 +48,13 @@ const checkChannels = async (client) => {
     } catch (error) {
       if (error instanceof Discord.DiscordAPIError && error.code === 10003) {
         console.error(`Channel not found or inaccessible: ${channel.id}`);
-        continue; 
+        continue;
       } else {
         console.error(
           `Error checking messages in channel ${channel.id}: ${error}`
-        ); 
+        );
       }
-    } 
+    }
   }
 };
 
