@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
 import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
@@ -17,7 +26,9 @@ export class UsersEntity {
   @CreateDateColumn()
   created_at: Date;
 
-  @ManyToOne(() => UserRolesEntity, (userRolesEntity) => userRolesEntity.user, { nullable: false })
+  @ManyToOne(() => UserRolesEntity, (userRolesEntity) => userRolesEntity.user, {
+    nullable: false,
+  })
   @JoinColumn({
     name: 'role_id',
   })
@@ -25,18 +36,27 @@ export class UsersEntity {
 
   @OneToOne(() => UserRankEntity, (userRank) => userRank.discord_id)
   @JoinColumn()
-  userRank: UserRankEntity
+  userRank: UserRankEntity;
 
-  @OneToMany(() => RecommendationsEntity, reccomendation => reccomendation.recommended_user)
-  recommendations_recived: RecommendationsEntity[]
+  @OneToMany(
+    () => RecommendationsEntity,
+    (reccomendation) => reccomendation.recommended_user,
+  )
+  recommendations_recived: RecommendationsEntity[];
 
-  @OneToMany(() => RecommendationsEntity, reccomendation => reccomendation.recommender_user)
-  recommendations_given: RecommendationsEntity[]
+  @OneToMany(
+    () => RecommendationsEntity,
+    (reccomendation) => reccomendation.recommender_user,
+  )
+  recommendations_given: RecommendationsEntity[];
 
-  @OneToMany(() => UserRankHistoryEntity, (userRankHistory) => userRankHistory.discord_id)
-  userRankHistory: UserRankHistoryEntity
+  @OneToMany(
+    () => UserRankHistoryEntity,
+    (userRankHistory) => userRankHistory.discord_id,
+  )
+  userRankHistory: UserRankHistoryEntity;
 
-  @OneToOne(() => UserPromotionEntity, userPromotion => userPromotion.id)
+  @OneToOne(() => UserPromotionEntity, (userPromotion) => userPromotion.id)
   @JoinColumn()
-  userPromotion: UserPromotionEntity
+  userPromotion: UserPromotionEntity;
 }
