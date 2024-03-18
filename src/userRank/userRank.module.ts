@@ -12,6 +12,6 @@ import { UsersEntity } from 'src/users/models/users.entity';
   ],
   controllers: [UserRankController],
   providers: [UserRankService],
-  exports: [UserRankService]
+  exports: [UserRankService],
 })
-export class UserRankModule { }
+export class UserRankModule {}

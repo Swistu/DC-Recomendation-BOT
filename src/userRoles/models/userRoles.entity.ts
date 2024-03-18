@@ -1,4 +1,11 @@
-import { Column, Entity, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserRole } from './userRole.dto';
 import { UsersEntity } from 'src/users/models/users.entity';
 

@@ -8,6 +8,6 @@ import { RanksService } from './services/ranks.service';
   imports: [TypeOrmModule.forFeature([RanksEntity])],
   controllers: [RanksController],
   providers: [RanksService],
-  exports: [RanksService]
+  exports: [RanksService],
 })
-export class RanksModule { }
+export class RanksModule {}
