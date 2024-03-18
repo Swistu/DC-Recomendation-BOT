@@ -1,20 +1,8 @@
-import {
-  Handler,
-  IA,
-  InteractionEvent,
-  SubCommand,
-} from '@discord-nestjs/core';
-import { Inject, Injectable } from '@nestjs/common';
-import {
-  CommandInteraction,
-  EmbedBuilder,
-  GuildMember,
-  InteractionCollector,
-  InteractionReplyOptions,
-} from 'discord.js';
-import { UsersService } from 'src/users/services/users.service';
-import { RecommendationsService } from 'src/recommendations/service/recommendations.service';
-import { UserPromotionService } from 'src/userPromotion/services/userPromotion.service';
+import {Handler, InteractionEvent, SubCommand,} from '@discord-nestjs/core';
+import {Inject, Injectable} from '@nestjs/common';
+import {CommandInteraction,} from 'discord.js';
+import {UsersService} from 'src/users/services/users.service';
+import {UserPromotionService} from 'src/userPromotion/services/userPromotion.service';
 
 @SubCommand({
   name: 'pokaż',
