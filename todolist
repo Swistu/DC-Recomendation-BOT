@@ -1,0 +1,17 @@
+1. activitylog - TODO 0%
+2. bot 100%
+3. bot-commands
+    player 100%
+4. ranks
+5. recommendations
+6. recommendationsHistory
+7. userPromotion
+8. userRank
+9. userRankHistory
+10 .userRoles
+11. users
+12. utility - DONE
+
+
+13. Dockerfile postgres + readme jak puścić
+nie trzeba sql create - type ORM - sam tworzy tabele - DONE
