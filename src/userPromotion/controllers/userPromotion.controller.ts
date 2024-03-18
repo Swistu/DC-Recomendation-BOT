@@ -1,10 +1,23 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Post, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  UsePipes,
+} from '@nestjs/common';
 import { UserPromotionService } from '../services/userPromotion.service';
-import { CreatePromotionDto, UpdatePromotionDto } from '../models/userPromotion.dto';
+import {
+  CreatePromotionDto,
+  UpdatePromotionDto,
+} from '../models/userPromotion.dto';
 
 @Controller('users/')
 export class UserPromotionController {
-  constructor(private userPromotionService: UserPromotionService) { }
+  constructor(private userPromotionService: UserPromotionService) {}
 
   @Get(':id/promotion')
   getUserPromotion(@Param('id') discordId: string) {
@@ -12,13 +25,25 @@ export class UserPromotionController {
   }
 
   @Post(':id/promotion')
-  createUserPromotion(@Param('id') discordId: string, @Body() createPromotionDto: CreatePromotionDto) {
-    return this.userPromotionService.createUserPromotion({ discordId, ...createPromotionDto });
+  createUserPromotion(
+    @Param('id') discordId: string,
+    @Body() createPromotionDto: CreatePromotionDto,
+  ) {
+    return this.userPromotionService.createUserPromotion({
+      discordId,
+      ...createPromotionDto,
+    });
   }
 
   @Patch(':id/promotion')
-  updateUserPromotion(@Param('id') discordId: string, @Body() updatePromotionDto: UpdatePromotionDto) {
-    return this.userPromotionService.updateUserPromotion(discordId, updatePromotionDto);
+  updateUserPromotion(
+    @Param('id') discordId: string,
+    @Body() updatePromotionDto: UpdatePromotionDto,
+  ) {
+    return this.userPromotionService.updateUserPromotion(
+      discordId,
+      updatePromotionDto,
+    );
   }
 
   @Get(':id/promotion/status')

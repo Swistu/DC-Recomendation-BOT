@@ -1,7 +1,16 @@
 import { RanksEntity } from 'src/ranks/models/ranks.entity';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
 import { UsersEntity } from 'src/users/models/users.entity';
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('userPromotion')
 export class UserPromotionEntity {
@@ -21,9 +30,9 @@ export class UserPromotionEntity {
   @JoinColumn({
     name: 'discord_id',
   })
-  user_entity: UsersEntity
+  user_entity: UsersEntity;
 
   @OneToOne(() => UserRankEntity, (userRank) => userRank.id)
   @JoinColumn({ name: 'userRank_id' })
-  userRank: UserRankEntity
+  userRank: UserRankEntity;
 }

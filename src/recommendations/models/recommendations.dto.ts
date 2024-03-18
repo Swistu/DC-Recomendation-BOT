@@ -12,14 +12,14 @@ export class RecommendationsDto {
 }
 
 export class GiveRecommendationDto {
-  recommenderDiscordId: string; 
+  recommenderDiscordId: string;
   recommendedDiscordId: string;
-  reason: string; 
+  reason: string;
   type: number;
 }
 
 export class RemoveRecommendationDto {
-  recommenderDiscordId: string; 
+  recommenderDiscordId: string;
   recommendedDiscordId: string;
   type: number;
 }

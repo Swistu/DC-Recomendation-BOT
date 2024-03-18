@@ -1,7 +1,13 @@
 import { UserRank } from 'src/userRank/models/userRank.dto';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
 import { UserRankHistoryEntity } from 'src/userRankHistory/models/userRankHistory.entity';
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export enum CorpsTypes {
   OFICEROW = 'Oficerów',
@@ -44,9 +50,12 @@ export class RanksEntity {
   @Column({ type: 'enum', enum: CorpsTypes })
   corps: string;
 
-  @OneToMany(() => UserRankEntity, userRank => userRank.rank)
+  @OneToMany(() => UserRankEntity, (userRank) => userRank.rank)
   userRank: UserRankEntity[];
 
-  @OneToMany(() => UserRankHistoryEntity, (userRankHistory) => userRankHistory.rank)
-  userRankHistory: UserRankHistoryEntity
+  @OneToMany(
+    () => UserRankHistoryEntity,
+    (userRankHistory) => userRankHistory.rank,
+  )
+  userRankHistory: UserRankHistoryEntity;
 }

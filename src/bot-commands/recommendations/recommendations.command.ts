@@ -8,6 +8,5 @@ import { RecommendationRemoveSubCommand } from './sub-command/recommendations-re
   description: 'zarządzanie rekomendacjami',
   include: [RecommendationAddSubCommand, RecommendationRemoveSubCommand],
 })
-
 @Injectable()
-export class RecommendationsCommand { }
+export class RecommendationsCommand {}

@@ -8,6 +8,5 @@ import { PromotionsGrantSubCommand } from './sub-command/promotions-grant/promot
   description: 'zarządzanie awansami',
   include: [PromotionsShowSubCommand, PromotionsGrantSubCommand],
 })
-
 @Injectable()
-export class PromotionsCommand { }
+export class PromotionsCommand {}
