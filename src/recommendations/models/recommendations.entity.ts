@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { RecommendationsTypes } from './recommendations.dto';
 import { UsersEntity } from 'src/users/models/users.entity';
 
@@ -16,16 +25,16 @@ export class RecommendationsEntity {
   @CreateDateColumn()
   created_at: Date;
 
-  @Column({name: 'recommended_discord_id'})
+  @Column({ name: 'recommended_discord_id' })
   recommended_discord_id: string;
-  @Column({name: 'recommender_discord_id'})
+  @Column({ name: 'recommender_discord_id' })
   recommender_discord_id: string;
 
-  @ManyToOne(() => UsersEntity, user => user.discord_id)
+  @ManyToOne(() => UsersEntity, (user) => user.discord_id)
   @JoinColumn({ name: 'recommender_discord_id' })
-  recommender_user: UsersEntity
+  recommender_user: UsersEntity;
 
-  @ManyToOne(() => UsersEntity, user => user.discord_id)
+  @ManyToOne(() => UsersEntity, (user) => user.discord_id)
   @JoinColumn({ name: 'recommended_discord_id' })
-  recommended_user: UsersEntity
+  recommended_user: UsersEntity;
 }

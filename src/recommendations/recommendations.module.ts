@@ -17,4 +17,3 @@ import { UserRankHistoryModule } from 'src/userRankHistory/userRankHistory.modul
   exports: [RecommendationsService],
 })
 export class RecommendationsModule {}
-

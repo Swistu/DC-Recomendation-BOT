@@ -4,7 +4,9 @@ import { RecommendationsHistoryService } from '../service/recommendationsHistory
 
 @Controller('recommendationsHistory')
 export class RecommendationsHistoryController {
-  constructor(private recommendationsHistoryService: RecommendationsHistoryService) {}
+  constructor(
+    private recommendationsHistoryService: RecommendationsHistoryService,
+  ) {}
 
   @Get('')
   gettest(@Param('id') id: number) {
@@ -12,7 +14,7 @@ export class RecommendationsHistoryController {
   }
 
   @Get(':id')
-  getRole(@Param('id') id: number){
+  getRole(@Param('id') id: number) {
     return this.recommendationsHistoryService.getRole(id);
   }
 }

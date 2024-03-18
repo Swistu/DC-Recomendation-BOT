@@ -10,7 +10,7 @@ export class RecommendationsHistoryService {
     private readonly userRankHistoryRepository: Repository<RecommendationsHistoryEntity>,
   ) {}
 
-  getRole(roleId: number){
+  getRole(roleId: number) {
     return this.userRankHistoryRepository.findOneBy({ id: roleId });
   }
 }

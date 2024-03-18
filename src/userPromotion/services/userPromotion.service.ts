@@ -75,9 +75,8 @@ export class UserPromotionService {
       userRank: userRank,
     });
 
-    const savedUserPromotion = await this.userPromotionRepository.save(
-      newUserPromotion,
-    );
+    const savedUserPromotion =
+      await this.userPromotionRepository.save(newUserPromotion);
 
     await this.userRepository.update(
       { discord_id: userPromotionDto.discordId },
