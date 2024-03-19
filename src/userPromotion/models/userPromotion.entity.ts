@@ -1,14 +1,10 @@
-import { RanksEntity } from 'src/ranks/models/ranks.entity';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
 import { UsersEntity } from 'src/users/models/users.entity';
 import {
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 

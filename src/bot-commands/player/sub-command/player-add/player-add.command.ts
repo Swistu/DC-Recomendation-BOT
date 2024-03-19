@@ -1,19 +1,8 @@
 import { SlashCommandPipe } from '@discord-nestjs/common';
-import {
-  Handler,
-  IA,
-  InteractionEvent,
-  SubCommand,
-} from '@discord-nestjs/core';
+import { Handler, InteractionEvent, SubCommand } from '@discord-nestjs/core';
 import { PlayerAddDto } from './player-add.dto';
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  CommandInteraction,
-  EmbedBuilder,
-  GuildMember,
-  InteractionCollector,
-  InteractionReplyOptions,
-} from 'discord.js';
+import { CommandInteraction, EmbedBuilder, GuildMember } from 'discord.js';
 import { UsersService } from 'src/users/services/users.service';
 import { UserRole } from 'src/userRoles/models/userRole.dto';
 import { UserExistsError } from 'src/utility/errorTypes';

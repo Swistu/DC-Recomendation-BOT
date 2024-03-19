@@ -1,5 +1,4 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { RecommendationsHistoryService } from '../service/recommendationsHistory.service';
 
 @Controller('recommendationsHistory')

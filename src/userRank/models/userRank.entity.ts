@@ -1,4 +1,3 @@
-import { type } from 'os';
 import { RanksEntity } from 'src/ranks/models/ranks.entity';
 import { UsersEntity } from 'src/users/models/users.entity';
 import {
@@ -8,7 +7,6 @@ import {
   JoinColumn,
   ManyToOne,
   OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 

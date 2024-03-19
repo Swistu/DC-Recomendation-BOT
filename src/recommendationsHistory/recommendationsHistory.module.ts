@@ -1,4 +1,3 @@
-import { DiscordModule } from '@discord-nestjs/core';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RecommendationsHistoryEntity } from './models/recommendationsHistory.entity';

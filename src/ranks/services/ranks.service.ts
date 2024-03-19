@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository, UpdateResult } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { RanksEntity } from '../models/ranks.entity';
 import { ServiceOptions } from 'src/utility/generalClasses';
 

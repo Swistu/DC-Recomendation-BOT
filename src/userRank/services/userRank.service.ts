@@ -1,16 +1,13 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { from, Observable } from 'rxjs';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UserRankEntity } from '../models/userRank.entity';
 import {
   createUserRankWithId,
   createUserRankWithOrderNumber,
   createUserRankWithRankName,
   setUserRank,
-  UserRank,
 } from '../models/userRank.dto';
 import { RanksEntity } from 'src/ranks/models/ranks.entity';
-import { UsersService } from 'src/users/services/users.service';
 import { UsersEntity } from 'src/users/models/users.entity';
 import { RankDontExistError, UserDontExistError } from 'src/utility/errorTypes';
 
