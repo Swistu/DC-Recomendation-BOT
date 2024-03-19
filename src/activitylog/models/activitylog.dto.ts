@@ -1,6 +1,10 @@
+
 export class ActivityLogDto {
+  // @IsNumber
   warNumber: number;
+  //todo @IsDiscordId - custom
   discordId: string;
+
   EnemyPlayerDamage?: number;
   EnemyStructureVehicleDamage?: number;
   FriendlyConstruction?: number;

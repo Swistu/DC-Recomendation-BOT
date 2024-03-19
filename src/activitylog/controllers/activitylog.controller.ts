@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import {Body, Controller, Get, Post} from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { ActivityLogDto } from '../models/activitylog.dto';
 import { ActivityLogService } from '../services/activitylog.service';
@@ -10,5 +10,11 @@ export class ActivityLogController {
   @Get()
   getAll(): Observable<ActivityLogDto[]> {
     return this.activityLogService.getAllActivityLogs();
+  }
+
+  @Post()
+  create(@Body() activityLog: ActivityLogDto): Observable<ActivityLogDto[]> {
+    this.activityLogService.createAllActivityLogs(activityLog);
+    return null;
   }
 }
