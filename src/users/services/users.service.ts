@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 
-import { UsersEntity } from '../models/users.entity';
-import { CreateUser, User } from '../models/user.dto';
 import { InjectDiscordClient } from '@discord-nestjs/core';
 import { Client } from 'discord.js';
-import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
-import { UserRankService } from 'src/userRank/services/userRank.service';
-import { createUserRankWithOrderNumber } from 'src/userRank/models/userRank.dto';
-import { UserPromotionService } from 'src/userPromotion/services/userPromotion.service';
-import { UserDontExistError, UserExistsError } from 'src/utility/errorTypes';
+import {CreateUser, User} from "../models/user.dto";
+import {UsersEntity} from "../models/users.entity";
+import {UserRolesEntity} from "../../userRoles/models/userRoles.entity";
+import {UserRankService} from "../../userRank/services/userRank.service";
+import {UserPromotionService} from "../../userPromotion/services/userPromotion.service";
+import {UserDontExistError, UserExistsError} from "../../utility/errorTypes";
+import {createUserRankWithOrderNumber} from "../../userRank/models/userRank.dto";
 
 @Injectable()
 export class UsersService {

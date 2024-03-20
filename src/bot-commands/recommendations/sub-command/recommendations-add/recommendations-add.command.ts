@@ -3,8 +3,8 @@ import { Handler, InteractionEvent, SubCommand } from '@discord-nestjs/core';
 import { RecommendationAddDto } from './recommendations-add.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandInteraction, EmbedBuilder, GuildMember } from 'discord.js';
-import { UsersService } from 'src/users/services/users.service';
-import { RecommendationsService } from 'src/recommendations/service/recommendations.service';
+import { UsersService } from '../users/services/users.service';
+import { RecommendationsService } from '../recommendations/service/recommendations.service';
 
 @SubCommand({ name: 'dodaj', description: 'Dodaje rekomendacje' })
 @Injectable()

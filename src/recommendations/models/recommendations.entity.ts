@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RecommendationsTypes } from './recommendations.dto';
-import { UsersEntity } from 'src/users/models/users.entity';
+import {UsersEntity} from "../../users/models/users.entity";
 
 @Entity('recommendations')
 export class RecommendationsEntity {

@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRankEntity } from './models/userRank.entity';
 import { UserRankController } from './controllers/userRank.controller';
 import { UserRankService } from './services/userRank.service';
-import { RanksEntity } from 'src/ranks/models/ranks.entity';
-import { UsersEntity } from 'src/users/models/users.entity';
+import {RanksEntity} from "../ranks/models/ranks.entity";
+import {UsersEntity} from "../users/models/users.entity";
 
 @Module({
   imports: [

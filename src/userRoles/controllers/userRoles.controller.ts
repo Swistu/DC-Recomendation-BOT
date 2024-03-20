@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { UserRolesEntity } from '../models/userRoles.entity';
-import { UserRolesService } from '../services/userRoles.service';
+import {UserRolesService} from "../services/userRoles.service";
+import {UserRolesEntity} from "../models/userRoles.entity";
 
 @Controller('userRoles')
 export class UserRolesController {

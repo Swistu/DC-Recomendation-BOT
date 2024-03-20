@@ -3,12 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserPromotionService } from './services/userPromotion.service';
 import { UserPromotionController } from './controllers/userPromotion.controller';
 import { UserPromotionEntity } from './models/userPromotion.entity';
-import { UsersEntity } from 'src/users/models/users.entity';
-import { RanksModule } from 'src/ranks/ranks.module';
-import { UserRankModule } from 'src/userRank/userRank.module';
-import { UserRankEntity } from 'src/userRank/models/userRank.entity';
-import { UserRankHistoryModule } from 'src/userRankHistory/userRankHistory.module';
 import { DiscordModule } from '@discord-nestjs/core';
+import {UsersEntity} from "../users/models/users.entity";
+import {UserRankEntity} from "../userRank/models/userRank.entity";
+import {RanksModule} from "../ranks/ranks.module";
+import {UserRankModule} from "../userRank/userRank.module";
+import {UserRankHistoryModule} from "../userRankHistory/userRankHistory.module";
 
 @Module({
   imports: [

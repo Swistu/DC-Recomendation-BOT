@@ -6,16 +6,16 @@ import {
   UpdatePromotionDto,
   UserPromotionList,
 } from '../models/userPromotion.dto';
-import { UsersEntity } from 'src/users/models/users.entity';
-import { UserRankEntity } from 'src/userRank/models/userRank.entity';
-import { RanksService } from 'src/ranks/services/ranks.service';
-import { RankDontExistError, UserDontExistError } from 'src/utility/errorTypes';
-import { ServiceOptions } from 'src/utility/generalClasses';
-import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
-import { UserRankHistoryService } from 'src/userRankHistory/services/userRankHistory.service';
+import {UsersEntity} from "../../users/models/users.entity";
+import {UserRankEntity} from "../../userRank/models/userRank.entity";
 import { Client, GuildMember } from 'discord.js';
 import { InjectDiscordClient } from '@discord-nestjs/core';
-import { getDiscordGuild, getUserDiscordRoles } from 'src/utility/discordUtils';
+import {RankDontExistError, UserDontExistError} from "../../utility/errorTypes";
+import {ServiceOptions} from "../../utility/generalClasses";
+import {RecommendationsEntity} from "../../recommendations/models/recommendations.entity";
+import {UserRankHistoryService} from "../../userRankHistory/services/userRankHistory.service";
+import {getDiscordGuild, getUserDiscordRoles} from "../../utility/discordUtils";
+import {RanksService} from "../../ranks/services/ranks.service";
 
 export class UserPromotionService {
   constructor(

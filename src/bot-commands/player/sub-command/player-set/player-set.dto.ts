@@ -1,5 +1,5 @@
 import { Choice, Param, ParamType } from '@discord-nestjs/core';
-import { RankTypes } from 'src/ranks/models/ranks.entity';
+import { RankTypes } from '../ranks/models/ranks.entity';
 
 export class PlayerSetDto {
   @Param({ description: 'Gracz', type: ParamType.USER, required: true })

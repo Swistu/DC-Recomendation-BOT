@@ -1,4 +1,4 @@
-import { CorpsTypes } from 'src/ranks/models/ranks.entity';
+import {CorpsTypes} from "../ranks/models/ranks.entity";
 
 export function parseCorpsName(corps: string) {
   let number: number;

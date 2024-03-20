@@ -3,8 +3,8 @@ import { RecommendationsController } from './controller/recommendations.controll
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RecommendationsEntity } from './models/recommendations.entity';
 import { RecommendationsService } from './service/recommendations.service';
-import { UsersEntity } from 'src/users/models/users.entity';
-import { UserPromotionModule } from 'src/userPromotion/userPromotion.module';
+import {UsersEntity} from "../users/models/users.entity";
+import {UserPromotionModule} from "../userPromotion/userPromotion.module";
 
 @Module({
   imports: [

@@ -1,10 +1,10 @@
 import { DiscordModule } from '@discord-nestjs/core';
 import { Module } from '@nestjs/common';
 import { InjectDynamicProviders } from 'nestjs-dynamic-providers';
-import { RecommendationsModule } from 'src/recommendations/recommendations.module';
-import { UserPromotionModule } from 'src/userPromotion/userPromotion.module';
-import { UserRankModule } from 'src/userRank/userRank.module';
-import { UsersModule } from 'src/users/users.module';
+import { UserPromotionModule } from '../userPromotion/userPromotion.module';
+import { UserRankModule } from '../userRank/userRank.module';
+import { UsersModule } from '../users/users.module';
+import {RecommendationsModule} from "../recommendations/recommendations.module";
 
 @InjectDynamicProviders('**/*.command.js')
 @Module({

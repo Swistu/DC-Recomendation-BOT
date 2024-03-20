@@ -8,11 +8,11 @@ import {
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
-import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
-import { UserRankEntity } from 'src/userRank/models/userRank.entity';
-import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
-import { UserRankHistoryEntity } from 'src/userRankHistory/models/userRankHistory.entity';
-import { UserPromotionEntity } from 'src/userPromotion/models/userPromotion.entity';
+import {UserRolesEntity} from "../../userRoles/models/userRoles.entity";
+import {UserRankEntity} from "../../userRank/models/userRank.entity";
+import {RecommendationsEntity} from "../../recommendations/models/recommendations.entity";
+import {UserRankHistoryEntity} from "../../userRankHistory/models/userRankHistory.entity";
+import {UserPromotionEntity} from "../../userPromotion/models/userPromotion.entity";
 
 @Entity('users')
 export class UsersEntity {

@@ -1,26 +1,23 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { RecommendationsEntity } from '../models/recommendations.entity';
-import { UsersEntity } from 'src/users/models/users.entity';
+import {UsersEntity} from "../../users/models/users.entity";
 import {
   GiveRecommendationDto,
   RecommendationsAction,
   RecommendationsTypes,
   RemoveRecommendationDto,
 } from '../models/recommendations.dto';
-import { parseCorpsName } from 'src/utility/parseCorpsName';
-import { CorpsTypes, RankTypes } from 'src/ranks/models/ranks.entity';
-import {
-  RecommendationForbiddenError,
-  UserDontExistError,
-} from 'src/utility/errorTypes';
+import {parseCorpsName} from "../../utility/parseCorpsName";
+import {CorpsTypes, RankTypes} from "../../ranks/models/ranks.entity";
+import {UserPromotionService} from "../../userPromotion/services/userPromotion.service";
+import {ServiceOptions} from "../../utility/generalClasses";
+import {RecommendationForbiddenError, UserDontExistError} from "../../utility/errorTypes";
 import {
   calcCurrentRecommendationNumber,
   checkPromotionAvaiable,
-  isUserRecommendationInList,
-} from 'src/utility/recommendation.utility';
-import { UserPromotionService } from 'src/userPromotion/services/userPromotion.service';
-import { ServiceOptions } from 'src/utility/generalClasses';
+  isUserRecommendationInList
+} from "../../utility/recommendation.utility";
 
 export class RecommendationsService {
   constructor(

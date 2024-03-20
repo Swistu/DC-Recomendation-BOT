@@ -17,6 +17,7 @@ export class ActivityLogService {
   }
 
   createAllActivityLogs(activityLog: ActivityLogDto) {
-    return from(this.activityLogRepository.save(activityLog));
+    return null;
+    // return from(this.activityLogRepository.save(activityLog));
   }
 }

@@ -3,10 +3,10 @@ import { Handler, IA, SubCommand } from '@discord-nestjs/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { PlayerSetDto } from './player-set.dto';
 import { CommandInteraction, GuildMember } from 'discord.js';
-import { UsersService } from 'src/users/services/users.service';
-import { UserRankService } from 'src/userRank/services/userRank.service';
-import { setUserRank } from 'src/userRank/models/userRank.dto';
-import { RankTypes } from 'src/ranks/models/ranks.entity';
+import { UsersService } from '../users/services/users.service';
+import { UserRankService } from '../userRank/services/userRank.service';
+import { setUserRank } from '../userRank/models/userRank.dto';
+import { RankTypes } from '../ranks/models/ranks.entity';
 
 @SubCommand({ name: 'ustaw', description: 'ustawia graczowi stopień' })
 @Injectable()

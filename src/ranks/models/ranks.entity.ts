@@ -1,6 +1,6 @@
-import { UserRankEntity } from 'src/userRank/models/userRank.entity';
-import { UserRankHistoryEntity } from 'src/userRankHistory/models/userRankHistory.entity';
+import {UserRankHistoryEntity} from "../../userRankHistory/models/userRankHistory.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {UserRankEntity} from "../../userRank/models/userRank.entity";
 
 export enum CorpsTypes {
   OFICEROW = 'Oficerów',

@@ -7,9 +7,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UsersEntity } from 'src/users/models/users.entity';
-import { RanksEntity } from 'src/ranks/models/ranks.entity';
-import { RecommendationsHistoryEntity } from 'src/recommendationsHistory/models/recommendationsHistory.entity';
+import {UsersEntity} from "../../users/models/users.entity";
+import {RanksEntity} from "../../ranks/models/ranks.entity";
+import {RecommendationsHistoryEntity} from "../../recommendationsHistory/models/recommendationsHistory.entity";
 
 @Entity('userRankHistory')
 export class UserRankHistoryEntity {

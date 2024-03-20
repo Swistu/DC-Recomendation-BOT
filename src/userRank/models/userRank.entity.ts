@@ -1,5 +1,4 @@
-import { RanksEntity } from 'src/ranks/models/ranks.entity';
-import { UsersEntity } from 'src/users/models/users.entity';
+import {UsersEntity} from "../../users/models/users.entity";
 import {
   Column,
   CreateDateColumn,
@@ -9,6 +8,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import {RanksEntity} from "../../ranks/models/ranks.entity";
 
 @Entity('userRank')
 export class UserRankEntity {
