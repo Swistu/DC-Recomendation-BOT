@@ -1,23 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  combineLatest,
-  firstValueFrom,
-  from,
-  map,
-  mergeMap,
-  of,
-  switchMap,
-  toArray,
-} from 'rxjs';
-import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import { UsersEntity } from '../models/users.entity';
-import { CreateUser, User, UserAllData } from '../models/user.dto';
+import { CreateUser, User } from '../models/user.dto';
 import { InjectDiscordClient } from '@discord-nestjs/core';
-import { Client, GuildMember } from 'discord.js';
+import { Client } from 'discord.js';
 import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
-import { RanksEntity } from 'src/ranks/models/ranks.entity';
 import { UserRankService } from 'src/userRank/services/userRank.service';
 import { createUserRankWithOrderNumber } from 'src/userRank/models/userRank.dto';
 import { UserPromotionService } from 'src/userPromotion/services/userPromotion.service';

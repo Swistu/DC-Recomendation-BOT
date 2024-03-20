@@ -11,7 +11,6 @@ import {
 import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
 import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
-import { RecommendationsHistoryEntity } from 'src/recommendationsHistory/models/recommendationsHistory.entity';
 import { UserRankHistoryEntity } from 'src/userRankHistory/models/userRankHistory.entity';
 import { UserPromotionEntity } from 'src/userPromotion/models/userPromotion.entity';
 

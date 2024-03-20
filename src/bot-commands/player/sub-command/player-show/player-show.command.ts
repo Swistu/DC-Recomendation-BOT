@@ -8,7 +8,6 @@ import {
   calcCurrentRecommendationNumber,
   checkRecommendationRequiredToPromote,
 } from 'src/utility/recommendation.utility';
-import { UserDontExistError } from 'src/utility/errorTypes';
 
 @SubCommand({ name: 'pokaż', description: 'pokazuje infromacje o graczu' })
 @Injectable()

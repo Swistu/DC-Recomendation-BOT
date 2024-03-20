@@ -1,4 +1,4 @@
-import { Param, Choice, ParamType } from '@discord-nestjs/core';
+import { Choice, Param, ParamType } from '@discord-nestjs/core';
 import { RankTypes } from 'src/ranks/models/ranks.entity';
 
 export class PlayerSetDto {

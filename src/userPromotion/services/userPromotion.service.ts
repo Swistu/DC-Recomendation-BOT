@@ -1,26 +1,22 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { from, Observable } from 'rxjs';
-import { DataSource, Repository, UpdateResult } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { UserPromotionEntity } from '../models/userPromotion.entity';
 import {
   CreateUserPromotionDto,
   UpdatePromotionDto,
-  UpdateUserPromotionDto,
   UserPromotionList,
 } from '../models/userPromotion.dto';
 import { UsersEntity } from 'src/users/models/users.entity';
 import { UserRankEntity } from 'src/userRank/models/userRank.entity';
-import { UserRank } from 'src/userRank/models/userRank.dto';
 import { RanksService } from 'src/ranks/services/ranks.service';
 import { RankDontExistError, UserDontExistError } from 'src/utility/errorTypes';
 import { ServiceOptions } from 'src/utility/generalClasses';
 import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
-import { RecommendationsHistoryEntity } from 'src/recommendationsHistory/models/recommendationsHistory.entity';
 import { UserRankHistoryService } from 'src/userRankHistory/services/userRankHistory.service';
-import { Client, GuildBan, GuildMember } from 'discord.js';
+import { Client, GuildMember } from 'discord.js';
 import { InjectDiscordClient } from '@discord-nestjs/core';
 import { getDiscordGuild, getUserDiscordRoles } from 'src/utility/discordUtils';
-import { CorpsTypes } from 'src/ranks/models/ranks.entity';
+
 export class UserPromotionService {
   constructor(
     @InjectRepository(UserPromotionEntity)

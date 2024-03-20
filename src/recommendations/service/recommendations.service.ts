@@ -1,6 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { from, Observable } from 'rxjs';
-import { DataSource, DeleteResult, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { RecommendationsEntity } from '../models/recommendations.entity';
 import { UsersEntity } from 'src/users/models/users.entity';
 import {
@@ -18,7 +17,6 @@ import {
 import {
   calcCurrentRecommendationNumber,
   checkPromotionAvaiable,
-  checkRecommendationRequiredToPromote,
   isUserRecommendationInList,
 } from 'src/utility/recommendation.utility';
 import { UserPromotionService } from 'src/userPromotion/services/userPromotion.service';

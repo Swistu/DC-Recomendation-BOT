@@ -1,5 +1,5 @@
 import { DiscordModule } from '@discord-nestjs/core';
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './controllers/users.controller';
 import { UsersEntity } from './models/users.entity';

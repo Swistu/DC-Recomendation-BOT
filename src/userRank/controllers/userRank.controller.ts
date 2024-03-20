@@ -6,15 +6,13 @@ import {
   HttpStatus,
   Param,
   Post,
-  UsePipes,
 } from '@nestjs/common';
 import { UserRankService } from '../services/userRank.service';
 import {
   createUserRankWithId,
-  createUserRankWithRankName,
   createUserRankWithOrderNumber,
+  createUserRankWithRankName,
 } from '../models/userRank.dto';
-import { ValidationPipe } from '@discord-nestjs/common';
 
 @Controller('userRank')
 export class UserRankController {
