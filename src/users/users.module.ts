@@ -4,10 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './controllers/users.controller';
 import { UsersEntity } from './models/users.entity';
 import { UsersService } from './services/users.service';
-import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
-import { RanksEntity } from 'src/ranks/models/ranks.entity';
-import { UserRankModule } from 'src/userRank/userRank.module';
-import { UserPromotionModule } from 'src/userPromotion/userPromotion.module';
+import {UserRolesEntity} from "../userRoles/models/userRoles.entity";
+import {UserRankModule} from "../userRank/userRank.module";
+import {UserPromotionModule} from "../userPromotion/userPromotion.module";
+import {RanksEntity} from "../ranks/models/ranks.entity";
 
 @Module({
   imports: [

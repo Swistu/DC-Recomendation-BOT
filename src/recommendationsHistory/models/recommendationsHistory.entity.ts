@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
-import { UserRankHistoryEntity } from 'src/userRankHistory/models/userRankHistory.entity';
+import { RecommendationsEntity } from '../../recommendations/models/recommendations.entity';
+import {UserRankHistoryEntity} from "../../userRankHistory/models/userRankHistory.entity";
 
 @Entity('recommendationsHistory')
 export class RecommendationsHistoryEntity extends RecommendationsEntity {

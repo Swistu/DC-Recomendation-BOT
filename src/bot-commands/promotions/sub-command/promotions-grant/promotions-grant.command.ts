@@ -1,9 +1,9 @@
 import { Handler, InteractionEvent, SubCommand } from '@discord-nestjs/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandInteraction } from 'discord.js';
-import { UsersService } from 'src/users/services/users.service';
-import { UserPromotionService } from 'src/userPromotion/services/userPromotion.service';
-import { RankTypes } from 'src/ranks/models/ranks.entity';
+import {UsersService} from "../../../../users/services/users.service";
+import {UserPromotionService} from "../../../../userPromotion/services/userPromotion.service";
+import {RankTypes} from "../../../../ranks/models/ranks.entity";
 
 @SubCommand({ name: 'przyznaj', description: 'Przyznaje wszystkie awanse' })
 @Injectable()

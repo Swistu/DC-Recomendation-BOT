@@ -1,5 +1,5 @@
-import { CorpsTypes, RankTypes } from 'src/ranks/models/ranks.entity';
-import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
+import {RecommendationsEntity} from "../recommendations/models/recommendations.entity";
+import {CorpsTypes, RankTypes} from "../ranks/models/ranks.entity";
 
 export function checkRecommendationRequiredToPromote(rankName: string) {
   let number: number;

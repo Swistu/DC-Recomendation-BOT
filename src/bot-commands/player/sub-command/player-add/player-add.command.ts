@@ -3,9 +3,9 @@ import { Handler, InteractionEvent, SubCommand } from '@discord-nestjs/core';
 import { PlayerAddDto } from './player-add.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandInteraction, EmbedBuilder, GuildMember } from 'discord.js';
-import { UsersService } from 'src/users/services/users.service';
-import { UserRole } from 'src/userRoles/models/userRole.dto';
-import { UserExistsError } from 'src/utility/errorTypes';
+import {UsersService} from "../../../../users/services/users.service";
+import {UserRole} from "../../../../userRoles/models/userRole.dto";
+import {UserExistsError} from "../../../../utility/errorTypes";
 
 @SubCommand({ name: 'dodaj', description: 'pokazuje infromacje o graczu' })
 @Injectable()

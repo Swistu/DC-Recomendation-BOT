@@ -3,7 +3,7 @@ import { Handler, IA, SubCommand } from '@discord-nestjs/core';
 import { RecommendationRemoveDto } from './recommendations-remove.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { CommandInteraction, EmbedBuilder, GuildMember } from 'discord.js';
-import { RecommendationsService } from 'src/recommendations/service/recommendations.service';
+import {RecommendationsService} from "../../../../recommendations/service/recommendations.service";
 
 @SubCommand({ name: 'usuń', description: 'Usuwa rekomendację' })
 @Injectable()

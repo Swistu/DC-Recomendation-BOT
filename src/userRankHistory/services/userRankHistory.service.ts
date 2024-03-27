@@ -3,10 +3,10 @@ import { from } from 'rxjs';
 import { DataSource, Repository } from 'typeorm';
 import { UserRankHistoryEntity } from '../models/userRankHistory.entity';
 import { Injectable } from '@nestjs/common';
-import { RecommendationsEntity } from 'src/recommendations/models/recommendations.entity';
+import { RecommendationsEntity } from '../../recommendations/models/recommendations.entity';
 import { SaveUserRankHistoryDto } from '../models/userRankHistory.dto';
-import { ServiceOptions } from 'src/utility/generalClasses';
-import { RecommendationsHistoryEntity } from 'src/recommendationsHistory/models/recommendationsHistory.entity';
+import { ServiceOptions } from '../../utility/generalClasses';
+import { RecommendationsHistoryEntity } from '../../recommendationsHistory/models/recommendationsHistory.entity';
 
 @Injectable()
 export class UserRankHistoryService {

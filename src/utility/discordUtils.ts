@@ -1,5 +1,5 @@
 import { Client, GuildMember } from 'discord.js';
-import { CorpsTypes, RankTypes } from 'src/ranks/models/ranks.entity';
+import {CorpsTypes, RankTypes} from "../ranks/models/ranks.entity";
 
 export const getDiscordGuild = async (client: Client) => {
   return await client.guilds.fetch(process.env.DISCORD_GUILD_ID);

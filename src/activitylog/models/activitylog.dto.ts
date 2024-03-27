@@ -1,6 +1,13 @@
+import {IsNumber, IsString, Length, MinLength} from "class-validator";
+
 export class ActivityLogDto {
+  @IsNumber()
+  // @MinLength(3)
   warNumber: number;
+  //todo @IsDiscordId - custom
+  @Length(16, 16)
   discordId: string;
+
   EnemyPlayerDamage?: number;
   EnemyStructureVehicleDamage?: number;
   FriendlyConstruction?: number;

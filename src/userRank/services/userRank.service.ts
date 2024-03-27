@@ -7,9 +7,9 @@ import {
   createUserRankWithRankName,
   setUserRank,
 } from '../models/userRank.dto';
-import { RanksEntity } from 'src/ranks/models/ranks.entity';
-import { UsersEntity } from 'src/users/models/users.entity';
-import { RankDontExistError, UserDontExistError } from 'src/utility/errorTypes';
+import { RanksEntity } from '../../ranks/models/ranks.entity';
+import { UsersEntity } from '../../users/models/users.entity';
+import { RankDontExistError, UserDontExistError } from '../../utility/errorTypes';
 
 export class UserRankService {
   constructor(

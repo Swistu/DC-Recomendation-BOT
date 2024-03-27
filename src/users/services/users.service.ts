@@ -6,11 +6,11 @@ import { UsersEntity } from '../models/users.entity';
 import { CreateUser, User } from '../models/user.dto';
 import { InjectDiscordClient } from '@discord-nestjs/core';
 import { Client } from 'discord.js';
-import { UserRolesEntity } from 'src/userRoles/models/userRoles.entity';
-import { UserRankService } from 'src/userRank/services/userRank.service';
-import { createUserRankWithOrderNumber } from 'src/userRank/models/userRank.dto';
-import { UserPromotionService } from 'src/userPromotion/services/userPromotion.service';
-import { UserDontExistError, UserExistsError } from 'src/utility/errorTypes';
+import { UserRolesEntity } from '../../userRoles/models/userRoles.entity';
+import { UserRankService } from '../../userRank/services/userRank.service';
+import { createUserRankWithOrderNumber } from '../../userRank/models/userRank.dto';
+import { UserPromotionService } from '../../userPromotion/services/userPromotion.service';
+import { UserDontExistError, UserExistsError } from '../../utility/errorTypes';
 
 @Injectable()
 export class UsersService {

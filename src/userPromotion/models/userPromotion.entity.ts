@@ -1,5 +1,5 @@
-import { UserRankEntity } from 'src/userRank/models/userRank.entity';
-import { UsersEntity } from 'src/users/models/users.entity';
+import { UserRankEntity } from "../../userRank/models/userRank.entity";
+import { UsersEntity } from '../../users/models/users.entity';
 import {
   Column,
   Entity,

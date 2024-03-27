@@ -1,5 +1,5 @@
-import { RanksEntity } from 'src/ranks/models/ranks.entity';
-import { UsersEntity } from 'src/users/models/users.entity';
+import { RanksEntity } from '../../ranks/models/ranks.entity';
+import { UsersEntity } from '../../users/models/users.entity';
 import {
   Column,
   CreateDateColumn,

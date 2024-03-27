@@ -3,11 +3,11 @@ import { Handler, IA, SubCommand } from '@discord-nestjs/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { PlayerShowDto } from './player-show.dto';
 import { CommandInteraction, EmbedBuilder, GuildMember } from 'discord.js';
-import { UsersService } from 'src/users/services/users.service';
 import {
   calcCurrentRecommendationNumber,
-  checkRecommendationRequiredToPromote,
-} from 'src/utility/recommendation.utility';
+  checkRecommendationRequiredToPromote
+} from "../../../../utility/recommendation.utility";
+import {UsersService} from "../../../../users/services/users.service";
 
 @SubCommand({ name: 'pokaż', description: 'pokazuje infromacje o graczu' })
 @Injectable()
