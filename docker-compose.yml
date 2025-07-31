@@ -1,8 +1,32 @@
 # Use postgres/example user/password credentials
-version: '3.9'
 
 services:
+  app:
+    build:
+      context: . # Look for Dockerfile in the current directory
+      dockerfile: Dockerfile # Specify the Dockerfile name
+      target: development # Use the 'development' stage from the Dockerfile for local dev
+    ports:
+      - '3000:3000' # Map host port 3000 to container port 3000
+    volumes:
+      - .:/app # Mount your local project directory into the container for live code changes
+      - /app/node_modules # Anonymous volume to prevent host's node_modules from overwriting container's
+    env_file:
+      - .env # Load environment variables from .env file if it exists
+    environment:
+      # Environment variables for your NestJS application
+      # IMPORTANT: Adjust these to match your TypeORM configuration
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DATABASE: ba
+      NODE_ENV: development # Set Node.js environment to development
+      # Add any other environment variables your NestJS app needs (e.g., Discord Bot Token)
 
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres
     ports:
@@ -20,3 +44,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: ba
+    healthcheck: # Add this healthcheck for the database
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ba"] # Checks if DB 'ba' is ready for user 'postgres'
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s # Give the DB some time to start before checking health
+
+

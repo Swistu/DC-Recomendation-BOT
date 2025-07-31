@@ -23,7 +23,7 @@ export class PlayerSetSubCommand {
     @IA() interaction: CommandInteraction,
   ) {
     await interaction.reply('Trwa sprawdzanie gracza...');
-    const user = interaction.options.getMember('user') as GuildMember;
+    const user = interaction.member as GuildMember;
     if (!user) await interaction.editReply('Podano niewłaściwego gracza.');
 
     try {

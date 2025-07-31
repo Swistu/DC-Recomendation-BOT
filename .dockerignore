@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+Dockerfile
+docker-compose.yml
+dist/ # Exclude the compiled output from the host, as it's built inside the container
+*.log
+tmp/
+coverage/
+.vscode/

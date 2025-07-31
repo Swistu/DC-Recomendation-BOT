@@ -18,7 +18,7 @@ export class RecommendationRemoveSubCommand {
     @IA(SlashCommandPipe) dto: RecommendationRemoveDto,
     @IA() interaction: CommandInteraction,
   ) {
-    const user = interaction.options.getMember('user') as GuildMember;
+    const user = interaction.member as GuildMember;
 
     if (!user) {
       await interaction.reply('Podano niewłaściwego gracza.');
