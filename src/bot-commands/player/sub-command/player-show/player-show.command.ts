@@ -22,6 +22,7 @@ export class PlayerShowSubCommand {
     @IA(SlashCommandPipe) dto: PlayerShowDto,
     @IA() interaction: CommandInteraction,
   ) {
+    console.log(interaction.member);
     const user = interaction.member as GuildMember;
 
     if (!user) {
