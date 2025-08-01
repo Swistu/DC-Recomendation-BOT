@@ -7,7 +7,7 @@ import { UsersService } from 'src/users/services/users.service';
 import { UserRole } from 'src/userRoles/models/userRole.dto';
 import { UserExistsError } from 'src/utility/errorTypes';
 
-@SubCommand({ name: 'dodaj', description: 'pokazuje infromacje o graczu' })
+@SubCommand({ name: 'dodaj', description: 'Dodaje gracza do bazy' })
 @Injectable()
 export class PlayerAddSubCommand {
   constructor(
@@ -22,6 +22,9 @@ export class PlayerAddSubCommand {
   ) {
     const user = interaction.member as GuildMember;
 
+    console.log('dto', dto);
+    console.log('user', user);
+
     if (!user) {
       await interaction.editReply('Podano niewłaściwego gracza.');
       return;
@@ -32,8 +35,8 @@ export class PlayerAddSubCommand {
 
     try {
       const createUser = await this.usersService.createUser({
-        discordId: user.user.id,
-        roleId: UserRole.MEMBER,
+        discordId: dto.user,
+        roleName: 'member',
       });
 
       if (createUser) {

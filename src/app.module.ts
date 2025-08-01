@@ -1,6 +1,6 @@
 import { DiscordModule } from '@discord-nestjs/core';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GatewayIntentBits } from 'discord.js';
 import { AppController } from './app.controller';
@@ -15,19 +15,24 @@ import { RanksModule } from './ranks/ranks.module';
 import { RecommendationsHistoryModule } from './recommendationsHistory/recommendationsHistory.module';
 import { BotModule } from './bot/bot.module';
 import { BotSlashCommandsModule } from './bot-commands/bot-slash-commands.module';
+import { dataSourceOptions } from './config/data-source';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(<string>process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DATABASE,
-      autoLoadEntities: true,
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        ...dataSourceOptions, // <--- Spread the options from your data-source.ts
+        // You can override specific options here if needed for the app context
+        // For example, if you want logging only in dev but not in data-source.ts:
+        // logging: configService.get<string>('NODE_ENV') === 'development',
+        synchronize: true, // <--- Always false for production, handled by migrations
+        // Ensure entities path is correct for runtime if using glob
+        entities: ['dist/**/*.entity{.ts,.js}'], // Use compiled paths for runtime
+        migrations: ['dist/migrations/*{.ts,.js}'], // Use compiled paths for runtime
+      }),
     }),
     DiscordModule.forRootAsync({
       useFactory: () => ({

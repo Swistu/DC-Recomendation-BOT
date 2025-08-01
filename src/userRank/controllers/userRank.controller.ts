@@ -6,12 +6,14 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { UserRankService } from '../services/userRank.service';
 import {
   createUserRankWithId,
   createUserRankWithOrderNumber,
   createUserRankWithRankName,
+  setUserRank,
 } from '../models/userRank.dto';
 
 @Controller('userRank')
@@ -38,5 +40,23 @@ export class UserRankController {
     }
 
     return createUserRank;
+  }
+
+  @Put(':id')
+  async updateUserRank(
+    @Param('id') id: string,
+    @Body()
+    rankName: setUserRank,
+  ) {
+    const updateUserRank = await this.userRankService.setUserRank({
+      discordId: id,
+      ...rankName,
+    });
+
+    if (!updateUserRank) {
+      throw new HttpException('Cannot update user', HttpStatus.BAD_REQUEST);
+    }
+
+    return updateUserRank;
   }
 }

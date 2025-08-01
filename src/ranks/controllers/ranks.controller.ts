@@ -1,10 +1,19 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { RanksService } from '../services/ranks.service';
+import { CreateRankDto } from '../models/ranks.dto';
 
-@Controller('rank')
+@Controller('ranks')
 export class RanksController {
   constructor(private rankService: RanksService) {}
 
+  @Post()
+  create(@Body() rank: CreateRankDto) {
+    return this.rankService.createRank(rank);
+  }
+  @Get()
+  getAllRanks() {
+    return this.rankService.getAllRanks();
+  }
   @Get(':id')
   getRankByName(@Param('id') name: string) {
     return this.rankService.getRankByName(name);

@@ -22,7 +22,6 @@ export class PlayerShowSubCommand {
     @IA(SlashCommandPipe) dto: PlayerShowDto,
     @IA() interaction: CommandInteraction,
   ) {
-    console.log(interaction.member);
     const user = interaction.member as GuildMember;
 
     if (!user) {
@@ -34,7 +33,7 @@ export class PlayerShowSubCommand {
     await interaction.reply({ embeds: [embed], ephemeral: false });
 
     try {
-      const userData = await this.usersService.getUser(user.id);
+      const userData = await this.usersService.getUser(dto.user);
 
       let userPositiveRecommendations = '';
       let userNegativeRecommendations = '';

@@ -29,7 +29,7 @@ export class UsersService {
   ) {}
 
   async createUser(user: CreateUser) {
-    const { discordId, roleId, accountactive } = user;
+    const { discordId, roleName, accountactive } = user;
     let savedUser: undefined | UsersEntity;
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -47,7 +47,7 @@ export class UsersService {
       }
 
       const userRole = await this.userRolesRepository.findOneBy({
-        id: roleId,
+        name: roleName,
       });
 
       if (!userRole) {

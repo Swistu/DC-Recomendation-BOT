@@ -16,5 +16,5 @@ export class UserAllData extends User {
 export class CreateUser {
   discordId: string;
   accountactive?: boolean | true;
-  roleId: UserRole;
+  roleName: string;
 }

@@ -2,7 +2,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { RanksEntity } from '../models/ranks.entity';
 import { ServiceOptions } from 'src/utility/generalClasses';
+import { CreateRankDto } from '../models/ranks.dto';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class RanksService {
   constructor(
     @InjectRepository(RanksEntity)
@@ -10,6 +13,11 @@ export class RanksService {
 
     private dataSource: DataSource,
   ) {}
+
+  async createRank(rank: CreateRankDto, options?: ServiceOptions) {
+    const newRank = this.rankRepository.create({ ...rank });
+    return await this.rankRepository.save(newRank);
+  }
 
   async getAllRanks(options?: ServiceOptions) {
     const entityManager =

@@ -5,3 +5,9 @@ export class RanksDto {
   rank: string;
   corps: string;
 }
+export class CreateRankDto {
+  number: number;
+  order: number;
+  name: string;
+  corps: string;
+}
