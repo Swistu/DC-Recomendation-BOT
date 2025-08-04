@@ -9,41 +9,41 @@ export class ActivityLogEntity {
   discordId: string;
 
   @Column({ type: 'int' })
-  enemyPlayerDamage: number;
+  enemy_player_damage: number;
 
   @Column({ type: 'int' })
-  enemyStructureVehicleDamage: number;
+  enemy_structure_vehicle_damage: number;
 
   @Column({ type: 'int' })
-  friendlyConstruction: number;
+  friendly_construction: number;
 
   @Column({ type: 'int' })
-  friendlyHealing: number;
+  friendly_healing: number;
 
   @Column({ type: 'int' })
-  friendlyPlayerDamage: number;
+  friendly_player_damage: number;
 
   @Column({ type: 'int' })
-  friendlyRepairing: number;
+  friendly_repairing: number;
 
   @Column({ type: 'int' })
-  friendlyRevivals: number;
+  friendly_revivals: number;
 
   @Column({ type: 'int' })
-  friendlyStructureVehicleDamage: number;
+  friendly_structure_vehicle_damage: number;
 
   @Column({ type: 'int' })
-  materialsGathered: number;
+  materials_gathered: number;
 
   @Column({ type: 'int' })
-  materialsSubmitted: number;
+  materials_submitted: number;
 
   @Column({ type: 'int' })
-  supplyValueDelivered: number;
+  supply_value_delivered: number;
 
   @Column({ type: 'int' })
-  vehicleSelfDamage: number;
+  vehicle_self_damage: number;
 
   @Column({ type: 'int' })
-  vehiclesCapturedByEnemy: number;
+  vehicles_captured_by_enemy: number;
 }

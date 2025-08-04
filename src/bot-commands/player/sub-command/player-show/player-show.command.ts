@@ -65,10 +65,14 @@ export class PlayerShowSubCommand {
         embed.addFields(
           {
             name: 'Stopień:',
-            value: userData.userRank.rank.name,
+            value: userData.user_rank.rank.name,
             inline: true,
           },
-          { name: 'Korpus', value: userData.userRank.rank.corps, inline: true },
+          {
+            name: 'Korpus',
+            value: userData.user_rank.rank.corps,
+            inline: true,
+          },
           { name: '\u200B', value: '\u200B' },
           { name: 'Rekomendacje:', value: userPositiveRecommendations },
           { name: 'Ujemne Rekomendacje:', value: userNegativeRecommendations },
@@ -82,13 +86,13 @@ export class PlayerShowSubCommand {
           {
             name: 'Liczba do awansu',
             value: `${checkRecommendationRequiredToPromote(
-              userData.userRank.rank.name,
+              userData.user_rank.rank.name,
             )}`,
             inline: true,
           },
           {
             name: 'Gotowy do awansu',
-            value: userData.userPromotion.ready ? 'Tak' : 'Nie',
+            value: userData.user_promotion.ready ? 'Tak' : 'Nie',
           },
           {
             name: 'Konto aktywne',

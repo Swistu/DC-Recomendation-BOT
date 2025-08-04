@@ -35,7 +35,7 @@ export class UsersEntity {
 
   @OneToOne(() => UserRankEntity, (userRank) => userRank.discord_id)
   @JoinColumn()
-  userRank: UserRankEntity;
+  user_rank: UserRankEntity;
 
   @OneToMany(
     () => RecommendationsEntity,
@@ -53,9 +53,9 @@ export class UsersEntity {
     () => UserRankHistoryEntity,
     (userRankHistory) => userRankHistory.discord_id,
   )
-  userRankHistory: UserRankHistoryEntity;
+  user_rank_history: UserRankHistoryEntity;
 
   @OneToOne(() => UserPromotionEntity, (userPromotion) => userPromotion.id)
   @JoinColumn()
-  userPromotion: UserPromotionEntity;
+  user_promotion: UserPromotionEntity;
 }

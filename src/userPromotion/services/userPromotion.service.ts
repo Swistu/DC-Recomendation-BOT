@@ -68,7 +68,7 @@ export class UserPromotionService {
     const newUserPromotion = this.userPromotionRepository.create({
       ...userPromotionDto,
       discord_id: userPromotionDto.discordId,
-      userRank: userRank,
+      user_rank: userRank,
     });
 
     const savedUserPromotion =
@@ -77,7 +77,7 @@ export class UserPromotionService {
     await this.userRepository.update(
       { discord_id: userPromotionDto.discordId },
       {
-        userPromotion: newUserPromotion,
+        user_promotion: newUserPromotion,
       },
     );
 

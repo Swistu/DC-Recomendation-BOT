@@ -40,5 +40,5 @@ export class UserRankHistoryEntity {
     () => RecommendationsHistoryEntity,
     (recommendationHistory) => recommendationHistory.id,
   )
-  recommendationsHistoryEntity: RecommendationsHistoryEntity;
+  recommendations_history_entity: RecommendationsHistoryEntity;
 }

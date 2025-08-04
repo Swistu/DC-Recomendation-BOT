@@ -135,7 +135,7 @@ export class UsersService {
     const userDatabaseData = await this.usersRepository.find({
       relations: {
         role: true,
-        userRank: {
+        user_rank: {
           rank: true,
         },
       },
@@ -151,10 +151,10 @@ export class UsersService {
       },
       relations: {
         role: true,
-        userRank: {
+        user_rank: {
           rank: true,
         },
-        userPromotion: true,
+        user_promotion: true,
         recommendations_recived: true,
         recommendations_given: true,
       },

@@ -29,6 +29,6 @@ export class UserPromotionEntity {
   user_entity: UsersEntity;
 
   @OneToOne(() => UserRankEntity, (userRank) => userRank.id)
-  @JoinColumn({ name: 'userRank_id' })
-  userRank: UserRankEntity;
+  @JoinColumn({ name: 'user_rank_id' })
+  user_rank: UserRankEntity;
 }

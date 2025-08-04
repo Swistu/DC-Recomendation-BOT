@@ -71,7 +71,7 @@ export class RecommendationsService {
           discord_id: recommenderDiscordId,
         },
         relations: {
-          userRank: {
+          user_rank: {
             rank: true,
           },
         },
@@ -87,10 +87,10 @@ export class RecommendationsService {
           discord_id: recommendedDiscordId,
         },
         relations: {
-          userRank: {
+          user_rank: {
             rank: true,
           },
-          userPromotion: true,
+          user_promotion: true,
           recommendations_recived: true,
         },
       });
@@ -99,7 +99,7 @@ export class RecommendationsService {
           `Nie znaleziono <@${recommendedDiscordId}> w bazie!`,
         );
 
-      if (recommendedUser.userPromotion.ready && type)
+      if (recommendedUser.user_promotion.ready && type)
         throw new RecommendationForbiddenError(
           `<@${recommendedUser.discord_id}> już ma awans!`,
         );
@@ -116,13 +116,13 @@ export class RecommendationsService {
         );
 
       const recommenderCorpsNumber = parseCorpsName(
-        recommenderUser.userRank.rank.corps,
+        recommenderUser.user_rank.rank.corps,
       );
       const recommendedCorpsNumber = parseCorpsName(
-        recommendedUser.userRank.rank.corps,
+        recommendedUser.user_rank.rank.corps,
       );
 
-      if (recommenderUser.userRank.rank.name !== RankTypes.PULKOWNIK) {
+      if (recommenderUser.user_rank.rank.name !== RankTypes.PULKOWNIK) {
         if (type === RecommendationsTypes.negative) {
           throw new RecommendationForbiddenError(
             'Nie możesz dawać ujemnych rekomendacji!',
@@ -130,8 +130,8 @@ export class RecommendationsService {
         }
         if (recommenderCorpsNumber > recommendedCorpsNumber) {
           if (
-            recommenderUser.userRank.rank.corps === CorpsTypes.PODOFICEROW &&
-            recommendedUser.userRank.rank.name === RankTypes.PLUTONOWY
+            recommenderUser.user_rank.rank.corps === CorpsTypes.PODOFICEROW &&
+            recommendedUser.user_rank.rank.name === RankTypes.PLUTONOWY
           ) {
             throw new RecommendationForbiddenError(
               `Masz za niski stopień, aby dać rekomendacje graczowi <@${recommendedUser.discord_id}>!`,
@@ -193,7 +193,7 @@ export class RecommendationsService {
           discord_id: recommenderDiscordId,
         },
         relations: {
-          userRank: {
+          user_rank: {
             rank: true,
           },
         },
@@ -207,10 +207,10 @@ export class RecommendationsService {
           discord_id: recommendedDiscordId,
         },
         relations: {
-          userRank: {
+          user_rank: {
             rank: true,
           },
-          userPromotion: true,
+          user_promotion: true,
           recommendations_recived: true,
         },
       });
@@ -267,15 +267,15 @@ export class RecommendationsService {
     if (type === action) {
       if (recommendedUser.recommendations_recived.length) {
         const isPromotionAvaiable = checkPromotionAvaiable(
-          recommendedUser.userRank.rank.name,
-          recommendedUser.userRank.rank.corps,
+          recommendedUser.user_rank.rank.name,
+          recommendedUser.user_rank.rank.corps,
           calculatedRecommendations + 1,
         );
 
         if (isPromotionAvaiable) {
           userPromotionObject.ready = true;
 
-          switch (recommendedUser.userRank.rank.name) {
+          switch (recommendedUser.user_rank.rank.name) {
             case RankTypes.PLUTONOWY:
             case RankTypes.STARSZY_SIERZANT:
               userPromotionObject.locked = true;
@@ -292,8 +292,8 @@ export class RecommendationsService {
       }
     } else {
       const isPromotionAvaiable = checkPromotionAvaiable(
-        recommendedUser.userRank.rank.name,
-        recommendedUser.userRank.rank.corps,
+        recommendedUser.user_rank.rank.name,
+        recommendedUser.user_rank.rank.corps,
         calculatedRecommendations - 1,
       );
 

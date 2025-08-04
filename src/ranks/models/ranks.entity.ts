@@ -44,11 +44,11 @@ export class RanksEntity {
   corps: string;
 
   @OneToMany(() => UserRankEntity, (userRank) => userRank.rank)
-  userRank: UserRankEntity[];
+  user_rank: UserRankEntity[];
 
   @OneToMany(
     () => UserRankHistoryEntity,
     (userRankHistory) => userRankHistory.rank,
   )
-  userRankHistory: UserRankHistoryEntity;
+  user_rank_history: UserRankHistoryEntity;
 }

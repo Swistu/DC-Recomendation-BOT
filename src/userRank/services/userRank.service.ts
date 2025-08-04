@@ -77,7 +77,7 @@ export class UserRankService {
     const savedUserRank = await this.userRankRepository.save(userRank);
     const userUpdated = this.usersRepository.create({
       discord_id: discordId,
-      userRank: userRank,
+      user_rank: userRank,
     });
 
     await this.usersRepository.save(userUpdated);
