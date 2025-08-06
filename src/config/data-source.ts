@@ -11,7 +11,7 @@ export const dataSourceOptions: DataSourceOptions = {
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
   synchronize: true, // <--- CRITICAL: Always false for production, use migrations!
-  logging: true, // Set to true in development to see SQL queries
+  logging: false, // Set to true in development to see SQL queries
   entities: ['dist/**/*.entity{.ts,.js}', 'src/**/*.entity{.ts,.js}'],
   migrations: [
     'dist/migrations/*{.ts,.js}', // Path to your compiled migration files
