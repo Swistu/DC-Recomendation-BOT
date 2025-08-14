@@ -1,17 +1,19 @@
 export class ActivityLogDto {
   warNumber: number;
   discordId: string;
-  EnemyPlayerDamage?: number;
-  EnemyStructureVehicleDamage?: number;
-  FriendlyConstruction?: number;
-  FriendlyHealing?: number;
-  FriendlyPlayerDamage?: number;
-  FriendlyRepairing?: number;
-  FriendlyRevivals?: number;
-  FriendlyStructureVehicleDamage?: number;
-  MaterialsGathered?: number;
-  MaterialsSubmitted?: number;
-  SupplyValueDelivered?: number;
-  VehicleSelfDamage?: number;
-  VehiclesCapturedByEnemy?: number;
+  enemyPlayerDamage?: number;
+  enemyStructureVehicleDamage?: number;
+  friendlyConstruction?: number;
+  friendlyHealing?: number;
+  friendlyPlayerDamage?: number;
+  friendlyRepairing?: number;
+  friendlyRevivals?: number;
+  friendlyStructureVehicleDamage?: number;
+  materialsGathered?: number;
+  materialsSubmitted?: number;
+  supplyValueDelivered?: number;
+  vehicleSelfDamageNeutral?: number;
+  vehicleSelfDamageColonial?: number;
+  vehicleSelfDamageWarden?: number;
+  vehiclesCapturedByEnemy?: number;
 }

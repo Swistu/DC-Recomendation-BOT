@@ -16,6 +16,7 @@ import { RecommendationsHistoryModule } from './recommendationsHistory/recommend
 import { BotModule } from './bot/bot.module';
 import { BotSlashCommandsModule } from './bot-commands/bot-slash-commands.module';
 import { dataSourceOptions } from './config/data-source';
+import { ActivityLogModule } from './activitylog/activitylog.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { dataSourceOptions } from './config/data-source';
         },
       }),
     }),
+    ActivityLogModule,
     UsersModule,
     UserRolesModule,
     UserRankModule,

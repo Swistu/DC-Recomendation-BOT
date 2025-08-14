@@ -1,49 +1,69 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { UsersEntity } from 'src/users/models/users.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('activitylog')
 export class ActivityLogEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn({ type: 'int', name: 'war_number' })
+  id: number;
+
+  @Column({ type: 'int', name: 'war_number' })
   warNumber: number;
 
-  @PrimaryColumn({ type: 'bigint' })
+  @ManyToOne(() => UsersEntity, (user) => user.discord_id)
+  @JoinColumn({ name: 'discord_id' })
+  @PrimaryColumn()
+  @Column({ type: 'bigint', name: 'discord_id' })
   discordId: string;
 
-  @Column({ type: 'int' })
-  enemy_player_damage: number;
+  @Column({ type: 'int', name: 'enemy_player_damage' })
+  enemyPlayerDamage: number;
 
-  @Column({ type: 'int' })
-  enemy_structure_vehicle_damage: number;
+  @Column({ type: 'int', name: 'enemy_structure_vehicle_damage' })
+  enemyStructureVehicleDamage: number;
 
-  @Column({ type: 'int' })
-  friendly_construction: number;
+  @Column({ type: 'int', name: 'friendly_construction' })
+  friendlyConstruction: number;
 
-  @Column({ type: 'int' })
-  friendly_healing: number;
+  @Column({ type: 'int', name: 'friendly_healing' })
+  friendlyHealing: number;
 
-  @Column({ type: 'int' })
-  friendly_player_damage: number;
+  @Column({ type: 'int', name: 'friendly_player_damage' })
+  friendlyPlayerDamage: number;
 
-  @Column({ type: 'int' })
-  friendly_repairing: number;
+  @Column({ type: 'int', name: 'friendly_repairing' })
+  friendlyRepairing: number;
 
-  @Column({ type: 'int' })
-  friendly_revivals: number;
+  @Column({ type: 'int', name: 'friendly_revivals' })
+  friendlyRevivals: number;
 
-  @Column({ type: 'int' })
-  friendly_structure_vehicle_damage: number;
+  @Column({ type: 'int', name: 'friendly_structure_vehicle_damage' })
+  friendlyStructureVehicleDamage: number;
 
-  @Column({ type: 'int' })
-  materials_gathered: number;
+  @Column({ type: 'int', name: 'materials_gathered' })
+  materialsGathered: number;
 
-  @Column({ type: 'int' })
-  materials_submitted: number;
+  @Column({ type: 'int', name: 'materials_submitted' })
+  materialsSubmitted: number;
 
-  @Column({ type: 'int' })
-  supply_value_delivered: number;
+  @Column({ type: 'int', name: 'supply_value_delivered' })
+  supplyValueDelivered: number;
 
-  @Column({ type: 'int' })
-  vehicle_self_damage: number;
+  @Column({ type: 'int', name: 'vehicle_self_damage_neutral' })
+  vehicleSelfDamageNeutral: number;
 
-  @Column({ type: 'int' })
-  vehicles_captured_by_enemy: number;
+  @Column({ type: 'int', name: 'vehicle_self_damage_colonial' })
+  vehicleSelfDamageColonial: number;
+
+  @Column({ type: 'int', name: 'vehicle_self_damage_warden' })
+  vehicleSelfDamageWarden: number;
+
+  @Column({ type: 'int', name: 'vehicles_captured_by_enemy' })
+  vehiclesCapturedByEnemy: number;
 }
