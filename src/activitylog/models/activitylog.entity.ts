@@ -10,7 +10,7 @@ import {
 
 @Entity('activitylog')
 export class ActivityLogEntity {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'war_number' })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
   @Column({ type: 'int', name: 'war_number' })
