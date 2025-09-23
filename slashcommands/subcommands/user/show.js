@@ -30,7 +30,7 @@ const show = async (interaction) => {
     userData.payLoad.rankData.positiveRecommendations.forEach((element) => {
       userRecommendations += `<@${element.userID}> ${
         element?.timestamp
-          ? " <t:" + parseInt(element.timestamp) / 1000 + ":d> \n"
+          ? " <t:" + Math.floor(parseInt(element.timestamp) / 1000) + ":d> \n"
           : " - "
       }${element.reason} \n`;
     });
