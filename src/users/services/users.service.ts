@@ -38,7 +38,7 @@ export class UsersService {
 
     try {
       const existUser = await this.usersRepository.findOneBy({
-        discord_id: discordId,
+        discordId: discordId,
       });
       if (existUser) {
         throw new UserExistsError(
@@ -55,8 +55,8 @@ export class UsersService {
       }
 
       const newUser = this.usersRepository.create({
-        account_active: accountactive,
-        discord_id: discordId,
+        accountActive: accountactive,
+        discordId: discordId,
         role: userRole,
       });
       savedUser = await this.usersRepository.save(newUser);
@@ -135,7 +135,7 @@ export class UsersService {
     const userDatabaseData = await this.usersRepository.find({
       relations: {
         role: true,
-        user_rank: {
+        userRank: {
           rank: true,
         },
       },
@@ -147,16 +147,16 @@ export class UsersService {
   async getUserDatabaseData(discordId: string) {
     const userDatabaseData = await this.usersRepository.findOne({
       where: {
-        discord_id: discordId,
+        discordId: discordId,
       },
       relations: {
         role: true,
-        user_rank: {
+        userRank: {
           rank: true,
         },
-        user_promotion: true,
-        recommendations_recived: true,
-        recommendations_given: true,
+        userPromotion: true,
+        recommendationsRecived: true,
+        recommendationsGiven: true,
       },
     });
 

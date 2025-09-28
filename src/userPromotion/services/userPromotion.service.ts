@@ -38,7 +38,7 @@ export class UserPromotionService {
 
   async getUserPromotion(discordId: string) {
     return await this.userPromotionRepository.findOneBy({
-      discord_id: discordId,
+      discordId: discordId,
     });
   }
 
@@ -52,8 +52,8 @@ export class UserPromotionService {
 
     const update = await entityManager.upsert(
       UserPromotionEntity,
-      [{ discord_id: discordId, ...userPromotionDto }],
-      ['discord_id'],
+      [{ discordId: discordId, ...userPromotionDto }],
+      ['discordId'],
     );
     return update;
   }
@@ -61,23 +61,23 @@ export class UserPromotionService {
   async createUserPromotion(userPromotionDto: CreateUserPromotionDto) {
     const userRank = await this.userRankRepository.findOne({
       where: {
-        discord_id: userPromotionDto.discordId,
+        discordId: userPromotionDto.discordId,
       },
     });
 
     const newUserPromotion = this.userPromotionRepository.create({
       ...userPromotionDto,
-      discord_id: userPromotionDto.discordId,
-      user_rank: userRank,
+      discordId: userPromotionDto.discordId,
+      userRank: userRank,
     });
 
     const savedUserPromotion =
       await this.userPromotionRepository.save(newUserPromotion);
 
     await this.userRepository.update(
-      { discord_id: userPromotionDto.discordId },
+      { discordId: userPromotionDto.discordId },
       {
-        user_promotion: newUserPromotion,
+        userPromotion: newUserPromotion,
       },
     );
 
@@ -86,7 +86,7 @@ export class UserPromotionService {
 
   async checkUserPromotion(discordId: string) {
     const userPromotion = await this.userPromotionRepository.findOneBy({
-      discord_id: discordId,
+      discordId: discordId,
     });
 
     let promotionData = {
@@ -170,7 +170,7 @@ export class UserPromotionService {
         }
 
         const userRank = await entityManager.findOneBy(UserRankEntity, {
-          discord_id: promotion.discordId,
+          discordId: promotion.discordId,
         });
         userRank.rank = newRank;
         await entityManager.save(userRank);
@@ -188,13 +188,13 @@ export class UserPromotionService {
           {
             discordId: promotion.discordId,
             promotionRankingId: promotion.currentRankId,
-            rankStartDate: userRank.rank_start_date,
+            rankStartDate: userRank.rankStartDate,
           },
           { entityManager },
         );
 
         await entityManager.delete(RecommendationsEntity, {
-          recommended_discord_id: promotion.discordId,
+          recommendedDiscordId: promotion.discordId,
         });
 
         promotionList.push({ ...promotion });

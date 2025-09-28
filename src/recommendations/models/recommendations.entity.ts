@@ -20,19 +20,19 @@ export class RecommendationsEntity {
   @Column({ type: 'enum', enum: RecommendationsTypes, nullable: false })
   type: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
   @Column({ name: 'recommended_discord_id' })
-  recommended_discord_id: string;
+  recommendedDiscordId: string;
   @Column({ name: 'recommender_discord_id' })
-  recommender_discord_id: string;
+  recommenderDiscordId: string;
 
-  @ManyToOne(() => UsersEntity, (user) => user.discord_id)
+  @ManyToOne(() => UsersEntity, (user) => user.discordId)
   @JoinColumn({ name: 'recommender_discord_id' })
-  recommender_user: UsersEntity;
+  recommenderUser: UsersEntity;
 
-  @ManyToOne(() => UsersEntity, (user) => user.discord_id)
+  @ManyToOne(() => UsersEntity, (user) => user.discordId)
   @JoinColumn({ name: 'recommended_discord_id' })
-  recommended_user: UsersEntity;
+  recommendedUser: UsersEntity;
 }

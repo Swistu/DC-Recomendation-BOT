@@ -32,7 +32,7 @@ export class PromotionsGrantSubCommand {
         interaction.user.id,
       );
 
-      if (intreactionUser.user_rank.rank.name !== RankTypes.PULKOWNIK) {
+      if (intreactionUser.userRank.rank.name !== RankTypes.PULKOWNIK) {
         await interaction.editReply('Nie możesz awansować graczy');
         return;
       }

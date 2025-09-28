@@ -41,7 +41,7 @@ export class RecommendationsService {
       RecommendationsEntity,
       {
         where: {
-          recommended_discord_id: discordId,
+          recommendedDiscordId: discordId,
         },
       },
     );
@@ -53,7 +53,7 @@ export class RecommendationsService {
     const { recommendedDiscordId, recommenderDiscordId, reason, type } =
       giveRecommendationDto;
     let newRecommendation: RecommendationsEntity | undefined;
-
+    console.log(giveRecommendationDto);
     if (recommendedDiscordId === recommenderDiscordId)
       throw new RecommendationForbiddenError(
         `Nie możesz dać sobie rekomendacji!`,
@@ -68,10 +68,10 @@ export class RecommendationsService {
 
       const recommenderUser = await entityManager.findOne(UsersEntity, {
         where: {
-          discord_id: recommenderDiscordId,
+          discordId: recommenderDiscordId,
         },
         relations: {
-          user_rank: {
+          userRank: {
             rank: true,
           },
         },
@@ -84,14 +84,14 @@ export class RecommendationsService {
 
       const recommendedUser = await entityManager.findOne(UsersEntity, {
         where: {
-          discord_id: recommendedDiscordId,
+          discordId: recommendedDiscordId,
         },
         relations: {
-          user_rank: {
+          userRank: {
             rank: true,
           },
-          user_promotion: true,
-          recommendations_recived: true,
+          userPromotion: true,
+          recommendationsRecived: true,
         },
       });
       if (!recommendedUser)
@@ -99,15 +99,15 @@ export class RecommendationsService {
           `Nie znaleziono <@${recommendedDiscordId}> w bazie!`,
         );
 
-      if (recommendedUser.user_promotion.ready && type)
+      if (recommendedUser.userPromotion.ready && type)
         throw new RecommendationForbiddenError(
-          `<@${recommendedUser.discord_id}> już ma awans!`,
+          `<@${recommendedUser.discordId}> już ma awans!`,
         );
 
       if (
         isUserRecommendationInList(
-          recommenderUser.discord_id,
-          recommendedUser.recommendations_recived,
+          recommenderUser.discordId,
+          recommendedUser.recommendationsRecived,
           type.toString(),
         )
       )
@@ -116,13 +116,13 @@ export class RecommendationsService {
         );
 
       const recommenderCorpsNumber = parseCorpsName(
-        recommenderUser.user_rank.rank.corps,
+        recommenderUser.userRank.rank.corps,
       );
       const recommendedCorpsNumber = parseCorpsName(
-        recommendedUser.user_rank.rank.corps,
+        recommendedUser.userRank.rank.corps,
       );
 
-      if (recommenderUser.user_rank.rank.name !== RankTypes.PULKOWNIK) {
+      if (recommenderUser.userRank.rank.name !== RankTypes.PULKOWNIK) {
         if (type === RecommendationsTypes.negative) {
           throw new RecommendationForbiddenError(
             'Nie możesz dawać ujemnych rekomendacji!',
@@ -130,11 +130,11 @@ export class RecommendationsService {
         }
         if (recommenderCorpsNumber > recommendedCorpsNumber) {
           if (
-            recommenderUser.user_rank.rank.corps === CorpsTypes.PODOFICEROW &&
-            recommendedUser.user_rank.rank.name === RankTypes.PLUTONOWY
+            recommenderUser.userRank.rank.corps === CorpsTypes.PODOFICEROW &&
+            recommendedUser.userRank.rank.name === RankTypes.PLUTONOWY
           ) {
             throw new RecommendationForbiddenError(
-              `Masz za niski stopień, aby dać rekomendacje graczowi <@${recommendedUser.discord_id}>!`,
+              `Masz za niski stopień, aby dać rekomendacje graczowi <@${recommendedUser.discordId}>!`,
             );
           }
         } else {
@@ -152,8 +152,8 @@ export class RecommendationsService {
       newRecommendation = entityManager.create(RecommendationsEntity, {
         reason: reason,
         type: type.toString(),
-        recommended_discord_id: recommendedDiscordId,
-        recommender_discord_id: recommenderDiscordId,
+        recommendedDiscordId: recommendedDiscordId,
+        recommenderDiscordId: recommenderDiscordId,
       });
 
       await entityManager.save(newRecommendation);
@@ -190,10 +190,10 @@ export class RecommendationsService {
 
       const recommenderUser = await entityManager.findOne(UsersEntity, {
         where: {
-          discord_id: recommenderDiscordId,
+          discordId: recommenderDiscordId,
         },
         relations: {
-          user_rank: {
+          userRank: {
             rank: true,
           },
         },
@@ -204,21 +204,21 @@ export class RecommendationsService {
 
       const recommendedUser = await entityManager.findOne(UsersEntity, {
         where: {
-          discord_id: recommendedDiscordId,
+          discordId: recommendedDiscordId,
         },
         relations: {
-          user_rank: {
+          userRank: {
             rank: true,
           },
-          user_promotion: true,
-          recommendations_recived: true,
+          userPromotion: true,
+          recommendationsRecived: true,
         },
       });
       if (!recommendedUser) throw new UserDontExistError();
 
       const removedEntity = await entityManager.delete(RecommendationsEntity, {
-        recommended_discord_id: recommendedDiscordId,
-        recommender_discord_id: recommenderDiscordId,
+        recommended_discordId: recommendedDiscordId,
+        recommender_discordId: recommenderDiscordId,
         type: type.toString(),
       });
 
@@ -253,7 +253,7 @@ export class RecommendationsService {
     options?: ServiceOptions,
   ) {
     const calculatedRecommendations = calcCurrentRecommendationNumber(
-      recommendedUser.recommendations_recived,
+      recommendedUser.recommendationsRecived,
     );
 
     const entityManager =
@@ -265,17 +265,17 @@ export class RecommendationsService {
     };
 
     if (type === action) {
-      if (recommendedUser.recommendations_recived.length) {
+      if (recommendedUser.recommendationsRecived.length) {
         const isPromotionAvaiable = checkPromotionAvaiable(
-          recommendedUser.user_rank.rank.name,
-          recommendedUser.user_rank.rank.corps,
+          recommendedUser.userRank.rank.name,
+          recommendedUser.userRank.rank.corps,
           calculatedRecommendations + 1,
         );
 
         if (isPromotionAvaiable) {
           userPromotionObject.ready = true;
 
-          switch (recommendedUser.user_rank.rank.name) {
+          switch (recommendedUser.userRank.rank.name) {
             case RankTypes.PLUTONOWY:
             case RankTypes.STARSZY_SIERZANT:
               userPromotionObject.locked = true;
@@ -284,7 +284,7 @@ export class RecommendationsService {
           }
 
           await this.userPromotionSerivce.updateUserPromotion(
-            recommendedUser.discord_id,
+            recommendedUser.discordId,
             userPromotionObject,
             { entityManager },
           );
@@ -292,14 +292,14 @@ export class RecommendationsService {
       }
     } else {
       const isPromotionAvaiable = checkPromotionAvaiable(
-        recommendedUser.user_rank.rank.name,
-        recommendedUser.user_rank.rank.corps,
+        recommendedUser.userRank.rank.name,
+        recommendedUser.userRank.rank.corps,
         calculatedRecommendations - 1,
       );
 
       if (!isPromotionAvaiable) {
         await this.userPromotionSerivce.updateUserPromotion(
-          recommendedUser.discord_id,
+          recommendedUser.discordId,
           userPromotionObject,
           { entityManager },
         );

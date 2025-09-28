@@ -17,18 +17,18 @@ export class UserRankHistoryEntity {
   id: number;
 
   @Column({ type: 'bigint', name: 'discord_id', nullable: false })
-  discord_id: string;
+  discordId: string;
 
   @Column({ name: 'rank_id', nullable: false })
-  rank_id: number;
+  rankId: number;
 
   @Column({ type: 'date', nullable: false })
-  rank_start_date: Date;
+  rankStartDate: Date;
 
   @CreateDateColumn()
-  rank_end_date: Date;
+  rankEndDate: Date;
 
-  @ManyToOne(() => UsersEntity, (user) => user.discord_id)
+  @ManyToOne(() => UsersEntity, (user) => user.discordId)
   @JoinColumn({ name: 'discord_id' })
   user: UsersEntity;
 
@@ -40,5 +40,5 @@ export class UserRankHistoryEntity {
     () => RecommendationsHistoryEntity,
     (recommendationHistory) => recommendationHistory.id,
   )
-  recommendations_history_entity: RecommendationsHistoryEntity;
+  recommendationsHistoryEntity: RecommendationsHistoryEntity;
 }

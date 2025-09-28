@@ -42,14 +42,14 @@ export class UserRankHistoryService {
         RecommendationsEntity,
         {
           where: {
-            recommended_discord_id: discordId,
+            recommendedDiscordId: discordId,
           },
         },
       );
       const userRankHistory = entityManager.create(UserRankHistoryEntity, {
-        discord_id: discordId,
-        rank_id: promotionRankingId,
-        rank_start_date: rankStartDate,
+        discordId: discordId,
+        rankId: promotionRankingId,
+        rankStartDate: rankStartDate,
       });
       await entityManager.save(userRankHistory);
 
@@ -59,8 +59,8 @@ export class UserRankHistoryService {
             RecommendationsHistoryEntity,
             {
               ...recommendation,
-              user_rank_history_id: userRankHistory.id,
-              user_rank_history_entity: userRankHistory,
+              userRankHistoryId: userRankHistory.id,
+              userRankHistoryEntity: userRankHistory,
             },
           );
           return recommendationHistory;

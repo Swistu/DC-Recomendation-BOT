@@ -20,15 +20,15 @@ export class UserPromotionEntity {
   blocked: boolean;
 
   @Column({ type: 'bigint', name: 'discord_id', nullable: false })
-  discord_id: string;
+  discordId: string;
 
-  @OneToOne(() => UsersEntity, (user) => user.discord_id)
+  @OneToOne(() => UsersEntity, (user) => user.discordId)
   @JoinColumn({
     name: 'discord_id',
   })
-  user_entity: UsersEntity;
+  userEntity: UsersEntity;
 
   @OneToOne(() => UserRankEntity, (userRank) => userRank.id)
   @JoinColumn({ name: 'user_rank_id' })
-  user_rank: UserRankEntity;
+  userRank: UserRankEntity;
 }

@@ -73,7 +73,7 @@ export function isUserRecommendationInList(
 ): boolean {
   const isUserInList = recommendationList.find((element) => {
     if (
-      element.recommender_discord_id === recommenderDiscordId &&
+      element.recommenderDiscordId === recommenderDiscordId &&
       element.type == type
     )
       return true;

@@ -20,12 +20,12 @@ export class UserRankEntity {
   rank: RanksEntity;
 
   @CreateDateColumn()
-  rank_start_date: Date;
+  rankStartDate: Date;
 
   @Column({ type: 'bigint', name: 'discord_id' })
-  discord_id: string;
+  discordId: string;
 
-  @OneToOne(() => UsersEntity, (user) => user.discord_id)
+  @OneToOne(() => UsersEntity, (user) => user.discordId)
   @JoinColumn({
     name: 'discord_id',
   })

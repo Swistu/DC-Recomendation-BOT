@@ -48,7 +48,7 @@ export class RecommendationAddSubCommand {
 
       if (giveRecommendation)
         embed.setDescription(
-          `<@${giveRecommendation.recommender_discord_id}> dał rekomendacje dla<@${giveRecommendation.recommended_discord_id}>\n ${giveRecommendation.reason}`,
+          `<@${giveRecommendation.recommenderDiscordId}> dał rekomendacje dla<@${giveRecommendation.recommendedDiscordId}>\n ${giveRecommendation.reason}`,
         );
       else embed.setDescription('Nie udało się dodać rekomendacji!');
 

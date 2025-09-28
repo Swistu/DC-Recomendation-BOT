@@ -37,12 +37,12 @@ export class PlayerShowSubCommand {
 
       let userPositiveRecommendations = '';
       let userNegativeRecommendations = '';
-      if (userData.recommendations_recived.length) {
-        userData.recommendations_recived.forEach((element) => {
+      if (userData.recommendationsRecived.length) {
+        userData.recommendationsRecived.forEach((element) => {
           if (element.type)
-            userPositiveRecommendations += `<@${element.recommender_discord_id}> - ${element.reason}\n`;
+            userPositiveRecommendations += `<@${element.recommenderDiscordId}> - ${element.reason}\n`;
           else
-            userNegativeRecommendations += `<@${element.recommender_discord_id}> - ${element.reason}\n`;
+            userNegativeRecommendations += `<@${element.recommenderDiscordId}> - ${element.reason}\n`;
         });
       }
 
@@ -55,22 +55,22 @@ export class PlayerShowSubCommand {
       }
 
       if (userData) {
-        embed.setDescription(`<@${userData.discord_id}>`);
+        embed.setDescription(`<@${userData.discordId}>`);
         embed.setTitle('Dane gracza');
         embed.setColor('#0099ff');
         embed.setAuthor({
           name: `${userData.discordTag}`,
-          iconURL: `https://cdn.discordapp.com/avatars/${userData.discord_id}/${userData.avatar}.jpeg`,
+          iconURL: `https://cdn.discordapp.com/avatars/${userData.discordId}/${userData.avatar}.jpeg`,
         });
         embed.addFields(
           {
             name: 'Stopień:',
-            value: userData.user_rank.rank.name,
+            value: userData.userRank.rank.name,
             inline: true,
           },
           {
             name: 'Korpus',
-            value: userData.user_rank.rank.corps,
+            value: userData.userRank.rank.corps,
             inline: true,
           },
           { name: '\u200B', value: '\u200B' },
@@ -79,24 +79,24 @@ export class PlayerShowSubCommand {
           {
             name: 'Aktualna liczba ',
             value: `${calcCurrentRecommendationNumber(
-              userData.recommendations_recived,
+              userData.recommendationsRecived,
             )}`,
             inline: true,
           },
           {
             name: 'Liczba do awansu',
             value: `${checkRecommendationRequiredToPromote(
-              userData.user_rank.rank.name,
+              userData.userRank.rank.name,
             )}`,
             inline: true,
           },
           {
             name: 'Gotowy do awansu',
-            value: userData.user_promotion.ready ? 'Tak' : 'Nie',
+            value: userData.userPromotion.ready ? 'Tak' : 'Nie',
           },
           {
             name: 'Konto aktywne',
-            value: userData.account_active ? 'Tak' : 'Nie',
+            value: userData.accountActive ? 'Tak' : 'Nie',
           },
         );
       } else {

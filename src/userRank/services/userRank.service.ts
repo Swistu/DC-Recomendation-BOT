@@ -22,7 +22,7 @@ export class UserRankService {
   ) {}
 
   getUserRankByDiscordId(discordId: any) {
-    return this.userRankRepository.findOneBy({ discord_id: discordId });
+    return this.userRankRepository.findOneBy({ discordId: discordId });
   }
 
   async createUserRank(
@@ -33,7 +33,7 @@ export class UserRankService {
   ) {
     const { discordId, rankId, rankName, rankOrderNumber } = createUserRankDto;
     const user = await this.usersRepository.findOneBy({
-      discord_id: discordId,
+      discordId: discordId,
     });
 
     if (!user) {
@@ -63,7 +63,7 @@ export class UserRankService {
     }
 
     const userRank = this.userRankRepository.create({
-      discord_id: discordId,
+      discordId: discordId,
       rank: rank,
     });
 
@@ -76,8 +76,8 @@ export class UserRankService {
 
     const savedUserRank = await this.userRankRepository.save(userRank);
     const userUpdated = this.usersRepository.create({
-      discord_id: discordId,
-      user_rank: userRank,
+      discordId: discordId,
+      userRank: userRank,
     });
 
     await this.usersRepository.save(userUpdated);
@@ -89,7 +89,7 @@ export class UserRankService {
 
     try {
       const userRank = await this.userRankRepository.findOneBy({
-        discord_id: discordId,
+        discordId: discordId,
       });
       if (!userRank)
         throw new UserDontExistError(`Nie znaleziono <@${discordId}> w bazie`);
@@ -99,7 +99,7 @@ export class UserRankService {
         throw new RankDontExistError(`Nie znaleziono rangi ${rankName}`);
 
       const updatedUser = await this.userRankRepository.update(
-        { discord_id: discordId },
+        { discordId: discordId },
         { rank: newRank },
       );
 

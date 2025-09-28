@@ -13,14 +13,14 @@ export class ActivityLogEntity {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column({ type: 'int', name: 'war_number' })
-  warNumber: number;
-
-  @ManyToOne(() => UsersEntity, (user) => user.discord_id)
+  @ManyToOne(() => UsersEntity, (user) => user.discordId)
   @JoinColumn({ name: 'discord_id' })
   @PrimaryColumn()
   @Column({ type: 'bigint', name: 'discord_id' })
   discordId: string;
+
+  @Column({ type: 'int', name: 'war_number' })
+  warNumber: number;
 
   @Column({ type: 'int', name: 'enemy_player_damage' })
   enemyPlayerDamage: number;

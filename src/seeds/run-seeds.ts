@@ -10,7 +10,7 @@ async function runSeeds() {
     const appContext = await NestFactory.createApplicationContext(SeedModule);
     console.log('hello1');
     const initialSeeder = appContext.get(InitialSeeder);
-    await initialSeeder.run(); // Execute the seeding logic
+    // await initialSeeder.run(); // Execute the seeding logic
 
     await appContext.close(); // Close the application context
     console.log('hello2');

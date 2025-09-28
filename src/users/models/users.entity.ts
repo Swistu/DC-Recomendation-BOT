@@ -16,14 +16,14 @@ import { UserPromotionEntity } from 'src/userPromotion/models/userPromotion.enti
 
 @Entity('users')
 export class UsersEntity {
-  @PrimaryColumn({ type: 'bigint' })
-  discord_id: string;
+  @PrimaryColumn({ type: 'bigint', name: 'discord_id' })
+  discordId: string;
 
-  @Column({ type: 'boolean', default: false })
-  account_active: boolean;
+  @Column({ type: 'boolean', default: false, name: 'account_active' })
+  accountActive: boolean;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
   @ManyToOne(() => UserRolesEntity, (userRolesEntity) => userRolesEntity.user, {
     nullable: false,
@@ -33,29 +33,29 @@ export class UsersEntity {
   })
   role: UserRolesEntity;
 
-  @OneToOne(() => UserRankEntity, (userRank) => userRank.discord_id)
+  @OneToOne(() => UserRankEntity, (userRank) => userRank.discordId)
   @JoinColumn()
-  user_rank: UserRankEntity;
+  userRank: UserRankEntity;
 
   @OneToMany(
     () => RecommendationsEntity,
-    (reccomendation) => reccomendation.recommended_user,
+    (reccomendation) => reccomendation.recommendedUser,
   )
-  recommendations_recived: RecommendationsEntity[];
+  recommendationsRecived: RecommendationsEntity[];
 
   @OneToMany(
     () => RecommendationsEntity,
-    (reccomendation) => reccomendation.recommender_user,
+    (reccomendation) => reccomendation.recommenderUser,
   )
-  recommendations_given: RecommendationsEntity[];
+  recommendationsGiven: RecommendationsEntity[];
 
   @OneToMany(
     () => UserRankHistoryEntity,
-    (userRankHistory) => userRankHistory.discord_id,
+    (userRankHistory) => userRankHistory.discordId,
   )
-  user_rank_history: UserRankHistoryEntity;
+  userRankHistory: UserRankHistoryEntity;
 
   @OneToOne(() => UserPromotionEntity, (userPromotion) => userPromotion.id)
   @JoinColumn()
-  user_promotion: UserPromotionEntity;
+  userPromotion: UserPromotionEntity;
 }
