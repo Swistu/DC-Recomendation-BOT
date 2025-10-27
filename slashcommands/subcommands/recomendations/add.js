@@ -18,8 +18,8 @@ const checkUserRoles = (recommender, recommended, negativeRecommend) => {
         constants.RANKS.PODPULKOWNIK,
         constants.RANKS.PULKOWNIK,
         constants.RANKS.GENERAL,
-        constants.CORPS.KORPUS_OFICEROW,
-      ].some((rank) => rank === recommenderRank)
+      ].some((rank) => rank === recommenderRank) ||
+      recommenderCorps === constants.CORPS.KORPUS_OFICEROW
     )
       return { valid: true };
     else
