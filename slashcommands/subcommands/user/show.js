@@ -39,7 +39,11 @@ const show = async (interaction) => {
   let userNegativeRecommendations = "";
   if (typeof userData.payLoad.rankData.negativeRecommendations === typeof [])
     userData.payLoad.rankData.negativeRecommendations.forEach((element) => {
-      userNegativeRecommendations += `<@${element.userID}> - ${element.reason}\n`;
+      userNegativeRecommendations += `<@${element.userID}> ${
+        element?.timestamp
+          ? " <t:" + Math.floor(parseInt(element.timestamp) / 1000) + ":d> \n"
+          : " - "
+      }${element.reason} \n`;
     });
   if (userNegativeRecommendations === "") userNegativeRecommendations = "Brak";
 
